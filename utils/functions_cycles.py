@@ -8,7 +8,7 @@ from matplotlib.collections import LineCollection
 from matplotlib.colors import Normalize
 
 
-# function to add annotations with dates to a plot
+# function to add annotations with dates to a plot.
 def add_annotations_with_dates(ax, dates, label, color, alpha):
     """
     Add vertical lines and text annotations with dates to a plot
@@ -185,7 +185,7 @@ def plot_bitcoin_cycles(
     zero_crossings,
     sin_minima,
     sin_maxima,
-    current
+    current,
 ):
     """
     Plot Bitcoin cycles with annotations and cycle phases
@@ -204,17 +204,20 @@ def plot_bitcoin_cycles(
         sin_maxima (array): Array of indices representing tops
     """
     # Initialize the figure with two subplots.
-    fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(10, 8), gridspec_kw={"height_ratios": [3, 1]}, sharex=True)
-
-    # Adjust subplot parameters manually if needed
-    fig.subplots_adjust(left=0.05, right=0.95, top=0.95, bottom=0.05, hspace=0.1)
-
+    fig, (ax1, ax2) = plt.subplots(
+        2, 1, figsize=(15, 10), gridspec_kw={"height_ratios": [3, 1]}, sharex=True
+    )
+    fig.subplots_adjust(hspace=0)  # Adjust space between subplots.
 
     # Plot Bitcoin price data on the first subplot.
     ax1.plot(btc_data["time"], btc_data["PriceUSD"], color="k", label="BTC Price USD")
     ax1.set_yscale("log")
     ax1.set_ylabel("Price USD", fontsize=13)
-    ax1.set_title("Bitcoin Cycles with Next Top Prediction", fontsize=25)
+    ax1.set_title(
+        "Bitcoin Cycles",
+        fontsize=25,
+        fontweight="bold",
+    )
     ax1.grid(axis="y", ls="--", alpha=0.4)
 
     # Add annotations with dates for halvings, tops, bottoms, and next peak prediction on the first subplot.
@@ -299,7 +302,9 @@ def plot_bitcoin_cycles(
     # Fill between 50% and 75% phases in red with alpha=0.3
     for i in range(len(tops_dates)):
         if i < len(bottoms_dates):
-            minima_indices = np.where((cycle_dates > tops_dates[i]) & (cycle_dates < bottoms_dates[i]))[0]
+            minima_indices = np.where(
+                (cycle_dates > tops_dates[i]) & (cycle_dates < bottoms_dates[i])
+            )[0]
         else:
             minima_indices = np.where(cycle_dates > tops_dates[i])[0]
         ax2.fill_between(
@@ -319,7 +324,9 @@ def plot_bitcoin_cycles(
         alpha=0.15,
     )
     for i in range(len(bottoms_dates) - 1):
-        minima_indices = np.where((cycle_dates > bottoms_dates[i]) & (cycle_dates < tops_dates[i + 1]))[0]
+        minima_indices = np.where(
+            (cycle_dates > bottoms_dates[i]) & (cycle_dates < tops_dates[i + 1])
+        )[0]
         ax2.fill_between(
             x=cycle_dates[minima_indices],
             y1=-1.02,
@@ -330,7 +337,9 @@ def plot_bitcoin_cycles(
 
     # Fill last green area
     ax2.fill_between(
-        x=cycle_dates[(cycle_dates > bottoms_dates[-1]) & (cycle_dates < next_peak_prediction)],
+        x=cycle_dates[
+            (cycle_dates > bottoms_dates[-1]) & (cycle_dates < next_peak_prediction)
+        ],
         y1=-1.02,
         y2=1.05,
         color="green",
@@ -363,18 +372,16 @@ def plot_bitcoin_cycles(
         next_peak_prediction_lower,
         next_peak_prediction_upper,
     )
-
+    ax1.text(
+        btc_data.time.iloc[2800],
+        100,
+        "@Daniele Raimondi",
+        fontsize=25,
+        color="grey",
+        alpha=0.25,
+    )
     # Save the figure and display it.
-    plt.tight_layout()
-
-    # Identify any extra artists if applicable. This might include text, annotations, or legends that
-    # are placed outside the default axes boundaries but you still want them included in the tight layout calculation.
-    # If you don't have extra artists outside of your subplot areas, you can omit this parameter or set it to None.
-    extra_artists = ax1.get_legend_handles_labels()  # Example for including legends. Adjust as needed.
-
-    # Save the figure with adjusted parameters for tight layout
-    plt.savefig("../output/bitcoin_cycles.jpeg", dpi=400, bbox_inches=plt.tight_layout(pad=0.1, h_pad=0, w_pad=0, rect=None), pad_inches=0, extra_artists=extra_artists)
-
+    plt.savefig("../output/Cycles.jpeg", dpi=400)
     plt.show()
 
 
@@ -424,6 +431,8 @@ def calculate_cycle_percentage(btc_data, cycle_dates, sin_minima, sin_maxima):
     )
 
     # Calculate the exact percentage of the cycle for the last price date
-    percentage_of_cycle = round((distance_from_last_significant_point / approx_cycle_length) * 100, 1)
+    percentage_of_cycle = round(
+        (distance_from_last_significant_point / approx_cycle_length) * 100, 1
+    )
 
     return f"{percentage_of_cycle}%"
