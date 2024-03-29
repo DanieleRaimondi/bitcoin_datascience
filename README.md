@@ -10,6 +10,7 @@ Welcome to `bitcoin_datascience`, your destination for exploring and modeling Bi
 - **Machine Learning Models**: Explore sophisticated machine learning approaches to price prediction, from time series analysis to neural networks, all tailored towards the cryptocurrency market.
 
 Data are fetched at:
+
 BTC ON-CHAIN DATA: https://coinmetrics.io/community-network-data/
 
 BTC'S MVRV DATA:   https://www.blockchain.com/explorer/charts/mvrv
