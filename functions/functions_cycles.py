@@ -382,7 +382,7 @@ def plot_bitcoin_cycles(
         alpha=0.25,
     )
     # Save the figure and display it.
-    plt.savefig("../output/1.Cycles.jpeg", dpi=400)
+    plt.savefig("../output/Cycles.jpeg", dpi=400)
     plt.show()
 
 
