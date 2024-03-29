@@ -1,4 +1,4 @@
-data/
+#data/
 .mypy_cache/
 utils/__pycache__
 btc_charts.egg-info/
