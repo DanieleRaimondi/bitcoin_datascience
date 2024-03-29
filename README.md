@@ -11,6 +11,7 @@ Welcome to `bitcoin_datascience`, your destination for exploring and modeling Bi
 
 Data are fetched at:
 BTC ON-CHAIN DATA: https://coinmetrics.io/community-network-data/
+
 BTC'S MVRV DATA:   https://www.blockchain.com/explorer/charts/mvrv
 
 
