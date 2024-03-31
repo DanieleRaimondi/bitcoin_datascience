@@ -3,7 +3,7 @@ import pandas as pd
 import statsmodels.api as sm
 
 
-def plot_cohorts(data, price_column):
+def plot_cohorts(data, price_column, coin):
     """
     Plots multiple charts for all relevant Bitcoin balance cohorts with LOESS smoothing, starting from the first day
     with a valued price. Each chart shows the number of addresses in the cohort, their LOESS smoothed curve, and
@@ -20,14 +20,16 @@ def plot_cohorts(data, price_column):
 
     # Defining all cohorts based on available columns
     cohorts = [
-        ("AdrBalNtv10KCnt", "More than 10,000 BTC"),
-        ("AdrBalNtv1KCnt", "1,000 to 10,000 BTC"),
-        ("AdrBalNtv100Cnt", "100 to 1,000 BTC"),
-        ("AdrBalNtv10Cnt", "10 to 100 BTC"),
-        ("AdrBalNtv1Cnt", "1 to 10 BTC"),
-        ("AdrBalNtv0.1Cnt", "0.1 to 1 BTC"),
-        ("AdrBalNtv0.01Cnt", "0.01 to 0.1 BTC"),
-        ("AdrBalNtv0.001Cnt", "0.001 to 0.01 BTC"),
+        ("AdrBalNtv1MCnt", f"9_more than 1M {coin}"),
+        ("AdrBalNtv100KCnt", f"8_100K to 1M {coin}"),
+        ("AdrBalNtv10KCnt", f"7_10K to 100K {coin}"),
+        ("AdrBalNtv1KCnt", f"6_1K to 10K {coin}"),
+        ("AdrBalNtv100Cnt", f"5_100 to 1K {coin}"),
+        ("AdrBalNtv10Cnt", f"4_10 to 100 {coin}"),
+        ("AdrBalNtv1Cnt", f"3_1 to 10 {coin}"),
+        ("AdrBalNtv0.1Cnt", f"2_0.1 to 1 {coin}"),
+        ("AdrBalNtv0.01Cnt", f"1_0.01 to 0.1 {coin}"),
+        ("AdrBalNtv0.001Cnt", f"0_0.001 to 0.01 {coin}"),
     ]
 
     for cohort_column, cohort_label in cohorts:
@@ -71,10 +73,9 @@ def plot_cohorts(data, price_column):
         ax2.set_yscale("log")
         ax2.tick_params(axis="y", labelcolor="black")
 
-        plt.title(f"Bitcoin Addresses with {cohort_label}")
-        plt.legend()
+        plt.title(f"{coin} Addresses with {cohort_label[2:]}")
         plt.grid(True)
 
-        cohort_filename = (f"{cohort_label.replace(' ', '_').replace(',', '').replace('.', '')}.jpeg")
-        plt.savefig(f"../output/BTC_Cohorts//{cohort_filename}", dpi=400)
+        cohort_filename = (f"{cohort_label.replace(' ', '_').replace(',', '').replace('.', '_')}.jpeg")
+        plt.savefig(f"../output/{coin}_Cohorts//{cohort_filename}", dpi=400)
         plt.show()
