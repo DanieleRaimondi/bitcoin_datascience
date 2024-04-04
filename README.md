@@ -26,7 +26,7 @@ I believe in the power of community and collaboration. Here's how you can get in
 
 ## Stay Updated 📬
 
-Bitcoin's market is volatile and endlessly fascinating. Stay ahead of the curve by keeping an eye on this repository as I regularly update our analyses and models with the latest data and techniques.
+Bitcoin's market is volatile and endlessly fascinating. Stay ahead of the curve by keeping an eye on this repository as I regularly update my analyses and models with the latest data and techniques.
 
 **Please note**, the content provided in this repository is for informational and educational purposes only and should not be construed as financial advice. Always conduct your own research and consult with a professional before making any investment decisions. 🚫💰📚
 
