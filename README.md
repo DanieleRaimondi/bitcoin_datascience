@@ -31,3 +31,5 @@ Bitcoin's market is volatile and endlessly fascinating. Stay ahead of the curve 
 **Please note**, the content provided in this repository is for informational and educational purposes only and should not be construed as financial advice. Always conduct your own research and consult with a professional before making any investment decisions. 🚫💰📚
 
 Happy exploring! 🕵️‍♂️🔍
+
+[![](https://visitcount.itsvg.in/api?id=4hundreds&label=Repo%20Views&color=2&icon=1&pretty=false)](https://visitcount.itsvg.in)
