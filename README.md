@@ -1,4 +1,4 @@
-# Bitcoin DataScience 📈💻🚀₿
+# ₿ Bitcoin DataScience 📈💻🚀
 
 Welcome to `bitcoin_datascience`, your destination for exploring and modeling Bitcoin prices through the lens of data science! This repository is dedicated to providing insightful analysis, predictive models, and cutting-edge research on the ever-dynamic world of Bitcoin. Whether you're a seasoned trader, a crypto enthusiast, or a data science lover, you'll find valuable resources to deepen your understanding of Bitcoin's market movements and its underlying trends.
 
