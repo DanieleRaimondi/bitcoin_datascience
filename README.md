@@ -48,7 +48,7 @@ I believe in the power of community and collaboration. Here's how you can get in
 
 - **Star this repo**: If you find this repository useful, give it a star! ⭐
 - **Fork and Contribute**: Have ideas or improvements? Fork this repo and contribute your changes back via pull requests.
-- **Feedback**: We love feedback! If you have suggestions or want to report issues, please open an issue in the repository.
+- **Feedback**: I love feedback! If you have suggestions or want to report issues, please open an issue in the repository.
 
 ## Stay Updated 📬
 
