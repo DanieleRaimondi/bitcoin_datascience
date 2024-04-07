@@ -437,3 +437,57 @@ def calculate_cycle_percentage(btc_data, cycle_dates, sin_minima, sin_maxima):
     )
 
     return f"{percentage_of_cycle}%"
+
+
+def manipulation(btc_data, bottoms_dates, tops_dates, halving_dates):
+    # Calculate the original frequency of major peaks to model the cyclic behavior of Bitcoin's price. (1/avg days between past peaks)
+    average_peak_distance = np.mean(
+        np.diff(tops_dates).astype("timedelta64[D]").astype(int)
+    )
+    frequence_between_peaks = 1 / average_peak_distance  # n of peaks per day
+
+    # Create a time series with a defined range: it's the x axis used for plotting a cyclical pattern
+    cycle_dates = pd.date_range(start=btc_data["time"].min(), end="2026-07-31")
+    # Generate a sinusoidal wave based on the calculated frequency to represent cyclical patterns
+    cycle_wave = np.sin(
+        2 * np.pi * frequence_between_peaks * (cycle_dates - cycle_dates[0]).days
+    )
+
+    # Predict the next major peak date by calculating the average interval between tops and adding it to the last top
+    next_peak_prediction_lower = tops_dates[-1] + pd.to_timedelta(
+        np.diff(tops_dates).astype("timedelta64[D]").astype(int)[1], "D"
+    )
+    next_peak_prediction = tops_dates[-1] + pd.to_timedelta(average_peak_distance, "D")
+    next_peak_prediction_upper = tops_dates[-1] + pd.to_timedelta(
+        np.diff(tops_dates).astype("timedelta64[D]").astype(int)[0], "D"
+    )
+
+    # Calculate indexes for annotating cycle phases (maxima, minima, and zero crossings) on the cyclical pattern based on the sinusoidal wave
+    sin_maxima = (
+        np.where(
+            (cycle_wave[:-2] < cycle_wave[1:-1]) & (cycle_wave[1:-1] > cycle_wave[2:])
+        )[0]
+        + 1
+    )
+    sin_minima = (
+        np.where(
+            (cycle_wave[:-2] > cycle_wave[1:-1]) & (cycle_wave[1:-1] < cycle_wave[2:])
+        )[0]
+        + 1
+    )
+    sin_derivative = np.gradient(cycle_wave, axis=0)
+    zero_crossings = np.where(np.diff(np.sign(cycle_wave)))[0]
+    current = calculate_cycle_percentage(btc_data, cycle_dates, sin_minima, sin_maxima)
+
+    return (
+        cycle_dates,
+        cycle_wave,
+        next_peak_prediction_lower,
+        next_peak_prediction_upper,
+        next_peak_prediction,
+        sin_derivative,
+        zero_crossings,
+        current,
+        sin_maxima,
+        sin_minima,
+    )
