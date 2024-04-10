@@ -17,7 +17,7 @@ Welcome to `bitcoin_datascience`, your destination for exploring and modeling Bi
 
 ## List of projects: 📝
 
-### 1.ThermoModel 🌡️ [![](https://github.com/DanieleRaimondi/bitcoin_datascience/blob/main/output/ThermoModel.jpg)
+### 1.ThermoModel 🌡️ ![](https://github.com/DanieleRaimondi/bitcoin_datascience/blob/main/output/ThermoModel.jpg)
 The ThermoModel project aims to predict and analyze Bitcoin price movements by integrating cubic and logarithmic regression models. 
 Through the creation of dynamic price bands and oscillators, it seeks to identify potential buy and sell zones, providing a comprehensive tool for understanding market trends and making informed investment decisions in the cryptocurrency space.
 
