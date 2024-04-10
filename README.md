@@ -21,20 +21,20 @@ Welcome to `bitcoin_datascience`, your destination for exploring and modeling Bi
 The ThermoModel project aims to predict and analyze Bitcoin price movements by integrating cubic and logarithmic regression models. 
 Through the creation of dynamic price bands and oscillators, it seeks to identify potential buy and sell zones, providing a comprehensive tool for understanding market trends and making informed investment decisions in the cryptocurrency space.
 
-### 2.Cycles 🧲
+### 2.Cycles 🧲 ![](https://github.com/DanieleRaimondi/bitcoin_datascience/blob/main/output/Cycles.jpeg)
 The Cycles project aims to analyze and visualize the cyclical patterns in Bitcoin's price movements, with a particular focus on the four-year cyclicity dictated by Bitcoin halving events. 
 This approach provides insights into potential market trends and key turning points, highlighting how these critical halving milestones impact the broader cyclical behavior of Bitcoin's market value.
 
-### 3.MVRV 🔋
+### 3.MVRV 🔋 ![](https://github.com/DanieleRaimondi/bitcoin_datascience/blob/main/output/MVRV_Oscillator.jpg)
 The MVRV project explores the relationship between Bitcoin's market and realized values by analyzing the MVRV ratio and price data to pinpoint market tops and bottoms. 
 It introduces an oscillator for easy identification of overbought and oversold zones, highlighting the cyclical nature of Bitcoin with two peaks per cycle, where the second typically marks the ATH. 
 This analysis aids in making informed investment decisions by understanding market trends and cycles.
 
-### 4.Cohorts 🐋
+### 4.Cohorts 🐋 ![](https://github.com/DanieleRaimondi/bitcoin_datascience/blob/main/output/BTC_Cohorts/7_10K_to_100K_BTC.jpeg)
 The project focuses on visualizing Bitcoin's distribution across address cohorts over time, highlighting balance ranges and applying LOESS smoothing to identify correlations with market behavior. 
 By examining the reactions of different holder types to market changes, it reveals patterns of accumulation and distribution, offering insights into market sentiment and potential price trends.
 
-### 5.AvailableSupply 💰
+### 5.AvailableSupply 💰 ![](https://github.com/DanieleRaimondi/bitcoin_datascience/blob/main/output/AvailableSupply.jpg)
 The project aims to estimate the percentage of Bitcoin that has been lost over time and predict the future available supply of Bitcoin, accounting for both the total supply limit and the estimated loss rate of coins. 
 By modeling Bitcoin's supply growth and applying a decaying loss rate to simulate the reduction in lost coins over time, the project forecasts the effective supply available for circulation. 
 This approach helps understand the dynamics affecting Bitcoin's scarcity and potential market impact, providing insights into how the diminishing supply and lost coins could influence Bitcoin's value in the long term.
