@@ -503,6 +503,16 @@ def final_plot(df, last_date):
         color="blue",
         alpha=0.6,
     )
+    plt.axvline(dt.datetime(2024, 4, 19), color="blue", alpha=0.6)
+    plt.text(
+        df.time.iloc[5000],
+        1.25,
+        "4th Halving",
+        rotation=90,
+        fontsize=20,
+        color="blue",
+        alpha=0.6,
+    )
 
     # TESTI
     plt.text(

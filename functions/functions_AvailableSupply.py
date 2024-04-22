@@ -76,7 +76,7 @@ def final_plot(btc_data, forecast):
         color="green",
     )
 
-    halving_dates = pd.to_datetime(["2012-11-28", "2016-07-09", "2020-05-11", "2024-04-25"])
+    halving_dates = pd.to_datetime(["2012-11-28", "2016-07-09", "2020-05-11", "2024-04-19"])
     halving_labels = ["Halving 1", "Halving 2", "Halving 3", "Halving 4"]
 
     for idx, date in enumerate(halving_dates):
