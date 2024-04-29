@@ -22,7 +22,7 @@ def load_btc_data(train_frac = 0.9, last_date = False):
     - pd.DataFrame: A pandas DataFrame with the prepared Bitcoin price data.
     - datetime: The last date available in the dataset.
     """
-    df = pd.read_csv("../data/btc.csv", parse_dates=["time"])
+    df = pd.read_csv("/Users/danieleraimondi/bitcoin_datascience/functions/data/btc.csv", parse_dates=["time"])
     df = df.dropna(subset=["PriceUSD"]).reset_index(drop=True)[["time", "PriceUSD"]]
     # Calculate the number of rows to load based on the fraction
     num_rows = int(len(df) * train_frac)
@@ -88,6 +88,7 @@ def cubic_regression(
         colors = plt.cm.bwr(np.linspace(0, 1, 5))
         BTC_TM = plt.figure(figsize=(30, 12), dpi=80)
 
+        plt.plot(df["time"], df["band_cubic"].where(df["band_cubic"] >= 1, np.nan), label="Model", color='grey', linewidth=3, ls = '--')
         plt.plot(df["time"], df["upper_cubic"].where(df["upper_cubic"] >= 1, np.nan), label="Upper Band", color=colors[4], linewidth=7)
         plt.plot(df["time"], df["lower_cubic"].where(df["lower_cubic"] >= 1, np.nan), label="Lower Band", color=colors[0], linewidth=7)
         plt.plot(df["time"], df["PriceUSD"], label="Bitcoin vs $ Price", color="black", linewidth=2)
@@ -125,9 +126,6 @@ def logarithmic_regression(
     - df (DataFrame): DataFrame with additional columns for regression results.
     - model_parameters (dict): Dictionary containing the coefficients of the regression model.
     """
-    
-    # start_date = "01-01-2015"
-    # df = df.loc[df['date']>=start_date]
 
     x = np.arange(1, len(df["PriceUSD"]) + 1)
     xfit = np.arange(1, len(df["PriceUSD"]) + 100)
@@ -143,12 +141,6 @@ def logarithmic_regression(
     df["upper_log"] = np.exp(upper + yfit[1 : len(x) + 1]) - 1
     df["lower_log"] = np.exp(lower + yfit[1 : len(x) + 1]) - 1
 
-    # predict manual
-    # fitz = np.polyfit(xlog, y, 1)
-    # print(fitz)
-    # df["log_predict_auto"] = np.exp(model.predict(xlog[:, np.newaxis])) - 1
-    # df["log_predict_manuale"] = np.exp(fitz[1] + fitz[0] * xlog) - 1
-
     # Save the model's parameters
     model_parameters = {"coef": model.coef_[0], "intercept": model.intercept_}
 
@@ -156,6 +148,7 @@ def logarithmic_regression(
         colors = plt.cm.bwr(np.linspace(0, 1, 5))
         BTC_TM = plt.figure(figsize=(30, 12), dpi=80)
 
+        plt.plot(df["time"], df["band_log"].where(df["band_log"] >= 1, np.nan), label="Model", color='grey', linewidth=3, ls = '--')
         plt.plot(df["time"], df["upper_log"].where(df["upper_log"] >= 1, np.nan), label="Upper Band", color=colors[4], linewidth=7)
         plt.plot(df["time"], df["lower_log"].where(df["lower_log"] >= 1, np.nan), label="Lower Band", color=colors[0], linewidth=7)
         plt.plot(df["time"], df["PriceUSD"], label="Bitcoin vs $ Price", color="black", linewidth=2)
@@ -253,69 +246,6 @@ def optimize_params(df, tops_dates, bottoms_dates, initial_guess, bounds):
     return result.x
 
 
-def create_cubiclog(df, optimized_params):
-
-    """
-    Create cubiclog bands and oscillator based on optimized parameters.
-
-    Parameters:
-    - df (DataFrame): DataFrame containing Bitcoin price data with columns 'time', 'PriceUSD', 'upper_cubic', 'upper_log', 'lower_cubic', and 'lower_log'.
-    - optimized_params (array-like): Array-like object containing optimized parameters.
-
-    Returns:
-    - df (DataFrame): DataFrame with additional columns for cubiclog bands and oscillator.
-    """
-    
-    df["Oscillator_cubiclog"] = (np.log(df["PriceUSD"]) - np.log(df["lower_cubiclog"])) / (np.log(df["upper_cubiclog"]) - np.log(df["lower_cubiclog"]))
-    df["Oscillator_cubiclog"] = df["Oscillator_cubiclog"].bfill()
-    lowess = sm.nonparametric.lowess(df["Oscillator_cubiclog"], df.time, frac=0.00175)
-    lowess = (lowess[:, 1] - lowess[:, 1].min()) / (lowess[:, 1].max() - lowess[:, 1].min())
-    # Estrazione dei parametri ottimizzati
-    upper_decay, upper_maxw, lower_decay, lower_maxw = optimized_params
-
-    # Calcolo dei pesi
-    df["weights_upper"] = ((np.exp(np.linspace(-1.0, 0.0, len(df)))) ** upper_decay) * upper_maxw
-    df["weights_lower"] = ((np.exp(np.linspace(-1.0, 0.0, len(df)))) ** lower_decay) * lower_maxw
-
-    # Combinazione delle bande cubiche e logaritmiche utilizzando i pesi
-    df["upper_cubiclog"] = (1 - df["weights_upper"]) * df["upper_cubic"] + df["weights_upper"] * df["upper_log"]
-    df["lower_cubiclog"] = (1 - df["weights_lower"]) * df["lower_cubic"] + df["weights_lower"] * df["lower_log"]
-    df["medium_cubiclog"] = np.exp(0.5 * (np.log(df["upper_cubiclog"] / df["lower_cubiclog"]))+ np.log(df["lower_cubiclog"]))
-    df["sell_cubiclog"] = np.exp(0.9 * (np.log(df["upper_cubiclog"] / df["lower_cubiclog"]))+ np.log(df["lower_cubiclog"]))
-    df["buy_cubiclog"] = np.exp(0.1 * (np.log(df["upper_cubiclog"] / df["lower_cubiclog"]))+ np.log(df["lower_cubiclog"]))
-    df["75_cubiclog"] = np.exp(0.75 * (np.log(df["upper_cubiclog"] / df["lower_cubiclog"]))+ np.log(df["lower_cubiclog"]))
-    df["25_cubiclog"] = np.exp(0.25 * (np.log(df["upper_cubiclog"] / df["lower_cubiclog"]))+ np.log(df["lower_cubiclog"]))
-    
-    # creo oscillatore
-    # df['Oscillator_cubiclog'] = (df['PriceUSD']- df['lower_cubiclog'])/(df['upper_cubiclog']- df['lower_cubiclog'])
-    df["Oscillator_cubiclog"] = (np.log(df["PriceUSD"]) - np.log(df["lower_cubiclog"])) / (np.log(df["upper_cubiclog"]) - np.log(df["lower_cubiclog"]))
-    df["Oscillator_cubiclog"] = df["Oscillator_cubiclog"].bfill()
-
-    # smusso l'oscillatore e lo riscalo
-    lowess = sm.nonparametric.lowess(df["Oscillator_cubiclog"], df.time, frac=0.00175)
-    lowess = (lowess[:, 1] - lowess[:, 1].min()) / (lowess[:, 1].max() - lowess[:, 1].min())
-    df["lowess"] = lowess
-    df["lowess"][:250] = np.nan  # forzo perchè qui prezzo era <1, non posso fare log.
-
-    # Visualizzazione delle bande
-    plt.figure(figsize=(20, 10), dpi=80)
-    plt.plot(df["time"],df["PriceUSD"],label="Bitcoin vs $ Price",color="black",linewidth=2,)
-    plt.plot(df["time"],df["upper_cubic"],label="Upper Cubic Band",color="red",linewidth=1,)
-    plt.plot(df["time"],df["upper_cubiclog"],label="Upper Ensemble Band",color="darkgreen",linewidth=4,)
-    plt.plot(df["time"], df["upper_log"], label="Upper Log Band", color="blue", linewidth=1)
-    plt.plot(df["time"],df["lower_cubic"],label="Lower Cubic Band",color="red",linewidth=1,)
-    plt.plot(df["time"],df["lower_cubiclog"],label="Lower Ensemble Band",color="darkgreen",linewidth=4,)
-    plt.plot(df["time"], df["lower_log"], label="Lower Log Band", color="blue", linewidth=1)
-
-    plt.yscale("log")
-    plt.yticks(10 ** np.arange(6), 10 ** np.arange(6))
-    plt.grid(linewidth=0.7, linestyle="--")
-    plt.legend()
-    plt.show()
-
-    return df
-
-
 def inference(df, cubic_model_params, log_model_params, optimized_params):
     """
     Applies cubic and logarithmic model parameters to the entire dataset to calculate and visualize
@@ -369,22 +299,29 @@ def inference(df, cubic_model_params, log_model_params, optimized_params):
     df["lowess"][:250] = (np.nan)  # Force NaN for the initial period if price was <1, not applicable for log
 
     # Visualization with logarithmic scale
-    plt.figure(figsize=(14, 7))
-    plt.plot(df["time"], df["PriceUSD"], label="Bitcoin Price", color="black")
-    plt.plot(df["time"], df["upper_cubiclog"], label="Upper Ensemble Band", color="green")
-    plt.plot(df["time"], df["lower_cubiclog"], label="Lower Ensemble Band", color="red")
-    plt.fill_between(df["time"],df["upper_cubiclog"],df["lower_cubiclog"],color="lightgray",alpha=0.5,)
+    plt.figure(figsize=(14, 6))
+    plt.plot(df["time"], df["upper_log"], label="Upper Log Band", color="k", linewidth=0.3)
+    plt.plot(df["time"], df["lower_log"], label="Lower Log Band", color="k", linewidth=0.3)
+    plt.plot(df["time"], df["upper_cubic"], label="Upper Cubic Band", color="brown", linewidth=0.3)
+    plt.plot(df["time"], df["lower_cubic"], label="Lower Cubic Band", color="brown", linewidth=0.3)
+    plt.plot(df["time"], df["upper_cubiclog"], label="Upper Ensemble Band", color="green", linewidth=3)
+    plt.plot(df["time"], df["lower_cubiclog"], label="Lower Ensemble Band", color="red", linewidth=3)
+    plt.fill_between(df["time"],df["upper_cubiclog"],df["lower_cubiclog"],color="lightgray",alpha=0.6,)
+    plt.plot(df["time"], df["PriceUSD"], label="Bitcoin Price", color="darkblue")
     plt.yscale("log")  # Set y-axis to logarithmic scale
     plt.title("Bitcoin Price with Inferenced Bands")
     plt.xlabel("Date")
     plt.ylabel("Price USD (log scale)")
+    plt.ylim(0.05, df["upper_cubiclog"].iloc[-1] * 1.15)
     plt.legend()
     plt.show()
 
 
 def weight_plot(df):
-    df["weights_upper"].plot()
-    df["weights_lower"].plot()
+    plt.figure(figsize=(6, 4))
+    plt.plot(df["time"], df["weights_upper"], label="weights_upper")
+    plt.plot(df["time"], df["weights_lower"], label="weights_lower")
+    plt.title("Weights")
     plt.legend()
 
 
@@ -414,7 +351,7 @@ def final_plot(df, last_date):
 
     plt.title("Bitcoin ThermoModel", fontsize=75, fontweight="bold")
     plt.grid(linewidth=0.5, linestyle="--")
-    plt.legend(loc='lower right', bbox_to_anchor=(1, 0.07), prop={"size": 18, "weight": "bold"})
+    plt.legend(loc='lower right', bbox_to_anchor=(0.99, 0.07), prop={"size": 18})
     plt.xticks(alpha=0)
     plt.yticks(fontsize=14, weight="bold")
     plt.ylim(df["PriceUSD"].min(), df["upper_cubiclog"].max() + 5000)
@@ -442,7 +379,7 @@ def final_plot(df, last_date):
     )
     plt.text(
         df.time.iloc[420],
-        0.125,
+        0.2,
         f"Expected top: {round(df['upper_cubiclog'].iloc[-1]/1000)*1000} $",
         fontsize=25,
         color="k",
@@ -479,19 +416,19 @@ def final_plot(df, last_date):
 
     # Use fill_betweenx to specify the y-range for the shaded area
     plt.fill_betweenx(
-        y=[0, 0.1],
+        y=[0, 0.13],
         x1=df["time"].min(),
         x2=cutoff_date - pd.Timedelta(days=500),
-        color="orange",
-        alpha=0.3,
+        color="green",
+        alpha=0.2,
         label="Train Data",
     )
     plt.fill_betweenx(
-        y=[0, 0.1],
+        y=[0, 0.13],
         x1=cutoff_date - pd.Timedelta(days=500),
         x2=df["time"].max(),
-        color="blue",
-        alpha=0.1,
+        color="orange",
+        alpha=0.25,
         label="Inference Data",
     )
 
@@ -500,20 +437,20 @@ def final_plot(df, last_date):
     midpoint_inference = df["time"].max() - pd.Timedelta(days=300)
     plt.text(
         midpoint_train,
-        0.07,
+        0.075,
         "Train Data",
         horizontalalignment="center",
-        fontsize=16,
+        fontsize=20,
         color="black",
         weight="bold",
         bbox=dict(facecolor="white", alpha=0.5),
     )
     plt.text(
         midpoint_inference,
-        0.07,
+        0.075,
         "Inference Data",
         horizontalalignment="center",
-        fontsize=16,
+        fontsize=20,
         color="black",
         weight="bold",
         bbox=dict(facecolor="white", alpha=0.5),

@@ -203,11 +203,11 @@ def plot_bitcoin_cycles(
         sin_minima (array): Array of indices representing bottoms
         sin_maxima (array): Array of indices representing tops
     """
-    # Initialize the figure with two subplots.
-    fig, (ax1, ax2) = plt.subplots(
-        2, 1, figsize=(15, 10), gridspec_kw={"height_ratios": [3, 1]}, sharex=True
-    )
-    fig.subplots_adjust(hspace=0)  # Adjust space between subplots.
+    fig = plt.figure(figsize=(14, 8))
+
+    # Create axes
+    ax1 = fig.add_axes([0.05, 0.32, 0.93, 0.63])  # left, bottom, width, height
+    ax2 = fig.add_axes([0.05, 0.05, 0.93, 0.25], sharex=ax1)
 
     # Plot Bitcoin price data on the first subplot.
     ax1.plot(btc_data["time"], btc_data["PriceUSD"], color="k", label="BTC Price USD")
@@ -218,6 +218,7 @@ def plot_bitcoin_cycles(
         fontsize=25,
         fontweight="bold",
     )
+    ax1.tick_params(labelbottom=False)
     ax1.grid(axis="y", ls="--", alpha=0.4)
 
     # Add annotations with dates for halvings, tops, bottoms, and next peak prediction on the first subplot.
@@ -439,7 +440,7 @@ def calculate_cycle_percentage(btc_data, cycle_dates, sin_minima, sin_maxima):
     return f"{percentage_of_cycle}%"
 
 
-def manipulation(btc_data, bottoms_dates, tops_dates, halving_dates):
+def manipulation(btc_data, tops_dates):
     # Calculate the original frequency of major peaks to model the cyclic behavior of Bitcoin's price. (1/avg days between past peaks)
     average_peak_distance = np.mean(
         np.diff(tops_dates).astype("timedelta64[D]").astype(int)

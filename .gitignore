@@ -2,3 +2,9 @@
 .mypy_cache/
 utils/__pycache__
 btc_charts.egg-info/
+functions/__pycache__
+
+.env
+notebooks/SentiMeter.ipynb
+functions/functions_SentiMeter.py
+notebooks/Reddit.csv
