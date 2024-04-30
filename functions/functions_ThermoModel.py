@@ -271,8 +271,7 @@ def inference(df, cubic_model_params, log_model_params, optimized_params):
     )  # Adjusted for -1 for the lower bound
 
     # Calculate logarithmic bands
-    x_log = np.log(x)
-    y_log_fit = log_model_params["coef"] * x_log + log_model_params["intercept"]
+    y_log_fit = log_model_params["coef"] * np.log(x) + log_model_params["intercept"]
     df["upper_log"] = np.exp(y_log_fit + 2) - 1  # Adjusted for +2 for the upper bound
     df["lower_log"] = np.exp(y_log_fit - 2) - 1  # Adjusted for -2 for the lower bound
 

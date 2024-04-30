@@ -5,7 +5,7 @@ jupyter nbconvert --to notebook --execute --inplace 3.MVRV.ipynb
 jupyter nbconvert --to notebook --execute --inplace 4.Cohorts.ipynb
 jupyter nbconvert --to notebook --execute --inplace 5.AvailableSupply.ipynb
 
-echo "Tutti i notebook sono stati eseguiti."
+echo "All the notebooks run."
 
 
 
@@ -20,5 +20,5 @@ echo "Tutti i notebook sono stati eseguiti."
 
 
 
-#POI OGNI VOLTA LANCIARE PIU' COMODAMENTE SOLO QUESTO:
+# Then, simply launch this:
 # ~/bitcoin_datascience/notebooks/run_notebooks.sh
