@@ -23,11 +23,11 @@ def load_dataframe():
       - merged: DataFrame that merges the Bitcoin price and normalized MVRV data,
                 including additional calculated metrics.
     """
-    df = pd.read_csv("../data/btc.csv", parse_dates=["time"])
+    df = pd.read_csv("/Users/danieleraimondi/bitcoin_datascience/functions/data/btc.csv", parse_dates=["time"])
     df = pd.DataFrame(data=df)
 
     # Loading the JSON file
-    with open("../data/mvrv.json", encoding="utf-8") as file:
+    with open("/Users/danieleraimondi/bitcoin_datascience/functions/data/mvrv.json", encoding="utf-8") as file:
         mvrv_data = json.load(file)
     # Converting the data into a DataFrame
     mvrv_df = pd.json_normalize(mvrv_data["mvrv"])
