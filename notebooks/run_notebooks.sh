@@ -1,9 +1,10 @@
 # Esegue i notebook uno dopo l'altro
 jupyter nbconvert --to notebook --execute --inplace 1.ThermoModel.ipynb
 jupyter nbconvert --to notebook --execute --inplace 2.Cycles.ipynb
-jupyter nbconvert --to notebook --execute --inplace 3.MVRV.ipynb
-jupyter nbconvert --to notebook --execute --inplace 4.Cohorts.ipynb
+jupyter nbconvert --to notebook --execute --inplace 3.DXY.ipynb
+jupyter nbconvert --to notebook --execute --inplace 4.MVRV.ipynb
 jupyter nbconvert --to notebook --execute --inplace 5.AvailableSupply.ipynb
+jupyter nbconvert --to notebook --execute --inplace 6.Cohorts.ipynb
 
 echo "All the notebooks run."
 

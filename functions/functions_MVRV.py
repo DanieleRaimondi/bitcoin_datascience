@@ -181,7 +181,7 @@ def plot_btcusd_and_mvrv_oscillator(merged, frac=0.02, k=0.015):
         pd.to_datetime("2017-11-26"),
         pd.to_datetime("2021-03-17"),
         pd.to_datetime("2021-10-25"),
-        pd.to_datetime("2024-05-11"),
+        #pd.to_datetime("2024-05-11"),
     ]
     values = [96, 97, 86, 92, 96, 70, 84]
     ellipse_width = 90
