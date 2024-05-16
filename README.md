@@ -26,7 +26,7 @@ Through the creation of dynamic price bands and oscillators, it seeks to identif
 The Cycles project aims to analyze and visualize the cyclical patterns in Bitcoin's price movements, with a particular focus on the four-year cyclicity dictated by Bitcoin halving events. 
 This approach provides insights into potential market trends and key turning points, highlighting how these critical halving milestones impact the broader cyclical behavior of Bitcoin's market value.
 
-### 3.DXY 💲 ![](output/BTCvsDXY.jpeg)
+### 3.DXY 💲 ![](output/BTCvsDXY.jpg)
 This project aims to analyze the relationship between Bitcoin prices (PriceUSD) and the US Dollar Index (DXY) over time. 
 The hypothesis is that since BTC is backed by USD, it is significantly affected by the performance of DXY. 
 I am using LOESS (Locally Estimated Scatterplot Smoothing) to visualize trends and their derivatives, providing insights into market behaviors during different periods.
