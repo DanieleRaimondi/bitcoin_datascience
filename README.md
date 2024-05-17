@@ -41,7 +41,10 @@ The project aims to estimate the percentage of Bitcoin that has been lost over t
 By modeling Bitcoin's supply growth and applying a decaying loss rate to simulate the reduction in lost coins over time, the project forecasts the effective supply available for circulation. 
 This approach helps understand the dynamics affecting Bitcoin's scarcity and potential market impact, providing insights into how the diminishing supply and lost coins could influence Bitcoin's value in the long term.
 
-### 6.Cohorts 🐋 ![](output/BTC_Cohorts/7_10K_to_100K_BTC.jpeg)
+### 6.Demand 🙋🏽‍♂️ ![](output/Demand.jpg)
+This project aims to analyze on-chain Bitcoin data to gain a deeper understanding of Bitcoin demand over time. By examining key metrics such as the number of active addresses and the total transaction count alongside Bitcoin's price, we can uncover valuable insights into market dynamics. These two metrics serve as proxies for estimating Bitcoin demand, showcasing a clear growth trend over time. As Bitcoin's adoption increases, these metrics provide a tangible measure of user engagement and transaction activity on the network.
+
+### 7.Cohorts 🐋 ![](output/BTC_Cohorts/7_10K_to_100K_BTC.jpeg)
 The project focuses on visualizing Bitcoin's distribution across address cohorts over time, highlighting balance ranges and applying LOESS smoothing to identify correlations with market behavior. 
 By examining the reactions of different holder types to market changes, it reveals patterns of accumulation and distribution, offering insights into market sentiment and potential price trends.
 

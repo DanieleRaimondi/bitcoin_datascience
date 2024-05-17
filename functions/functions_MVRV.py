@@ -95,7 +95,7 @@ def plot_btcusd_vs_mvrv(merged, frac=0.02):
     ax2.get_yaxis().set_major_formatter(matplotlib.ticker.ScalarFormatter())
     ax2.get_yaxis().set_minor_formatter(matplotlib.ticker.NullFormatter())
 
-    fig.suptitle("BTCUSD Price vs MVRV", fontsize=25)
+    fig.suptitle("BTCUSD Price vs MVRV", fontsize=20, fontweight="bold")
     ax2.grid()
 
     ax2.fill_between(merged.time, 0.5, 2, color="green", alpha=0.1)
@@ -148,7 +148,7 @@ def plot_btcusd_and_mvrv_oscillator(merged, frac=0.02, k=0.015):
     )
     plt.yscale("log")
     plt.yticks(10 ** np.arange(6), 10 ** np.arange(6))
-    plt.title("Bitcoin MVRV Oscillator", fontsize=40, fontweight="bold")
+    plt.title("Bitcoin MVRV Oscillator", fontsize=35, fontweight="bold")
     plt.grid(linewidth=0.7, linestyle="--")
     plt.legend(loc=2, prop={"size": 15})
     plt.xticks(alpha=0)

@@ -317,6 +317,15 @@ def inference(df, cubic_model_params, log_model_params, optimized_params):
 
 
 def weight_plot(df):
+    """
+    Plot the weights_upper and weights_lower against time to visualize the weights.
+
+    Parameters:
+    - df: DataFrame containing the data with columns 'time', 'weights_upper', and 'weights_lower'.
+
+    Returns:
+    - None
+    """
     plt.figure(figsize=(6, 4))
     plt.plot(df["time"], df["weights_upper"], label="weights_upper")
     plt.plot(df["time"], df["weights_lower"], label="weights_lower")
@@ -325,6 +334,16 @@ def weight_plot(df):
 
 
 def final_plot(df, last_date):
+    """
+    Generate a final plot for Bitcoin ThermoModel including various bands, price data, and important events.
+
+    Parameters:
+    - df: DataFrame containing the data to plot
+    - last_date: The last date used to determine the training and inference data sections
+
+    Returns:
+    - None
+    """
     lowess = sm.nonparametric.lowess(df["Oscillator_cubiclog"], df.time, frac=0.00175)
     lowess = (lowess[:, 1] - lowess[:, 1].min()) / (lowess[:, 1].max() - lowess[:, 1].min())
     colors = plt.cm.bwr(np.linspace(0, 1, 5))

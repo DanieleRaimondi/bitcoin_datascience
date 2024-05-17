@@ -22,6 +22,16 @@ def estimate_lost_coins_percentage(btc_data,time_series, initial_loss_rate=0.025
 
 
 def forecast_supply(btc_data, years=15):
+    """
+    Forecast the supply of Bitcoin for future dates using the Prophet model.
+
+    Parameters:
+    btc_data (DataFrame): Historical Bitcoin data containing columns "time" and "Supply".
+    years (int): Number of years to forecast into the future (default is 15).
+
+    Returns:
+    DataFrame: A DataFrame containing the forecasted supply values for future dates.
+    """
     # Preparing the DataFrame for Prophet
     df_prophet = btc_data[["time", "Supply"]].rename(columns={"time": "ds", "Supply": "y"})
 
@@ -44,6 +54,13 @@ def forecast_supply(btc_data, years=15):
 
 
 def lost_coins_estimation(btc_data,forecast):
+    """
+    Estimate the lost coins percentage over time and calculate the available supply based on the forecast.
+
+    :param btc_data: Historical Bitcoin data.
+    :param forecast: Forecast data including time series and predicted values.
+    :return: Updated forecast DataFrame with additional columns for loss rates, lost coins percentage, and available supply.
+    """
     forecast["loss_rates"] = estimate_lost_coins_percentage(btc_data, forecast["ds"])[1]
     forecast["lost_coins_percentage"] = estimate_lost_coins_percentage(
         btc_data, forecast["ds"]
@@ -55,6 +72,9 @@ def lost_coins_estimation(btc_data,forecast):
 
 
 def final_plot(btc_data, forecast):
+    """
+    Plot the forecasted values along with historical and available supply data.
+    """
     # Plotting
     plt.figure(figsize=(12, 6))
     plt.plot(forecast.ds, forecast.yhat, label="Forecast", color="orange")
@@ -94,17 +114,30 @@ def final_plot(btc_data, forecast):
     plt.gca().get_yaxis().set_major_formatter(ticker.FuncFormatter(lambda x, p: format(int(x), ",")))
     plt.xlabel("")
     plt.ylabel("Supply")
-    plt.title("BTC Available Supply Estimation", fontsize=20)
+    plt.title("BTC Available Supply Estimation", fontsize=20, fontweight="bold")
     plt.legend(fontsize=8)
     plt.savefig("../output/AvailableSupply.jpg", bbox_inches="tight", dpi=350)
     plt.show()
 
 
 def loss_rates_plot(forecast):
+    """
+    Plot the loss rates of the forecasted data.
+
+    :param forecast: Forecast data including time series and predicted values.
+    :return: None
+    """
     plt.plot(forecast.ds, forecast.loss_rates, label="Forecast", color="orange")
 
 
 def coins_lost_percentage(btc_data, forecast):
+    """
+    Calculate the percentage of lost coins based on the last available data in btc_data and the forecast.
+
+    :param btc_data: Historical Bitcoin data containing timestamps.
+    :param forecast: Forecast data with predicted values and available supply.
+    :return: A formatted string indicating the percentage of coins lost, or a message if data is not available.
+    """
     # l'ultima data disponibile in btc_data
     last_date = btc_data.dropna().iloc[-1]["time"]
     last_forecast = forecast[forecast["ds"] == last_date]

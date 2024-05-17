@@ -215,7 +215,7 @@ def plot_bitcoin_cycles(
     ax1.set_ylabel("Price USD", fontsize=13)
     ax1.set_title(
         "Bitcoin Cycles",
-        fontsize=25,
+        fontsize=20,
         fontweight="bold",
     )
     ax1.tick_params(labelbottom=False)
@@ -441,6 +441,17 @@ def calculate_cycle_percentage(btc_data, cycle_dates, sin_minima, sin_maxima):
 
 
 def manipulation(btc_data, tops_dates):
+    """
+    Calculate the original frequency of major peaks to model the cyclic behavior of Bitcoin's price. (1/avg days between past peaks)
+
+    Parameters:
+    - btc_data: DataFrame containing Bitcoin price data with a 'time' column
+    - tops_dates: Array of datetime objects representing the dates of major peaks
+
+    Returns:
+    - Tuple containing cycle_dates, cycle_wave, next_peak_prediction_lower, next_peak_prediction_upper,
+    next_peak_prediction, sin_derivative, zero_crossings, current, sin_maxima, sin_minima
+    """
     # Calculate the original frequency of major peaks to model the cyclic behavior of Bitcoin's price. (1/avg days between past peaks)
     average_peak_distance = np.mean(
         np.diff(tops_dates).astype("timedelta64[D]").astype(int)

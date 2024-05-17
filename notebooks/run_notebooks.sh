@@ -4,7 +4,8 @@ jupyter nbconvert --to notebook --execute --inplace 2.Cycles.ipynb
 jupyter nbconvert --to notebook --execute --inplace 3.DXY.ipynb
 jupyter nbconvert --to notebook --execute --inplace 4.MVRV.ipynb
 jupyter nbconvert --to notebook --execute --inplace 5.AvailableSupply.ipynb
-jupyter nbconvert --to notebook --execute --inplace 6.Cohorts.ipynb
+jupyter nbconvert --to notebook --execute --inplace 6.Demand.ipynb
+jupyter nbconvert --to notebook --execute --inplace 7.Cohorts.ipynb
 
 echo "All the notebooks run."
 
