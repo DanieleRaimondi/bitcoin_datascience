@@ -1,4 +1,4 @@
-# ₿ Bitcoin DataScience ₿ 📈
+# Bitcoin DataScience ₿ 📈
 
 Welcome to `bitcoin_datascience`, your destination for exploring and modeling Bitcoin prices through the lens of data science! This repository is dedicated to providing insightful analysis, predictive models, and cutting-edge research on the ever-dynamic world of Bitcoin. Whether you're a seasoned trader, a crypto enthusiast, or a data science lover, you'll find valuable resources to deepen your understanding of Bitcoin's market movements and its underlying trends.
 
@@ -7,11 +7,11 @@ Welcome to `bitcoin_datascience`, your destination for exploring and modeling Bi
 - **Jupyter Notebooks**: Dive into interactive analyses, from basic explorations to advanced predictive modeling, all designed to uncover hidden patterns and forecast future prices.
 - **Python Code**: Access well-documented and reusable Python scripts and modules that power my analyses, making it easy for you to integrate and adapt them into your own projects.
 - **Data Visualization**: Experience compelling visual narratives that bring data to life, offering clear and intuitive insights into Bitcoin's price behavior.
-- **Machine Learning Models**: Explore sophisticated machine learning approaches to price prediction, from time series analysis to neural networks, all tailored towards the cryptocurrency market.
+- **Machine Learning Models**: Explore sophisticated machine learning approaches to price prediction, from time series analysis to statistical modelling, all tailored towards the cryptocurrency market.
 
 ### Data are fetched at:
 
-> BTC ON-CHAIN DATA: https://coinmetrics.io/community-network-data/
+> BTC PRICE AND ON-CHAIN DATA: https://coinmetrics.io/community-network-data/
 
 > BTC MVRV DATA:   https://www.blockchain.com/explorer/charts/mvrv
 
