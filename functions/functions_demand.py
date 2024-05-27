@@ -103,5 +103,5 @@ def generate_plot(df):
         fontweight="bold",
         fontsize=20,
     )
-    plt.savefig("../output/Demand.jpg", bbox_inches="tight", dpi=350)
+    plt.savefig("../output/7.Demand.jpg", bbox_inches="tight", dpi=350)
     plt.show()

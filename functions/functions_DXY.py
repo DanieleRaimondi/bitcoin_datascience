@@ -166,7 +166,7 @@ def plot_models(df, tops_dates, bottoms_dates, startbull_dates):
     plt.title("PriceUSD vs DXY", fontweight="bold", fontsize=20)
     fig.tight_layout()
     fig.legend(loc="upper left", bbox_to_anchor=(0.1, 0.9))
-    plt.savefig("../output/BTCvsDXY.jpg",bbox_inches="tight",dpi=350,)
+    plt.savefig("../output/4.DXY.jpg",bbox_inches="tight",dpi=350,)
     plt.show()
 
 

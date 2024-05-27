@@ -513,6 +513,6 @@ def final_plot(df, last_date):
 
     plt.scatter(df["time"], df["lowess"] * 100, c=lowess, linewidth=0.75, cmap="RdBu_r")
 
-    plt.savefig("../output/ThermoModel.jpg",bbox_inches="tight",dpi=350,)
+    plt.savefig("../output/1.ThermoModel.jpg",bbox_inches="tight",dpi=350,)
 
     plt.show()

@@ -2,6 +2,7 @@
 import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
+from matplotlib.ticker import ScalarFormatter
 import matplotlib.dates as mdates
 from datetime import datetime
 from matplotlib.collections import LineCollection
@@ -202,6 +203,7 @@ def plot_bitcoin_cycles(
         zero_crossings (array): Array of indices representing zero crossings
         sin_minima (array): Array of indices representing bottoms
         sin_maxima (array): Array of indices representing tops
+        current (str): Current cycle position
     """
     fig = plt.figure(figsize=(14, 8))
 
@@ -215,11 +217,14 @@ def plot_bitcoin_cycles(
     ax1.set_ylabel("Price USD", fontsize=13)
     ax1.set_title(
         "Bitcoin Cycles",
-        fontsize=20,
+        fontsize=25,
         fontweight="bold",
     )
     ax1.tick_params(labelbottom=False)
     ax1.grid(axis="y", ls="--", alpha=0.4)
+
+    # Prevent scientific notation on y-axis
+    ax1.yaxis.set_major_formatter(ScalarFormatter(useMathText=True))
 
     # Add annotations with dates for halvings, tops, bottoms, and next peak prediction on the first subplot.
     add_annotations_with_dates(ax1, halving_dates, "HALVING", "orange", 0.2)
@@ -383,7 +388,7 @@ def plot_bitcoin_cycles(
         alpha=0.25,
     )
     # Save the figure and display it.
-    plt.savefig("../output/Cycles.jpeg", dpi=400)
+    plt.savefig("../output/2.Cycles.jpg", dpi=400)
     plt.show()
 
 
