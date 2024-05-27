@@ -26,7 +26,7 @@ Through the creation of dynamic price bands and oscillators, it seeks to identif
 The Cycles project aims to analyze and visualize the cyclical patterns in Bitcoin's price movements, with a particular focus on the four-year cyclicity dictated by Bitcoin halving events. 
 This approach provides insights into potential market trends and key turning points, highlighting how these critical halving milestones impact the broader cyclical behavior of Bitcoin's market value.
 
-### 3.LogTimeLogPrice 🧲 ![](output/3.LogTimeLogPrice.jpg)
+### 3.LogTimeLogPrice ⚙️ ![](output/3.LogTimeLogPrice.jpg)
 This study is a powerful tool designed to analyze Bitcoin's price growth over time using a log-log graph. In addition to plotting support and resistance lines using Ordinary Least Squares (OLS) regression, this function introduces an oscillator subplot. This oscillator provides insights into market sentiment, aiding investors in identifying potential buy and sell signals based on deviations from the trend lines.
 
 ### 4.DXY 💲 ![](output/4.DXY.jpg)
