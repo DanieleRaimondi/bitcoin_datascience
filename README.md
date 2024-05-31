@@ -33,6 +33,7 @@ This study is a powerful tool designed to analyze Bitcoin's price growth over ti
 This study aims to analyze the relationship between Bitcoin prices (PriceUSD) and the US Dollar Index (DXY) over time. 
 The hypothesis is that since BTC is backed by USD, it is significantly affected by the performance of DXY. 
 I am using LOESS (Locally Estimated Scatterplot Smoothing) to visualize trends and their derivatives, providing insights into market behaviors during different periods.
+Actually, as I expected, during the BTC depression phases, DXY is strong and growing. Instead, while BTC skyrockets, DXY is suffering and declining. It can be observed that, during the inbetween phases, DXY is stable.
 
 ### 5.MVRV 🔋 ![](output/5.MVRV_Oscillator.jpg)
 The MVRV project explores the relationship between Bitcoin's market and realized values by analyzing the MVRV ratio and price data to pinpoint market tops and bottoms. 
