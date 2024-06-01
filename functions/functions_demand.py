@@ -79,6 +79,7 @@ def generate_plot(df):
     )
     ax2.set_ylabel("Active Addresses", color="orange")
     ax2.tick_params(axis="y", labelcolor="orange")
+    #ax2.set_yscale("log")
 
     # Transaction Count
     ax3 = ax1.twinx()
@@ -93,7 +94,8 @@ def generate_plot(df):
     )
     ax3.set_ylabel("Transaction Count", color="green")
     ax3.tick_params(axis="y", labelcolor="green")
-
+    #ax3.set_yscale("log")
+    
     # Formatting
     fig.tight_layout()
     ax1.grid(True, ls= "--", alpha=0.5, lw = 1)
