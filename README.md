@@ -18,17 +18,17 @@ Welcome to `bitcoin_datascience`, your destination for exploring and modeling Bi
 
 ### 1.Growth Models:
 
-#### a. ThermoModel 🌡️ ![](output/1a.ThermoModel.jpg)
+#### ThermoModel 🌡️ ![](output/1a.ThermoModel.jpg)
 The ThermoModel project aims to predict and analyze Bitcoin price movements by integrating cubic and logarithmic regression models. 
 Through the creation of dynamic price bands and oscillators, it seeks to identify potential buy and sell zones, providing a comprehensive tool for understanding market trends and making informed investment decisions in the cryptocurrency space.
 
-#### b.LogTimeLogPrice 🪜 ![](output/1b.LogTimeLogPrice.jpg)
+#### LogTimeLogPrice 🪜 ![](output/1b.LogTimeLogPrice.jpg)
 This study is a powerful tool designed to analyze Bitcoin's price growth over time using a log-log graph. In addition to plotting support and resistance lines using Ordinary Least Squares (OLS) regression, this function introduces an oscillator subplot. This oscillator provides insights into market sentiment, aiding investors in identifying potential buy and sell signals based on deviations from the trend lines.
 
-#### c.AritmTimeLogPrice ⚙️ ![](output/1c.LogTimeLogPrice.jpg)
+#### AritmTimeLogPrice ⚙️ ![](output/1c.AritmTimeLogPrice.jpg)
 This section demonstrates an exponential transformation of the time dimension in the LogTimeLogPrice model. This transformation is applied to ensure the results are comparable with those of the ThermoModel.
 
-#### d.ThermoLogTimeLogPrice 💪🏻 ![](output/1d.ThermoLogTimeLogPrice.jpg)
+#### ThermoLogTimeLogPrice 💪🏻 ![](output/1d.ThermoLogTimeLogPrice.jpg)
 Here I present a straightforward ensemble of the ThermoModel and LogTimeLogPrice models. The purpose is to average the predicted upper and lower bands from both models, providing a more robust forecast.
 
 ### 2.Cycles 🧲 ![](output/2.Cycles.jpg)
