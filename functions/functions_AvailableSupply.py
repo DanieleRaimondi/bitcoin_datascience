@@ -116,7 +116,7 @@ def final_plot(btc_data, forecast):
     plt.ylabel("Supply")
     plt.title("BTC Available Supply Estimation", fontsize=20, fontweight="bold")
     plt.legend(fontsize=8)
-    plt.savefig("../output/6.AvailableSupply.jpg", bbox_inches="tight", dpi=350)
+    plt.savefig("../output/5.AvailableSupply.jpg", bbox_inches="tight", dpi=350)
     plt.show()
 
 

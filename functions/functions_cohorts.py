@@ -1,6 +1,7 @@
-import matplotlib.pyplot as plt
 import pandas as pd
+import matplotlib.pyplot as plt
 import statsmodels.api as sm
+from matplotlib.ticker import FuncFormatter, ScalarFormatter
 
 
 def plot_cohorts(data, price_column, coin):
@@ -43,7 +44,7 @@ def plot_cohorts(data, price_column, coin):
             data_filtered[cohort_column],
             color="tab:orange",
             alpha=0.5,
-            linewidth=1.5, 
+            linewidth=1.5,
         )
         ax1.tick_params(axis="y", labelcolor="tab:orange")
 
@@ -58,7 +59,7 @@ def plot_cohorts(data, price_column, coin):
             loess_value,
             color="red",
             label="LOESS Smoothed Curve",
-            linewidth=1, 
+            linewidth=1,
         )
 
         # Bitcoin Price
@@ -68,14 +69,20 @@ def plot_cohorts(data, price_column, coin):
             data_filtered["time"],
             data_filtered[price_column],
             color="black",
-            linewidth=1, 
+            linewidth=1,
         )
         ax2.set_yscale("log")
         ax2.tick_params(axis="y", labelcolor="black")
 
+        # Customizing y-axis ticks to avoid scientific notation
+        ax2.yaxis.set_major_formatter(ScalarFormatter())
+        ax2.yaxis.set_major_formatter(FuncFormatter(lambda x, _: f"{x:,.0f}"))
+
         plt.title(f"{coin} Addresses with {cohort_label[2:]}")
         plt.grid(True)
 
-        cohort_filename = (f"{cohort_label.replace(' ', '_').replace(',', '').replace('.', '_')}.jpeg")
+        cohort_filename = (
+            f"{cohort_label.replace(' ', '_').replace(',', '').replace('.', '_')}.jpeg"
+        )
         plt.savefig(f"../output/{coin}_Cohorts//{cohort_filename}", dpi=400)
         plt.show()

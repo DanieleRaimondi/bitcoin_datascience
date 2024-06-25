@@ -19,7 +19,7 @@ def load_dxy_data():
 
 def load_btc_data():
     btc = pd.read_csv(
-        "/Users/danieleraimondi/bitcoin_datascience/functions/data/btc.csv",
+        "https://raw.githubusercontent.com/coinmetrics/data/master/csv/btc.csv",
         parse_dates=["time"],
     )
     btc = btc.dropna(subset=["PriceUSD"]).reset_index(drop=True)[["time", "PriceUSD"]]
@@ -166,7 +166,7 @@ def plot_models(df, tops_dates, bottoms_dates, startbull_dates):
     plt.title("PriceUSD vs DXY", fontweight="bold", fontsize=20)
     fig.tight_layout()
     fig.legend(loc="upper left", bbox_to_anchor=(0.1, 0.9))
-    plt.savefig("../output/4.DXY.jpg",bbox_inches="tight",dpi=350,)
+    plt.savefig("../output/3.DXY.jpg",bbox_inches="tight",dpi=350,)
     plt.show()
 
 

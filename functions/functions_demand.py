@@ -11,7 +11,7 @@ def load_btc_data():
     - pd.DataFrame: A pandas DataFrame containing the loaded and prepared Bitcoin price data.
     """
     btc = pd.read_csv(
-        "/Users/danieleraimondi/bitcoin_datascience/functions/data/btc.csv",
+        "https://raw.githubusercontent.com/coinmetrics/data/master/csv/btc.csv",
         parse_dates=["time"],
     )
     btc = btc.dropna(subset=["PriceUSD"]).reset_index(drop=True)[["time", "AdrActCnt", "TxCnt", "PriceUSD"]]
@@ -105,5 +105,5 @@ def generate_plot(df):
         fontweight="bold",
         fontsize=20,
     )
-    plt.savefig("../output/7.Demand.jpg", bbox_inches="tight", dpi=350)
+    plt.savefig("../output/6.Demand.jpg", bbox_inches="tight", dpi=350)
     plt.show()

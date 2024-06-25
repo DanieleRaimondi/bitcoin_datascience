@@ -22,7 +22,10 @@ def load_btc_data(train_frac = 0.9, last_date = False):
     - pd.DataFrame: A pandas DataFrame with the prepared Bitcoin price data.
     - datetime: The last date available in the dataset.
     """
-    df = pd.read_csv("/Users/danieleraimondi/bitcoin_datascience/functions/data/btc.csv", parse_dates=["time"])
+    df = pd.read_csv(
+        "https://raw.githubusercontent.com/coinmetrics/data/master/csv/btc.csv",
+        parse_dates=["time"],
+    )
     df = df.dropna(subset=["PriceUSD"]).reset_index(drop=True)[["time", "PriceUSD"]]
     # Calculate the number of rows to load based on the fraction
     num_rows = int(len(df) * train_frac)
@@ -352,7 +355,7 @@ def final_plot(df, last_date):
 
     df["lower_cubiclog"] = df["lower_cubiclog"].where(df["lower_cubiclog"] >= 1.75, np.nan)  # pulisco la serie xk + bella graficamente
     df["medium_cubiclog"] = df["medium_cubiclog"].where(df["medium_cubiclog"] >= 1, np.nan)
-    df["upper_cubiclog"] = df["upper_cubiclog"].where(df["upper_cubiclog"] >= 27, np.nan)
+    df["upper_cubiclog"] = df["upper_cubiclog"].where(df["upper_cubiclog"] >= 20, np.nan)
     df["25_cubiclog"] = df["25_cubiclog"].where(df["25_cubiclog"] >= 3.8, np.nan)
     df["75_cubiclog"] = df["75_cubiclog"].where(df["75_cubiclog"] >= 8, np.nan)
 
@@ -513,6 +516,6 @@ def final_plot(df, last_date):
 
     plt.scatter(df["time"], df["lowess"] * 100, c=lowess, linewidth=0.75, cmap="RdBu_r")
 
-    plt.savefig("../output/1.ThermoModel.jpg",bbox_inches="tight",dpi=350,)
+    plt.savefig("../output/1a.ThermoModel.jpg",bbox_inches="tight",dpi=350,)
 
     plt.show()

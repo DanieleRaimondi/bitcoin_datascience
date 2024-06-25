@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 import statsmodels.api as sm
 import matplotlib.pyplot as plt
-import matplotlib.ticker as ticker
+import matplotlib.ticker as mticker
 
 
 def plot_log_log_graph_with_oscillator(
@@ -57,9 +57,7 @@ def plot_log_log_graph_with_oscillator(
     df["index"] = range(1, len(df) + 1)
 
     # Define the bottom dates and corresponding indices
-    bottoms_dates = pd.to_datetime(
-        ["2010-12-06", "2012-06-04", "2015-08-25", "2018-12-15", "2022-11-21"]
-    )
+    bottoms_dates = pd.to_datetime(["2010-12-06", "2012-06-04", "2015-08-25", "2018-12-15", "2022-11-21"])
     bottoms_data = df[df["time"].isin(bottoms_dates)]
 
     # Perform OLS regression on log-log transformed data for bottoms
@@ -68,9 +66,7 @@ def plot_log_log_graph_with_oscillator(
     model_bottoms = sm.OLS(y_bottoms, X_bottoms).fit()
 
     # Define the top dates and corresponding indices
-    tops_dates = pd.to_datetime(
-        ["2011-06-08", "2013-11-30", "2017-12-17", "2021-11-10"]
-    )
+    tops_dates = pd.to_datetime(["2011-06-08", "2013-11-30", "2017-12-17", "2021-11-10"])
     tops_data = df[df["time"].isin(tops_dates)]
 
     # Perform OLS regression on log-log transformed data for tops
@@ -274,8 +270,69 @@ def plot_log_log_graph_with_oscillator(
     ax2.legend()
 
     plt.savefig(
-        "../output/3.LogTimeLogPrice.jpg",
+        "../output/1b.LogTimeLogPrice.jpg",
         bbox_inches="tight",
         dpi=350,
     )
+    plt.show()
+
+    return df
+
+
+def plot_final_log_graph_with_oscillator(df):
+    """
+    Plots a graph showing the Bitcoin price prediction along with an oscillator.
+
+    Parameters:
+    df (pandas.DataFrame): The DataFrame containing the Bitcoin price data.
+
+    Returns:
+    None
+    """
+
+    # Drop rows with 'PriceUSD' NaN before 2011
+    df_before_2012 = df[df["time"] < "2011-01-01"].dropna(subset=["PriceUSD"])
+    # Rows from 2011 onwards
+    df_from_2012_onwards = df[df["time"] >= "2011-01-01"]
+    # Concatenate the two DataFrames
+    df = pd.concat([df_before_2012, df_from_2012_onwards])
+
+    # Filter the dataframe to start from 2011-01-01
+    df = df[df["time"] >= "2011-01-01"]
+
+    fig, (ax1, ax2) = plt.subplots(
+        2, 1, figsize=(12, 8), sharex=True, gridspec_kw={"height_ratios": [5, 1]}
+    )
+
+    # First plot
+    ax1.plot(df.time, df.TopLine, label="TopLine", color="red", linestyle="--")
+    ax1.plot(df.time, df.PriceUSD, label="PriceUSD", color="#1f52b4")
+    ax1.plot(df.time, df.BottomLine, label="BottomLine", color="green", linestyle="--")
+    ax1.set_yscale("log")
+    ax1.set_ylim(0, 1_000_000)
+    ax1.set_xlim(pd.Timestamp("2011-01-01"), df.time.max())
+    ax1.grid(ls="--", alpha=0.3)
+    ax1.set_title("AritmTime vs LogPrice", fontsize=20, fontweight="bold")
+    ax1.legend()
+
+    # Set yticks in non-scientific notation
+    ax1.yaxis.set_major_formatter(mticker.FuncFormatter(lambda x, pos: f"{int(x):,}"))
+
+    # Secondo plot
+    ax2.plot(df.time, df.oscillator, label="Oscillator", color="orange")
+    ax2.set_ylim(0, 100)
+    ax2.fill_between(df.time, 0, 10, color="green", alpha=0.2)
+    ax2.fill_between(df.time, 90, 100, color="red", alpha=0.2)
+    ax2.grid(ls="--", alpha=0.3)
+    ax2.legend()
+
+    # Adjust space between plots
+    plt.subplots_adjust(hspace=0)
+
+    plt.savefig(
+        "../output/1c.AritmTimeLogPrice.jpg",
+        bbox_inches="tight",
+        dpi=350,
+    )
+
     plt.show()

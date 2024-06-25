@@ -5,46 +5,20 @@ import matplotlib.ticker
 import statsmodels.api as sm
 import numpy as np
 from matplotlib.patches import Ellipse
-from sklearn.preprocessing import MinMaxScaler, RobustScaler
 
 
 def load_dataframe():
     """
-    Loads and merges Bitcoin price data from a CSV file and MVRV ratio data from a JSON file.
-    It processes these datasets by parsing dates, resampling MVRV data to get daily medians,
-    and merging the two datasets based on their timestamps. Additionally, it calculates the
-    standard deviation of MVRV over a rolling window and normalizes the MVRV values by this
-    standard deviation.
+    Loads and preprocesses a dataframe containing Bitcoin price, MVRV ratio, and other related data.
 
     Returns:
-    tuple: Contains three pandas DataFrames:
-      - df: DataFrame with original Bitcoin price data.
-      - mvrv: DataFrame with daily median MVRV values.
-      - merged: DataFrame that merges the Bitcoin price and normalized MVRV data,
-                including additional calculated metrics.
+        merged (pandas.DataFrame): Preprocessed dataframe with columns 'time', 'PriceUSD', 'mvrv', 'mvrvstd', and 'mvrv_norm'.
     """
-    df = pd.read_csv("/Users/danieleraimondi/bitcoin_datascience/functions/data/btc.csv", parse_dates=["time"])
+    df = pd.read_csv("https://raw.githubusercontent.com/coinmetrics/data/master/csv/btc.csv", parse_dates=["time"])
     df = pd.DataFrame(data=df)
 
-    # Loading the JSON file
-    with open("/Users/danieleraimondi/bitcoin_datascience/functions/data/mvrv.json", encoding="utf-8") as file:
-        mvrv_data = json.load(file)
-    # Converting the data into a DataFrame
-    mvrv_df = pd.json_normalize(mvrv_data["mvrv"])
-    # Converting Unix timestamps into datetime objects
-    mvrv_df["Day"] = pd.to_datetime(mvrv_df["x"], unit="ms")
-    mvrv_df.rename(columns={"y": "mvrv"}, inplace=True)
-    # Selecting the 'Day' and 'mvrv' columns
-    mvrv_df = mvrv_df[["Day", "mvrv"]]
-    # Aggregating the data to get the median MVRV for each day
-    mvrv = mvrv_df.resample("D", on="Day").median()
-    # Transforming dates to YYYY-MM-DD
-    mvrv.index = mvrv.index.normalize()
-    mvrv.reset_index(inplace=True)
-
-    merged = pd.merge(df[["time", "PriceUSD"]], mvrv, left_on="time", right_on="Day", how="left")
-
-    del merged["Day"]
+    df.rename(columns={"CapMVRVCur": "mvrv"}, inplace=True)
+    merged = df[["time", "PriceUSD", "mvrv"]]
 
     merged = merged.fillna(method="ffill")
     merged = merged.dropna()
@@ -52,7 +26,7 @@ def load_dataframe():
     merged["mvrv_norm"] = merged["mvrv"] / merged["mvrvstd"]
     merged = merged[450:]
 
-    return df, mvrv, merged
+    return merged
 
 
 def plot_btcusd_vs_mvrv(merged, frac=0.02):
@@ -205,5 +179,5 @@ def plot_btcusd_and_mvrv_oscillator(merged, frac=0.02, k=0.015):
             )
             ax2.add_artist(ellipse)
 
-    plt.savefig("../output/5.MVRV_Oscillator.jpg", bbox_inches="tight", dpi=350)
+    plt.savefig("../output/4.MVRV_Oscillator.jpg", bbox_inches="tight", dpi=350)
     plt.show()
