@@ -387,6 +387,11 @@ def plot_bitcoin_cycles(
         color="grey",
         alpha=0.25,
     )
+    
+    # export csv data for cycles
+    cycles_df = pd.DataFrame({"time": cycle_dates, "cycle": cycle_wave})
+    cycles_df.to_csv("/Users/danieleraimondi/bitcoin_datascience/data/cycles.csv", index=False)
+    
     # Save the figure and display it.
     plt.savefig("../output/2.Cycles.jpg", dpi=400)
     plt.show()

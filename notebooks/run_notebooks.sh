@@ -2,6 +2,7 @@
 jupyter nbconvert --to notebook --execute --inplace 1a.ThermoModel.ipynb
 jupyter nbconvert --to notebook --execute --inplace 1b.LogTimeLogPrice.ipynb
 jupyter nbconvert --to notebook --execute --inplace 1d.ThermoLogTimeLogPrice.ipynb
+jupyter nbconvert --to notebook --execute --inplace 1e.SlopesGrowthModel.ipynb
 jupyter nbconvert --to notebook --execute --inplace 2.Cycles.ipynb
 jupyter nbconvert --to notebook --execute --inplace 3.DXY.ipynb
 jupyter nbconvert --to notebook --execute --inplace 4.MVRV.ipynb

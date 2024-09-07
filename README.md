@@ -31,6 +31,9 @@ This section demonstrates an exponential transformation of the time dimension in
 #### ThermoLogTimeLogPrice 💪🏻 ![](output/1d.ThermoLogTimeLogPrice.jpg)
 Here I present a straightforward ensemble of the ThermoModel and LogTimeLogPrice models. The purpose is to average the predicted upper and lower bands from both models, providing a more robust forecast.
 
+#### SlopesGrowthModel 🪴 ![](output/1e.SlopesGrowthModel.jpg)
+This analysis aims to estimate the future growth rate of Bitcoin's price by examining historical trends and projecting them into the future. The model is based on the observation that Bitcoin's growth rate, while still positive, has been decreasing over time. This decline is hypothesized to be related to Bitcoin halving events and the economic theory of diminishing returns.
+
 ### 2.Cycles 🧲 ![](output/2.Cycles.jpg)
 The Cycles project aims to analyze and visualize the cyclical patterns in Bitcoin's price movements, with a particular focus on the four-year cyclicity dictated by Bitcoin halving events. 
 This approach provides insights into potential market trends and key turning points, highlighting how these critical halving milestones impact the broader cyclical behavior of Bitcoin's market value.
