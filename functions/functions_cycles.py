@@ -234,7 +234,7 @@ def plot_bitcoin_cycles(
     ax1.text(
         next_peak_prediction,
         6,
-        f'NEXT TOP\n{next_peak_prediction_lower.strftime("%b")}-{next_peak_prediction_upper.strftime("%b")} {next_peak_prediction.strftime("%y")}',
+        f'NEXT TOP ?\n{next_peak_prediction_lower.strftime("%b")}-{next_peak_prediction_upper.strftime("%b")} {next_peak_prediction.strftime("%y")}',
         verticalalignment="top",
         color="green",
         fontsize=8,
@@ -393,7 +393,7 @@ def plot_bitcoin_cycles(
     cycles_df.to_csv("/Users/danieleraimondi/bitcoin_datascience/data/cycles.csv", index=False)
     
     # Save the figure and display it.
-    plt.savefig("../output/2.Cycles.jpg", dpi=400)
+    plt.savefig("../output/2a.Cycles.jpg", dpi=400)
     plt.show()
 
 

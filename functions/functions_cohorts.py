@@ -84,14 +84,8 @@ def plot_cohorts(data, price_column, coin):
         cohort_filename = (
             f"{cohort_label.replace(' ', '_').replace(',', '').replace('.', '_')}.jpeg"
         )
-        plt.savefig(f"../output/{coin}_Cohorts//{cohort_filename}", dpi=400)
+        plt.savefig(f"../output/Cohorts_{coin}//{cohort_filename}", dpi=400)
         plt.show()
-
-
-import matplotlib.pyplot as plt
-import statsmodels.api as sm
-from matplotlib.ticker import FuncFormatter, ScalarFormatter
-import numpy as np
 
 
 def plot_all_cohorts(data, price_column, coin):
@@ -230,5 +224,5 @@ def plot_all_cohorts(data, price_column, coin):
     plt.tight_layout()
 
     # Save the figure
-    plt.savefig(f"../output/{coin}_Cohorts//{coin}_All_Cohorts.jpeg", dpi=400, bbox_inches="tight")
+    plt.savefig(f"../output/Cohorts_{coin}//{coin}_All_Cohorts.jpeg", dpi=400, bbox_inches="tight")
     plt.show()

@@ -51,7 +51,6 @@ def plot_btcusd_vs_mvrv(merged, frac=0.02):
     ax = fig.add_subplot()
 
     ax.plot(merged.time, merged["PriceUSD"], color="grey")
-    ax.set_xlabel("Time", fontsize=14)
     ax.set_ylabel("BTCUSD Price", color="grey", fontsize=14)
     ax.set_yscale("log")
     plt.yticks(10 ** np.arange(6), 10 ** np.arange(6))
@@ -155,9 +154,9 @@ def plot_btcusd_and_mvrv_oscillator(merged, frac=0.02, k=0.015):
         pd.to_datetime("2017-11-26"),
         pd.to_datetime("2021-03-17"),
         pd.to_datetime("2021-10-25"),
-        #pd.to_datetime("2024-05-11"),
+        pd.to_datetime("2024-03-20"),
     ]
-    values = [96, 97, 86, 92, 96, 70, 84]
+    values = [96, 97, 84, 92, 92, 70, 67]
     ellipse_width = 90
     ellipse_height = 23
 
@@ -179,5 +178,36 @@ def plot_btcusd_and_mvrv_oscillator(merged, frac=0.02, k=0.015):
             )
             ax2.add_artist(ellipse)
 
-    plt.savefig("../output/4.MVRV_Oscillator.jpg", bbox_inches="tight", dpi=350)
+    # Add ellipses at specified points
+    dates = [
+        pd.to_datetime("2015-02-01"),
+        pd.to_datetime("2016-02-15"),
+        pd.to_datetime("2019-01-01"),
+        pd.to_datetime("2020-04-01"),
+        pd.to_datetime("2022-12-15"),
+        pd.to_datetime("2023-09-01"),
+    ]
+    values = [10, 30, 11, 30, 14, 30]
+    ellipse_width = 90
+    ellipse_height = 23
+
+    for i, (date, value) in enumerate(zip(dates, values)):
+        circle_date_index = merged[merged["time"] == date].index
+        if not circle_date_index.empty:
+            circle_x = merged.loc[circle_date_index[0], "time"]
+            ellipse_color = (
+                "green" if i % 2 == 0 else "brown"
+            )  # Odd indices in orange, even in red
+            ellipse = Ellipse(
+                (circle_x, value),
+                width=ellipse_width,
+                height=ellipse_height,
+                edgecolor=ellipse_color,
+                facecolor="none",
+                linewidth=3,
+                clip_on=False,  # This allows the ellipse to extend beyond the plot boundaries
+            )
+            ax2.add_artist(ellipse)
+
+    plt.savefig("../output/2b.MVRV_Oscillator.jpg", bbox_inches="tight", dpi=350)
     plt.show()
