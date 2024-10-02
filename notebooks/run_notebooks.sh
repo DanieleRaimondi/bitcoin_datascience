@@ -9,7 +9,7 @@ jupyter nbconvert --to notebook --execute --inplace 2b.MVRV.ipynb
 jupyter nbconvert --to notebook --execute --inplace 3a.Economics.ipynb
 jupyter nbconvert --to notebook --execute --inplace 3b.DXY.ipynb
 jupyter nbconvert --to notebook --execute --inplace 4a.Supply.ipynb
-jupyter nbconvert --to notebook --execute --inplace 4b.Demand.ipynb
+jupyter nbconvert --to notebook --execute --inplace 4c.Demand.ipynb
 jupyter nbconvert --to notebook --execute --inplace 5.Cohorts.ipynb
 #jupyter nbconvert --to notebook --execute --inplace 6.DynamicPlot.ipynb
 
