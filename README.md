@@ -1,4 +1,4 @@
-# Bitcoin DataScience ₿ 📈
+# **Bitcoin DataScience ₿** 📈
 
 Welcome to `bitcoin_datascience`, your destination for exploring and modeling Bitcoin prices through the lens of data science! This repository is dedicated to providing insightful analysis, predictive models, and cutting-edge research on the ever-dynamic world of Bitcoin. Whether you're a seasoned trader, a crypto enthusiast, or a data science lover, you'll find valuable resources to deepen your understanding of Bitcoin's market movements and its underlying trends.
 
@@ -17,7 +17,7 @@ Welcome to `bitcoin_datascience`, your destination for exploring and modeling Bi
 ## List of projects: 📝
 
 
-### 1.Growth:
+## 1.Growth:
 
 #### ThermoModel 🌡️ ![](output/1a.ThermoModel.jpg)
 The ThermoModel project aims to predict and analyze Bitcoin price movements by integrating cubic and logarithmic regression models. 
@@ -42,7 +42,7 @@ This analysis explores the growth correlation between Bitcoin's supply curve and
 In this visualization, we display the Bitcoin price movement in comparison to its Simple Moving Average (SMA) calculated over 209 weeks. The reason for choosing 209 weeks is linked to the Bitcoin halving cycle, which occurs every 4 years, approximately equivalent to 209 weeks. It has always been a great support of Bitcoin's prices.
 
 
-### 2.Cycles:
+## 2.Cycles:
 
 #### Cycles 🧲 ![](output/2a.Cycles.jpg)
 The Cycles project aims to analyze and visualize the cyclical patterns in Bitcoin's price movements, with a particular focus on the four-year cyclicity dictated by Bitcoin halving events. 
@@ -57,7 +57,7 @@ This analysis aids in making informed investment decisions by understanding mark
 This section presents a visualization of Bitcoin's price growth since each halving event. It's useful to evaluate the diminishing returns effect over time.
 
 
-### 3.Economics:
+## 3.Economics:
 
 #### Economics 🪙 ![](output/3a.Economics.jpg)
 Thi chart helps analyze how U.S. macroeconomic indicators relate to Bitcoin's price by displaying them together on a single chart. This allows for easier understanding of their interactions and influences.
@@ -69,7 +69,7 @@ I am using LOESS (Locally Estimated Scatterplot Smoothing) to visualize trends a
 Actually, as I expected, during the BTC depression phases, DXY is strong and growing. Instead, while BTC skyrockets, DXY is suffering and declining. It can be observed that, during the inbetween phases, DXY is stable.
 
 
-### 4.Supply & Demand:
+## 4.Supply & Demand:
 
 #### BTCvsM2 🕯 ![](output/4a.BTCvsM2.jpg)
 This section aims to compare Bitcoin's supply dynamics with the M2 money supply to highlight their fundamental differences in growth patterns, control mechanisms, and responses to economic conditions. The goal is to illustrate Bitcoin's potential as a stable store of value against the inflationary nature of traditional monetary systems.
@@ -82,9 +82,9 @@ This approach helps understand the dynamics affecting Bitcoin's scarcity and pot
 #### Demand 🙋🏽‍♂️ ![](output/4c.Demand.jpg)
 This study aims to analyze on-chain Bitcoin data to gain a deeper understanding of Bitcoin demand over time. By examining key metrics such as the number of active addresses and the total transaction count alongside Bitcoin's price, we can uncover valuable insights into market dynamics. These two metrics serve as proxies for estimating Bitcoin demand, showcasing a clear growth trend over time. As Bitcoin's adoption increases, these metrics provide a tangible measure of user engagement and transaction activity on the network.
 
-### 5.Cohorts:
+## 5.Cohorts:
 
-#### Cohorts 🐋 ![](output/BTC_Cohorts/7_10K_to_100K_BTC.jpeg)
+#### Cohorts 🐋 ![](output/Cohorts_BTC/7_10K_to_100K_BTC.jpeg)
 The project focuses on visualizing Bitcoin's distribution across address cohorts over time, highlighting balance ranges and applying LOESS smoothing to identify correlations with market behavior. 
 By examining the reactions of different holder types to market changes, it reveals patterns of accumulation and distribution, offering insights into market sentiment and potential price trends.
 
