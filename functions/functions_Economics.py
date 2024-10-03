@@ -185,3 +185,115 @@ def plot_btc_economics(
     plt.savefig("../output/3a.Economics.jpg", dpi=400)
     # Show the plot
     plt.show()
+
+
+def plot_btc_m2sl_global_money_yoy():
+    """
+    Plots Bitcoin price against US M2 and global broad money supply year-over-year percent changes.
+    """
+    # Initialize connection to FRED with your API key
+    fred = Fred(api_key=os.getenv("FRED_API"))
+
+    # Load Bitcoin price data from online CSV
+    df = pd.read_csv(
+        "https://raw.githubusercontent.com/coinmetrics/data/master/csv/btc.csv",
+        parse_dates=["time"],
+        low_memory=False,
+    )
+    df["time"] = pd.to_datetime(df["time"])
+    df.dropna(inplace=True, subset=["PriceUSD"])
+
+    # Define start and end dates
+    end_date = datetime.now()
+    start_date = df["time"].min()
+
+    # Get US M2 data
+    m2_data = fred.get_series("M2SL", start_date, end_date)
+
+    # Get global broad money data
+    global_money_data = fred.get_series("BOGMBASE", start_date, end_date)
+
+    # Calculate year-over-year percent changes
+    m2_yoy = m2_data.pct_change(periods=12) * 100
+    global_money_yoy = global_money_data.pct_change(periods=12) * 100
+
+    # Create the plot with three y-axes
+    fig, ax1 = plt.subplots(figsize=(12, 6))
+
+    # Plot Bitcoin price (left y-axis, logarithmic scale)
+    color1 = "tab:orange"
+    ax1.semilogy(df["time"], df["PriceUSD"], color=color1, label="BTC Price")
+    ax1.tick_params(axis="y", labelcolor=color1)
+
+    # Format y-axis for Bitcoin price
+    def format_btc_price(x, p):
+        return f"${x:,.0f}"
+
+    ax1.yaxis.set_major_formatter(ticker.FuncFormatter(format_btc_price))
+
+    # Create a second y-axis for US M2 YoY change
+    ax2 = ax1.twinx()
+    color2 = "tab:blue"
+    ax2.plot(m2_yoy.index, m2_yoy, color=color2, label="US M2 YoY % Change")
+    ax2.tick_params(axis="y", labelcolor=color2)
+
+    # Create a third y-axis for global broad money YoY change
+    ax3 = ax1.twinx()
+    # Offset the right spine of ax3 by 60 points
+    ax3.spines["right"].set_position(("axes", 1.2))
+    color3 = "tab:green"
+    ax3.plot(
+        global_money_yoy.index,
+        global_money_yoy,
+        color=color3,
+        label="Global Broad Money YoY % Change",
+    )
+    ax3.tick_params(axis="y", labelcolor=color3)
+
+    # Format y-axes for percent changes
+    def format_percent(x, p):
+        return f"{x:.1f}%"
+
+    ax2.yaxis.set_major_formatter(ticker.FuncFormatter(format_percent))
+    ax3.yaxis.set_major_formatter(ticker.FuncFormatter(format_percent))
+
+    # Title and legend
+    plt.title(
+        "BTC Price vs US M2 and Global Broad Money Year-over-Year Percent Changes",
+        fontweight="bold",
+        fontsize=16,
+    )
+    lines1, labels1 = ax1.get_legend_handles_labels()
+    lines2, labels2 = ax2.get_legend_handles_labels()
+    lines3, labels3 = ax3.get_legend_handles_labels()
+    ax1.legend(
+        lines1 + lines2 + lines3,
+        labels1 + labels2 + labels3,
+        loc="upper left",
+        bbox_to_anchor=(0, 1),
+        bbox_transform=ax1.transAxes,
+    )
+
+    # Set x-axis limits to reduce empty space
+    ax1.set_xlim(start_date, end_date)
+
+    # Format x-axis
+    ax1.xaxis.set_major_locator(mdates.YearLocator())
+    ax1.xaxis.set_major_formatter(mdates.DateFormatter("%Y"))
+    plt.xticks(rotation=45)
+
+    # Set labels
+    ax1.set_ylabel("BTC Price (USD)", color=color1)
+    ax2.set_ylabel("US M2 YoY % Change", color=color2)
+    ax3.set_ylabel("Global Broad Money YoY % Change", color=color3)
+    ax3.spines["right"].set_position(("outward", 58))
+
+    # Adjust layout to reduce overall whitespace
+    plt.tight_layout()
+
+    plt.savefig(
+        "../output/3c.BTCvsLiquidity.jpg", dpi=400, bbox_inches="tight"
+    )
+
+    # Show the plot
+    plt.show()

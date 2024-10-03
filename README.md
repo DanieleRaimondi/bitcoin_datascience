@@ -60,7 +60,11 @@ This section presents a visualization of Bitcoin's price growth since each halvi
 ## 3.Economics:
 
 #### Economics 🪙 ![](output/3a.Economics.jpg)
-Thi chart helps analyze how U.S. macroeconomic indicators relate to Bitcoin's price by displaying them together on a single chart. This allows for easier understanding of their interactions and influences.
+This chart helps analyze how U.S. macroeconomic indicators relate to Bitcoin's price by displaying them together on a single chart. This allows for easier understanding of their interactions and influences.
+
+#### BTCvsLiquidity 🤑 ![](output/3c.BTCvsLiquidity.jpg)
+The plot illustrates the relationship between Bitcoin's price (BTC) and two important economic indicators:
+The money supply shows a strong correlation with Bitcoin's price movements, highlighting how the increase in liquidity drives demand for Bitcoin as an asset.
 
 #### DXY 💲 ![](output/3b.DXY.jpg)
 This study aims to analyze the relationship between Bitcoin prices (PriceUSD) and the US Dollar Index (DXY) over time. 

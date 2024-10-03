@@ -35,7 +35,7 @@ def plot_cohorts(data, price_column, coin):
     ]
 
     for cohort_column, cohort_label in cohorts:
-        fig, ax1 = plt.subplots(figsize=(15, 5))
+        fig, ax1 = plt.subplots(figsize=(15, 6))
 
         # Number of Addresses
         ax1.set_ylabel("Number of Addresses", color="tab:orange")
@@ -129,10 +129,9 @@ def plot_all_cohorts(data, price_column, coin):
     ]
 
     # Create the main figure and axis
-    fig, ax_price = plt.subplots(figsize=(15, 10))
+    fig, ax_price = plt.subplots(figsize=(15, 8))
 
     # Plot Bitcoin Price
-    ax_price.set_xlabel("Time")
     ax_price.set_ylabel("Price USD (log scale)", color="black")
     ax_price.plot(
         data_filtered["time"],
@@ -171,7 +170,7 @@ def plot_all_cohorts(data, price_column, coin):
 
         # LOESS Smoothing
         loess_model = sm.nonparametric.lowess(
-            data_filtered[cohort_column], data_filtered["time_numeric"], frac=0.03
+            data_filtered[cohort_column], data_filtered["time_numeric"], frac=0.2
         )
         loess_time = [pd.Timestamp.fromordinal(int(time)) for time, _ in loess_model]
         loess_value = [value for _, value in loess_model]
