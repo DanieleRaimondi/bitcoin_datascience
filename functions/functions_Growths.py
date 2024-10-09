@@ -5,11 +5,14 @@ from matplotlib.ticker import FuncFormatter
 import seaborn as sns
 import matplotlib.ticker as mticker
 from matplotlib.pyplot import figure
+import sys
 
+sys.path.append("/Users/danieleraimondi/bitcoin_datascience/functions")
+from fetch_data import fetch_data
 
 # Load and preprocess data
-def load_data(url):
-    df = pd.read_csv(url, parse_dates=["time"], low_memory=False)
+def load_data():
+    df = fetch_data("btc")
     df = df[["time", "PriceUSD"]].dropna()
     return df
 
@@ -86,18 +89,14 @@ def plot_bitcoin_price_vs_sma(df):
     plt.show()
 
 
-def load_and_preprocess_data(url):
+def load_and_preprocess_data():
     """
     Loads and preprocesses Bitcoin price data from a CSV file.
-
-    Parameters:
-        url (str): The URL or file path to the CSV file containing Bitcoin data.
-
     Returns:
         DataFrame: A pandas DataFrame containing the time, PriceUSD, Epoch, Halving, and Counter columns.
     """
     # Load the data from the CSV file and parse the 'time' column as dates
-    df = pd.read_csv(url, parse_dates=["time"], low_memory=False)
+    df = fetch_data("btc")
     df = df[["time", "PriceUSD"]].dropna()
 
     # Define epoch boundaries and their corresponding epoch numbers
@@ -124,16 +123,12 @@ def load_and_preprocess_data(url):
     return df
 
 
-def plot_bitcoin_halving_growth(
-    url="https://raw.githubusercontent.com/coinmetrics/data/master/csv/btc.csv"
-):
+def plot_bitcoin_halving_growth():
     """
     Plots the growth of Bitcoin price since each halving event.
-    Parameters:
-    url (str): The URL or file path to the CSV file containing Bitcoin data (default is the CoinMetrics dataset).
     """
-    # Load the data from the CSV file and parse the 'time' column as dates
-    df = pd.read_csv(url, parse_dates=["time"], low_memory=False)
+    # Load the data
+    df = fetch_data("btc")
     df = df[["time", "PriceUSD"]].dropna()
 
     # Define epoch boundaries and their corresponding epoch numbers
@@ -241,16 +236,12 @@ def plot_bitcoin_halving_growth(
 
 
 def plot_bitcoin_price_epochs(
-    url="https://raw.githubusercontent.com/coinmetrics/data/master/csv/btc.csv",
 ):
     """
     Plots Bitcoin prices for different epochs defined by halving events.
-
-    Parameters:
-        url (str): The URL or file path to the CSV file containing Bitcoin data (default is the CoinMetrics dataset).
     """
-    # Load the data from the CSV file and parse the 'time' column as dates
-    df = pd.read_csv(url, parse_dates=["time"], low_memory=False)
+    # Load the data
+    df = fetch_data("btc")
     df = df[["time", "PriceUSD"]].dropna()
 
     # Define epoch boundaries and their corresponding epoch numbers

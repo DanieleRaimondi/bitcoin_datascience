@@ -4,7 +4,10 @@ from datetime import datetime
 import matplotlib.pyplot as plt
 import statsmodels.api as sm
 from matplotlib.ticker import ScalarFormatter
+import sys
 
+sys.path.append("/Users/danieleraimondi/bitcoin_datascience/functions")
+from fetch_data import fetch_data
 
 def load_dxy_data():
     """
@@ -18,10 +21,7 @@ def load_dxy_data():
 
 
 def load_btc_data():
-    btc = pd.read_csv(
-        "https://raw.githubusercontent.com/coinmetrics/data/master/csv/btc.csv",
-        parse_dates=["time"],
-    )
+    btc = fetch_data("btc")
     btc = btc.dropna(subset=["PriceUSD"]).reset_index(drop=True)[["time", "PriceUSD"]]
     btc.rename(columns={"time": "Date"}, inplace=True)
     btc.set_index("Date", inplace=True)

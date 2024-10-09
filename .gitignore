@@ -7,5 +7,7 @@ functions/__pycache__
 .env
 notebooks/SentiMeter.ipynb
 functions/functions_SentiMeter.py
+functions/fetch_data.py
 notebooks/Reddit.csv
 notebooks/test.ipynb
+

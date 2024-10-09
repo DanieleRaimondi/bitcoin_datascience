@@ -7,6 +7,10 @@ import pandas as pd
 from dotenv import load_dotenv
 import matplotlib.ticker as ticker
 import matplotlib.dates as mdates
+import sys
+
+sys.path.append("/Users/danieleraimondi/bitcoin_datascience/functions")
+from fetch_data import fetch_data
 
 load_dotenv()
 
@@ -34,12 +38,8 @@ def plot_btc_economics(
     # Initialize connection to FRED with your API key
     fred = Fred(api_key=os.getenv("FRED_API"))
 
-    # Load Bitcoin price data from online CSV
-    df = pd.read_csv(
-        "https://raw.githubusercontent.com/coinmetrics/data/master/csv/btc.csv",
-        parse_dates=["time"],
-        low_memory=False,
-    )
+    # Load Bitcoin price data
+    df = fetch_data("btc")
     # Convert 'time' column to datetime if not already
     df["time"] = pd.to_datetime(df["time"])
     df.dropna(inplace=True, subset=["PriceUSD"])
@@ -194,12 +194,8 @@ def plot_btc_m2sl_global_money_yoy():
     # Initialize connection to FRED with your API key
     fred = Fred(api_key=os.getenv("FRED_API"))
 
-    # Load Bitcoin price data from online CSV
-    df = pd.read_csv(
-        "https://raw.githubusercontent.com/coinmetrics/data/master/csv/btc.csv",
-        parse_dates=["time"],
-        low_memory=False,
-    )
+    # Load Bitcoin price data
+    df = fetch_data("btc")
     df["time"] = pd.to_datetime(df["time"])
     df.dropna(inplace=True, subset=["PriceUSD"])
 

@@ -5,6 +5,10 @@ import matplotlib.ticker
 import statsmodels.api as sm
 import numpy as np
 from matplotlib.patches import Ellipse
+import sys
+
+sys.path.append("/Users/danieleraimondi/bitcoin_datascience/functions")
+from fetch_data import fetch_data
 
 
 def load_dataframe():
@@ -14,7 +18,7 @@ def load_dataframe():
     Returns:
         merged (pandas.DataFrame): Preprocessed dataframe with columns 'time', 'PriceUSD', 'mvrv', 'mvrvstd', and 'mvrv_norm'.
     """
-    df = pd.read_csv("https://raw.githubusercontent.com/coinmetrics/data/master/csv/btc.csv", parse_dates=["time"])
+    df = fetch_data("btc")
     df = pd.DataFrame(data=df)
 
     df.rename(columns={"CapMVRVCur": "mvrv"}, inplace=True)

@@ -4,15 +4,15 @@ import statsmodels.api as sm
 import matplotlib.pyplot as plt
 import matplotlib.ticker as mticker
 from matplotlib.colors import LinearSegmentedColormap
+import sys
+
+sys.path.append("/Users/danieleraimondi/bitcoin_datascience/functions")
+from fetch_data import fetch_data
 
 
 def slopes_growth_model(xlim=(2011, 2026), title="Slopes Growth Model"):
-    # Load Bitcoin price data from online CSV
-    df = pd.read_csv(
-        "https://raw.githubusercontent.com/coinmetrics/data/master/csv/btc.csv",
-        parse_dates=["time"],
-        usecols=["time", "PriceUSD"],
-    )
+    # Load Bitcoin price data
+    df = fetch_data("btc")
 
     # Create a range of dates and reindex the dataframe
     date_range = pd.date_range(start=df["time"].min(), end=f"{xlim[1]}-12-31", freq="D")

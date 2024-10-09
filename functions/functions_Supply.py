@@ -3,23 +3,23 @@ from prophet import Prophet
 import matplotlib.ticker as ticker
 import matplotlib.pyplot as plt
 import pandas as pd
+import sys
 
+sys.path.append("/Users/danieleraimondi/bitcoin_datascience/functions")
+from fetch_data import fetch_data
 
 def process_data():
-    # Load Bitcoin price data
-    btc_data = pd.read_csv(
-        "https://raw.githubusercontent.com/coinmetrics/data/master/csv/btc.csv",
-        parse_dates=["time"],
-    )
+    # Load Bitcoin data
+    df = fetch_data("btc")
 
     # 'time' column in datetime format
-    btc_data["time"] = pd.to_datetime(btc_data["time"])
-    btc_data["Supply"] = btc_data["CapMrktCurUSD"] / btc_data["PriceUSD"]
+    df["time"] = pd.to_datetime(df["time"])
+    df["Supply"] = df["CapMrktCurUSD"] / df["PriceUSD"]
 
-    forecast = forecast_supply(btc_data, years=15)
-    forecast = lost_coins_estimation(btc_data, forecast)
-    
-    return btc_data, forecast
+    forecast = forecast_supply(df, years=15)
+    forecast = lost_coins_estimation(df, forecast)
+
+    return df, forecast
 
 
 # Funzione per stimare la percentuale di monete perse nel tempo

@@ -6,9 +6,13 @@ from PIL import Image
 import os
 import math
 import numpy as np
+import sys
 
-def load_data(url):
-    df = pd.read_csv(url, parse_dates=["time"], low_memory=False)
+sys.path.append("/Users/danieleraimondi/bitcoin_datascience/functions")
+from fetch_data import fetch_data
+
+def load_data():
+    df = fetch_data("btc")
     df = df[["time", "PriceUSD"]].dropna()
     return df
 

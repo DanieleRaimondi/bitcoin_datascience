@@ -4,7 +4,6 @@ import statsmodels.api as sm
 import numpy as np
 from matplotlib.ticker import FuncFormatter, ScalarFormatter
 
-
 def plot_cohorts(data, price_column, coin):
     """
     Plots multiple charts for all relevant Bitcoin balance cohorts with LOESS smoothing, starting from the first day
