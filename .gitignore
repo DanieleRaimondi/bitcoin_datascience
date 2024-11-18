@@ -10,5 +10,7 @@ functions/functions_SentiMeter.py
 functions/fetch_data.py
 notebooks/Reddit.csv
 notebooks/test.ipynb
+notebooks/BTCvsUSElections.ipynb
 
 #functions
+
