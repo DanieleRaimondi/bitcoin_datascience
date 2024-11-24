@@ -223,6 +223,7 @@ def plot_data(
         fontweight="bold",
         fontsize=16,
     )
+    plt.savefig("../output/8.BTCvsUSELECTIONS.jpg", bbox_inches="tight", dpi=350)
     plt.show()
 
 
