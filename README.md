@@ -92,14 +92,12 @@ This study aims to analyze on-chain Bitcoin data to gain a deeper understanding 
 The project focuses on visualizing Bitcoin's distribution across address cohorts over time, highlighting balance ranges and applying LOESS smoothing to identify correlations with market behavior. 
 By examining the reactions of different holder types to market changes, it reveals patterns of accumulation and distribution, offering insights into market sentiment and potential price trends.
 
-## 7.GoogleTrends:
+## 6.Sentiment:
 
-#### GoogleTrends 🔍 ![](output/7.GoogleTrends.jpeg)
+#### GoogleTrends 🔍 ![](output/6a.GoogleTrends.jpeg)
 The purpose of this study is to explore the correlation between Google search interest for specific cryptocurrencies and their price fluctuations over time. The hypothesis is that search trends might serve as a proxy for sentiment, potentially acting as an indicator of market behavior.
 
-## 8.BTC vs US Elections 2024:
-
-#### BTCvsUSELECTIONS 🇺🇸 ![](output//8.BTCvsUSELECTIONS.jpeg)
+#### BTCvsUSELECTIONS 🇺🇸 ![](output//6b.BTCvsUSELECTIONS.jpeg)
 This analysis aims to explore the potential correlation between Bitcoin's price and Donald Trump's probability of winning the 2024 U.S. Presidential Election. The hypothesis is that political uncertainty, particularly the prospect of a Bitcoin-friendly president, may influence Bitcoin's value. By examining this relationship, we seek to determine whether election probabilities can serve as a predictive tool for Bitcoin price movements. Identifying a strong correlation could provide insights into forecasting Bitcoin's price based on political sentiment surrounding the election.
 
 

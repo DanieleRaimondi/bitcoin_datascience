@@ -219,7 +219,7 @@ def plot_google_trends_crypto(
             )
 
     plt.tight_layout()
-    plt.savefig("../output/7.GoogleTrends.jpeg", bbox_inches="tight", dpi=350)
+    plt.savefig("../output/6a.GoogleTrends.jpeg", bbox_inches="tight", dpi=350)
 
     plt.show()
 
