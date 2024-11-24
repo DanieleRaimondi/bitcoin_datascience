@@ -94,10 +94,10 @@ By examining the reactions of different holder types to market changes, it revea
 
 ## 6.Sentiment:
 
-#### GoogleTrends 🔍 ![](output/6a.GoogleTrends.jpeg)
+#### GoogleTrends 🔍 ![](output/6a.GoogleTrends.jpg)
 The purpose of this study is to explore the correlation between Google search interest for specific cryptocurrencies and their price fluctuations over time. The hypothesis is that search trends might serve as a proxy for sentiment, potentially acting as an indicator of market behavior.
 
-#### BTCvsUSELECTIONS 🇺🇸 ![](output//6b.BTCvsUSELECTIONS.jpeg)
+#### BTCvsUSELECTIONS 🇺🇸 ![](output//6b.BTCvsUSELECTIONS.jpg)
 This analysis aims to explore the potential correlation between Bitcoin's price and Donald Trump's probability of winning the 2024 U.S. Presidential Election. The hypothesis is that political uncertainty, particularly the prospect of a Bitcoin-friendly president, may influence Bitcoin's value. By examining this relationship, we seek to determine whether election probabilities can serve as a predictive tool for Bitcoin price movements. Identifying a strong correlation could provide insights into forecasting Bitcoin's price based on political sentiment surrounding the election.
 
 
