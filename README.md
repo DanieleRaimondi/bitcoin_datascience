@@ -94,7 +94,7 @@ By examining the reactions of different holder types to market changes, it revea
 
 ## 6.Sentiment:
 
-#### GoogleTrends 🔍 ![](output/6a.GoogleTrends.jpg)
+#### GoogleTrends 🔍 ![](output/6a.GoogleTrends.jpeg)
 The purpose of this study is to explore the correlation between Google search interest for specific cryptocurrencies and their price fluctuations over time. The hypothesis is that search trends might serve as a proxy for sentiment, potentially acting as an indicator of market behavior.
 
 #### BTCvsUSELECTIONS 🇺🇸 ![](output//6b.BTCvsUSELECTIONS.jpg)
