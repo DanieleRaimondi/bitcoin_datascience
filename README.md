@@ -32,13 +32,13 @@ This section demonstrates an exponential transformation of the time dimension in
 #### ThermoLogTimeLogPrice 💪🏻 ![](output/1d.ThermoLogTimeLogPrice.jpg)
 Here I present a straightforward ensemble of the ThermoModel and LogTimeLogPrice models. The purpose is to average the predicted upper and lower bands from both models, providing a more robust forecast.
 
-#### SlopesGrowthModel 🪴 ![](output/1e.SlopesGrowthModel.jpg)
+#### Slopes Growth Model 🪴 ![](output/1e.SlopesGrowthModel.jpg)
 This analysis aims to estimate the future growth rate of Bitcoin's price by examining historical trends and projecting them into the future. The model is based on the observation that Bitcoin's growth rate, while still positive, has been decreasing over time. This decline is hypothesized to be related to Bitcoin halving events and the economic theory of diminishing returns.
 
-#### BTCvsSupply 💭 ![](output/1f.BTCvsSupply.jpg)
+#### BTC vs Supply 💭 ![](output/1f.BTCvsSupply.jpg)
 This analysis explores the growth correlation between Bitcoin's supply curve and its price history, to gain insights into how Bitcoin's programmed scarcity might influence its value over time.
 
-#### BTC_SMA 💭 ![](output/1g.BTC_SMA.jpg)
+#### BTC SMA 💭 ![](output/1g.BTC_SMA.jpg)
 In this visualization, we display the Bitcoin price movement in comparison to its Simple Moving Average (SMA) calculated over 209 weeks. The reason for choosing 209 weeks is linked to the Bitcoin halving cycle, which occurs every 4 years, approximately equivalent to 209 weeks. It has always been a great support of Bitcoin's prices.
 
 
@@ -53,7 +53,7 @@ The MVRV project explores the relationship between Bitcoin's market and realized
 It introduces an oscillator for easy identification of overbought and oversold zones, highlighting the cyclical nature of Bitcoin with two peaks per cycle, where the second typically marks the ATH. 
 This analysis aids in making informed investment decisions by understanding market trends and cycles.
 
-#### EpochsGrowth 📆 ![](output/2c.EpochsGrowth.jpg)
+#### Epochs Growth 📆 ![](output/2c.EpochsGrowth.jpg)
 This section presents a visualization of Bitcoin's price growth since each halving event. It's useful to evaluate the diminishing returns effect over time.
 
 
@@ -62,7 +62,7 @@ This section presents a visualization of Bitcoin's price growth since each halvi
 #### Economics 🪙 ![](output/3a.Economics.jpg)
 This chart helps analyze how U.S. macroeconomic indicators relate to Bitcoin's price by displaying them together on a single chart. This allows for easier understanding of their interactions and influences.
 
-#### BTCvsLiquidity 🤑 ![](output/3c.BTCvsLiquidity.jpg)
+#### BTC vs Liquidity 🤑 ![](output/3c.BTCvsLiquidity.jpg)
 The plot illustrates the relationship between Bitcoin's price (BTC) and two important economic indicators:
 The money supply shows a strong correlation with Bitcoin's price movements, highlighting how the increase in liquidity drives demand for Bitcoin as an asset.
 
@@ -75,10 +75,10 @@ Actually, as I expected, during the BTC depression phases, DXY is strong and gro
 
 ## 4.Supply & Demand:
 
-#### BTCvsM2 🕯 ![](output/4a.BTCvsM2.jpg)
+#### BTC vs M2 🕯 ![](output/4a.BTCvsM2.jpg)
 This section aims to compare Bitcoin's supply dynamics with the M2 money supply to highlight their fundamental differences in growth patterns, control mechanisms, and responses to economic conditions. The goal is to illustrate Bitcoin's potential as a stable store of value against the inflationary nature of traditional monetary systems.
 
-#### AvailableSupply 💰 ![](output/4b.AvailableSupply.jpg)
+#### Available Supply 💰 ![](output/4b.AvailableSupply.jpg)
 The project aims to estimate the percentage of Bitcoin that has been lost over time and predict the future available supply of Bitcoin, accounting for both the total supply limit and the estimated loss rate of coins. 
 By modeling Bitcoin's supply growth and applying a decaying loss rate to simulate the reduction in lost coins over time, the project forecasts the effective supply available for circulation. 
 This approach helps understand the dynamics affecting Bitcoin's scarcity and potential market impact, providing insights into how the diminishing supply and lost coins could influence Bitcoin's value in the long term.
@@ -94,10 +94,10 @@ By examining the reactions of different holder types to market changes, it revea
 
 ## 6.Sentiment:
 
-#### GoogleTrends 🔍 ![](output/6a.GoogleTrends.jpeg)
+#### Google Trends 🔍 ![](output/6a.GoogleTrends.jpeg)
 The purpose of this study is to explore the correlation between Google search interest for specific cryptocurrencies and their price fluctuations over time. The hypothesis is that search trends might serve as a proxy for sentiment, potentially acting as an indicator of market behavior.
 
-#### BTCvsUSELECTIONS 🇺🇸 ![](output//6b.BTCvsUSELECTIONS.jpg)
+#### BTC vs US ELECTIONS 🇺🇸 ![](output//6b.BTCvsUSELECTIONS.jpg)
 This analysis aims to explore the potential correlation between Bitcoin's price and Donald Trump's probability of winning the 2024 U.S. Presidential Election. The hypothesis is that political uncertainty, particularly the prospect of a Bitcoin-friendly president, may influence Bitcoin's value. By examining this relationship, we seek to determine whether election probabilities can serve as a predictive tool for Bitcoin price movements. Identifying a strong correlation could provide insights into forecasting Bitcoin's price based on political sentiment surrounding the election.
 
 
