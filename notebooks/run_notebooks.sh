@@ -5,14 +5,16 @@ jupyter nbconvert --to notebook --execute --inplace 1d.ThermoLogTimeLogPrice.ipy
 jupyter nbconvert --to notebook --execute --inplace 1e.SlopesGrowthModel.ipynb
 jupyter nbconvert --to notebook --execute --inplace 1g.Growths.ipynb
 jupyter nbconvert --to notebook --execute --inplace 2a.Cycles.ipynb
-jupyter nbconvert --to notebook --execute --inplace 2b.MVRV.ipynb
+jupyter nbconvert --to notebook --execute --inplace 2b.CyclesNorm.ipynb
+jupyter nbconvert --to notebook --execute --inplace 2c.MVRV.ipynb
 jupyter nbconvert --to notebook --execute --inplace 3a.Economics.ipynb
 jupyter nbconvert --to notebook --execute --inplace 3b.DXY.ipynb
 jupyter nbconvert --to notebook --execute --inplace 4a.Supply.ipynb
 jupyter nbconvert --to notebook --execute --inplace 4c.Demand.ipynb
 jupyter nbconvert --to notebook --execute --inplace 5.Cohorts.ipynb
 jupyter nbconvert --to notebook --execute --inplace 6a.GoogleTrends.ipynb
-jupyter nbconvert --to notebook --execute --inplace 6b.BTCvsUSELECTIONS.ipynb
+jupyter nbconvert --to notebook --execute --inplace 7a.BTCvsUSELECTIONS.ipynb
+jupyter nbconvert --to notebook --execute --inplace 7b.US_Elections.ipynb
 #jupyter nbconvert --to notebook --execute --inplace 9.DynamicPlot.ipynb
 
 echo "All the notebooks run."
