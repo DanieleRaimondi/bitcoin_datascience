@@ -213,5 +213,5 @@ def plot_btcusd_and_mvrv_oscillator(merged, frac=0.02, k=0.015):
             )
             ax2.add_artist(ellipse)
 
-    plt.savefig("../output/2b.MVRV_Oscillator.jpg", bbox_inches="tight", dpi=350)
+    plt.savefig("../output/2c.MVRV_Oscillator.jpg", bbox_inches="tight", dpi=350)
     plt.show()

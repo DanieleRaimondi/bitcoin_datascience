@@ -9,15 +9,14 @@ import sys
 sys.path.append("/Users/danieleraimondi/bitcoin_datascience/functions")
 from fetch_data import fetch_data
 
+
 def load_dxy_data():
     """
-    This function extracts data related to dollar index up to today's date and returns the closing prices as a DataFrame.
+    Extracts data related to dollar index up to today's date and returns the closing prices as a DataFrame.
     """
     today = datetime.today().strftime("%Y-%m-%d")
     data = yf.download("DX-Y.NYB", start="2000-01-01", end=today)
-    dxy = data[["Close"]].rename(columns={"Close": "DXY"})
-
-    return dxy
+    return data[["Close"]].rename(columns={"Close": "DXY"})
 
 
 def load_btc_data():
@@ -28,69 +27,67 @@ def load_btc_data():
     return btc
 
 
-# Funzione per plottare LOESS colorata basata sulla derivata
 def plot_colored_loess(
     ax, df, column, deriv_column, color_up="green", color_down="red", lw=2
 ):
-    for i in range(1, len(df)):
-        if df[deriv_column].iloc[i] > 0:
-            ax.plot(
-                df.index[i - 1 : i + 1],
-                df[column].iloc[i - 1 : i + 1],
-                color=color_up,
-                lw=lw,
-            )
-        elif df[deriv_column].iloc[i] < 0:
-            ax.plot(
-                df.index[i - 1 : i + 1],
-                df[column].iloc[i - 1 : i + 1],
-                color=color_down,
-                lw=lw,
-            )
-
-
-def plot_colored_loess(
-    ax, df, column, deriv_column, color_up="green", color_down="red", lw=2
-):
-    for i in range(1, len(df)):
-        if df[deriv_column].iloc[i] > 0:
-            ax.plot(
-                df.index[i - 1 : i + 1],
-                df[column].iloc[i - 1 : i + 1],
-                color=color_up,
-                lw=lw,
-            )
-        elif df[deriv_column].iloc[i] < 0:
-            ax.plot(
-                df.index[i - 1 : i + 1],
-                df[column].iloc[i - 1 : i + 1],
-                color=color_down,
-                lw=lw,
-            )
-
-
-# Funzione principale per plottare i modelli
-def plot_models(df, tops_dates, bottoms_dates, startbull_dates):
     """
     Plots colored LOESS based on the derivative.
-
-    Parameters:
-    ax: Axes object for plotting.
-    df: DataFrame containing the data.
-    column: Column name for the data to be plotted.
-    deriv_column: Column name for the derivative data.
-    color_up: Color for positive derivative values (default is "green").
-    color_down: Color for negative derivative values (default is "red").
-    lw: Line width for the plot (default is 2).
     """
-    # LOESS derivative
+    for i in range(1, len(df)):
+        if df[deriv_column].iloc[i] > 0:
+            ax.plot(
+                df.index[i - 1 : i + 1],
+                df[column].iloc[i - 1 : i + 1],
+                color=color_up,
+                lw=lw,
+            )
+        elif df[deriv_column].iloc[i] < 0:
+            ax.plot(
+                df.index[i - 1 : i + 1],
+                df[column].iloc[i - 1 : i + 1],
+                color=color_down,
+                lw=lw,
+            )
+
+
+def add_election_markers(ax):
+    """
+    Adds vertical lines and labels for US presidential elections.
+    """
+    elections = {
+        "2012-11-06": "Obama Re-elected (Dem)",
+        "2016-11-08": "Trump Elected (Rep)",
+        "2020-11-03": "Biden Elected (Dem)",
+        "2024-11-05": "Trump Re-elected (Rep)",
+    }
+
+    for date, label in elections.items():
+        election_date = pd.to_datetime(date)
+        ax.axvline(x=election_date, color="brown", linestyle="--", alpha=0.2)
+        ax.text(
+            election_date + pd.Timedelta(days=3),
+            0.3,
+            label,
+            rotation=90,
+            verticalalignment="top",
+            transform=ax.get_xaxis_transform(),
+            color="brown",
+            fontsize=7,
+        )
+
+
+def plot_models(df, tops_dates, bottoms_dates, startbull_dates):
+    """
+    Creates the main plot with all components including market phases and election markers.
+    """
+    # Calculate LOESS derivatives
     df["PriceUSD_LOESS_DERIV"] = df["PriceUSD_LOESS"].diff()
     df["DXY_LOESS_DERIV"] = df["DXY_LOESS"].diff()
 
-    # Plotting
+    # Create figure and primary axis
     fig, ax1 = plt.subplots(figsize=(12, 6))
 
-    # Plot PriceUSD in log scale
+    # Configure primary axis (PriceUSD)
     ax1.set_ylabel("PriceUSD", color="tab:blue")
     ax1.plot(
         df.index, df["PriceUSD"], color="tab:blue", label="PriceUSD", lw=1.5, alpha=0.5
@@ -100,12 +97,10 @@ def plot_models(df, tops_dates, bottoms_dates, startbull_dates):
     ax1.set_yscale("log")
     ax1.set_ylim([df["PriceUSD"].min(), df["PriceUSD"].max()])
     ax1.set_xlim([df.index.min(), df.index.max()])
-
-    # Set formatter to prevent scientific notation
     ax1.yaxis.set_major_formatter(ScalarFormatter())
     ax1.ticklabel_format(style="plain", axis="y")
 
-    # Create a second y-axis to plot DXY
+    # Configure secondary axis (DXY)
     ax2 = ax1.twinx()
     ax2.set_ylabel("DXY", color="tab:orange")
     ax2.plot(df.index, df["DXY"], color="tab:orange", label="DXY", lw=1.5, alpha=0.5)
@@ -113,7 +108,7 @@ def plot_models(df, tops_dates, bottoms_dates, startbull_dates):
     ax2.tick_params(axis="y", labelcolor="tab:orange")
     ax2.grid(visible=True, which="both", linestyle="--", linewidth=0.5)
 
-    # Fill areas between tops and bottoms with red color
+    # Add market phase markers
     for top, bottom in zip(tops_dates[:-1], bottoms_dates):
         ax1.axvspan(top, bottom, color="red", alpha=0.15)
         mid_date = top + (bottom - top) / 2
@@ -128,7 +123,6 @@ def plot_models(df, tops_dates, bottoms_dates, startbull_dates):
             transform=ax1.get_xaxis_transform(),
         )
 
-    # Fill areas between startbull_dates and the next top date with green color
     for startbull in startbull_dates:
         next_top_index = tops_dates[tops_dates > startbull][0]
         ax1.axvspan(startbull, next_top_index, color="green", alpha=0.15)
@@ -144,9 +138,8 @@ def plot_models(df, tops_dates, bottoms_dates, startbull_dates):
             transform=ax1.get_xaxis_transform(),
         )
 
-    # Fill remaining areas with orange color
     for i in range(len(bottoms_dates)):
-        if i < len(startbull_dates) - 1:  # Ensure not to go out of range
+        if i < len(startbull_dates) - 1:
             start = bottoms_dates[i]
             end = startbull_dates[i + 1]
             ax1.axvspan(start, end, color="orange", alpha=0.15)
@@ -162,16 +155,21 @@ def plot_models(df, tops_dates, bottoms_dates, startbull_dates):
                 transform=ax1.get_xaxis_transform(),
             )
 
-    # Title and show plot
+    # Add election markers
+    add_election_markers(ax1)
+
+    # Finalize plot
     plt.title("PriceUSD vs DXY", fontweight="bold", fontsize=20)
     fig.tight_layout()
     fig.legend(loc="upper left", bbox_to_anchor=(0.1, 0.9))
-    plt.savefig("../output/3b.DXY.jpg",bbox_inches="tight",dpi=350,)
+    plt.savefig("../output/3b.DXY.jpg", bbox_inches="tight", dpi=350)
     plt.show()
 
 
-# Add LOESS curves
 def add_loess(df, column, frac=0.05):
+    """
+    Adds LOESS smoothing to a data column.
+    """
     loess = sm.nonparametric.lowess
     loess_fit = loess(df[column], df.index, frac=frac)
     return pd.Series(loess_fit[:, 1], index=df.index, name=f"{column}_LOESS")

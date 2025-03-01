@@ -123,7 +123,7 @@ def cycle_annotation_phase(
 
     # Set the X axis and Y axis limits and configure the date formatting for the X-axis
     ax2.set_xlim(pd.to_datetime("2012-01-01"), pd.to_datetime("2026-07-31"))
-    ax1.set_ylim(3, 100_000)
+    ax1.set_ylim(3, 150_000)
     ax2.set_ylim(-1.02, 1.05)
     ax2.set_ylabel("Cycles", fontsize=13)
     ax2.tick_params(axis="y", which="both", left=False, labelleft=False)

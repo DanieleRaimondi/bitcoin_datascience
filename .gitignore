@@ -14,3 +14,6 @@ notebooks/BTCvsUSElections.ipynb
 
 #functions
 
+test*.ipynb
+streamlit/
+notebooks/temp_images/

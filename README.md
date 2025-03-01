@@ -48,7 +48,10 @@ In this visualization, we display the Bitcoin price movement in comparison to it
 The Cycles project aims to analyze and visualize the cyclical patterns in Bitcoin's price movements, with a particular focus on the four-year cyclicity dictated by Bitcoin halving events. 
 This approach provides insights into potential market trends and key turning points, highlighting how these critical halving milestones impact the broader cyclical behavior of Bitcoin's market value.
 
-#### MVRV 🔋 ![](output/2b.MVRV_Oscillator.jpg)
+#### CyclesNorm 🔄 ![](output/2b.CyclesNorm.jpg)
+This analysis examines Bitcoin's price movements across multiple halving cycles, visualizing historical patterns and projecting potential future trends based on cycle alignment. By normalizing price data from the 2016, 2020, and 2024 halving cycles, the model enables direct comparison of market behavior across different periods, identifying key inflection points, and projecting the timing of potential tops and bottoms. The visualization includes color-coded background shading for different market phases and a sinusoidal overlay to represent the cyclical nature of Bitcoin price movements.
+
+#### MVRV 🔋 ![](output/2c.MVRV_Oscillator.jpg)
 The MVRV project explores the relationship between Bitcoin's market and realized values by analyzing the MVRV ratio and price data to pinpoint market tops and bottoms. 
 It introduces an oscillator for easy identification of overbought and oversold zones, highlighting the cyclical nature of Bitcoin with two peaks per cycle, where the second typically marks the ATH. 
 This analysis aids in making informed investment decisions by understanding market trends and cycles.
@@ -97,9 +100,13 @@ By examining the reactions of different holder types to market changes, it revea
 #### Google Trends 🔍 ![](output/6a.GoogleTrends.jpeg)
 The purpose of this study is to explore the correlation between Google search interest for specific cryptocurrencies and their price fluctuations over time. The hypothesis is that search trends might serve as a proxy for sentiment, potentially acting as an indicator of market behavior.
 
-#### BTC vs US ELECTIONS 🇺🇸 ![](output//6b.BTCvsUSELECTIONS.jpg)
-This analysis aims to explore the potential correlation between Bitcoin's price and Donald Trump's probability of winning the 2024 U.S. Presidential Election. The hypothesis is that political uncertainty, particularly the prospect of a Bitcoin-friendly president, may influence Bitcoin's value. By examining this relationship, we seek to determine whether election probabilities can serve as a predictive tool for Bitcoin price movements. Identifying a strong correlation could provide insights into forecasting Bitcoin's price based on political sentiment surrounding the election.
+## 7.US Elections:
 
+#### BTC vs US ELECTIONS 🇺🇸 ![](output//7a.BTCvsUSELECTIONS.jpg)
+This analysis aims to explore the potential correlation between Bitcoin's price and Donald Trump's probability of winning the 2024 U.S. Presidential Election. The hypothesis is that political uncertainty, particularly the prospect of a Bitcoin-friendly president, may influence Bitcoin's value. By examining this relationship, we seek to determine whether election probabilities can serve as a predictive tool for Bitcoin price movements. Identifying a strong correlation could provide insights into forecasting Bitcoin's price based on political sentiment surrounding the election. Data for election probabilities are sourced from Polymarket.
+
+#### Bitcoin Price Correlation with US Elections 🗳️ ![](output/7b.US_Elections.jpg)
+This analysis expands on my previous study by examining the broader relationship between Bitcoin price movements and significant political events globally. Beyond just the U.S. elections, we investigate how regulatory announcements, policy shifts, and major political transitions across different regions impact Bitcoin's volatility and overall trend. Through time-series analysis and correlation studies, we aim to identify patterns that might help predict how future political developments could influence the cryptocurrency market. This research provides investors with additional context for understanding Bitcoin's reaction to the geopolitical landscape.
 
 ## Get Involved! 🌟
 
