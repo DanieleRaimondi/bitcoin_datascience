@@ -46,6 +46,17 @@ def plot_google_trends_crypto(
         "cardano": "ada",
     }
 
+    # Mapping per le colonne dei prezzi per ogni criptovaluta
+    PRICE_COLUMN_MAPPING = {
+        "bitcoin": "PriceUSD",
+        "ethereum": "PriceUSD",
+        "litecoin": "PriceUSD",
+        "solana": "principal_market_price_usd",  # Colonna specifica per SOL
+        "dogecoin": "PriceUSD",
+        "ripple": "PriceUSD",
+        "cardano": "PriceUSD",
+    }
+
     COLOR_MAPPING = {
         "bitcoin": "orange",
         "ethereum": "darkblue",
@@ -66,18 +77,24 @@ def plot_google_trends_crypto(
                 }
             )
 
-    def fetch_crypto_data(crypto: str) -> pd.DataFrame:
+    def fetch_crypto_data(crypto: str, keyword: str) -> pd.DataFrame:
         url = f"https://raw.githubusercontent.com/coinmetrics/data/master/csv/{crypto}.csv"
         df = pd.read_csv(url, parse_dates=["time"], low_memory=False)
 
-        price_col = (
-            "PriceUSD" if "PriceUSD" in df.columns else "principal_market_price_usd"
-        )
+        # Usa il mapping specifico per determinare la colonna del prezzo
+        price_col = PRICE_COLUMN_MAPPING.get(keyword.lower(), "PriceUSD")
+
+        # Verifica se la colonna esiste nel dataframe
         if price_col not in df.columns:
-            raise ValueError(f"No valid price column found for {crypto}")
+            # Fallback per retrocompatibilità
+            price_col = (
+                "PriceUSD" if "PriceUSD" in df.columns else "principal_market_price_usd"
+            )
+            if price_col not in df.columns:
+                raise ValueError(f"No valid price column found for {crypto}")
 
         result_df = df[["time", price_col]].set_index("time")
-        result_df.columns = ["PriceUSD"]
+        result_df.columns = ["PriceUSD"]  # Rinomina per standardizzare
         return result_df
 
     def fetch_trends_data(kw: list, tf: str, initial_pause: int) -> dict:
@@ -124,15 +141,34 @@ def plot_google_trends_crypto(
             ax.set_ylabel("Interest (0-100)", color=color)
             ax.tick_params(axis="y", labelcolor=color)
 
-            ax.set_ylim(trends_data[keyword].min(), trends_data[keyword].max())
+            ax.set_ylim(0, 100)  # Set fixed y-limits for trends (0-100)
 
             if keyword.lower() in CRYPTO_MAPPING and price_data[keyword] is not None:
                 ax2 = ax.twinx()
 
-                mask = (price_data[keyword].index >= trends_data[keyword].index[0]) & (
-                    price_data[keyword].index <= trends_data[keyword].index[-1]
-                )
-                price_subset = price_data[keyword][mask]
+                # Ottimizzazione: Usa lo stesso intervallo di date per il plot di trend e prezzo
+                # e assicurati che vengano visualizzati tutti i dati disponibili
+                start_date = trends_data[keyword].index[0]
+                end_date = trends_data[keyword].index[-1]
+
+                # Assicurati che i dati di prezzo coprano l'intero intervallo
+                # Se ci sono dati di prezzo più recenti, li mostriamo comunque
+                price_subset = price_data[keyword]
+
+                # Se ci sono dati di prezzo disponibili che iniziano dopo i dati di trends
+                if price_subset.index[0] > start_date:
+                    start_date = price_subset.index[0]
+
+                # Se ci sono dati di prezzo che finiscono dopo i dati di trends
+                if price_subset.index[-1] > end_date:
+                    # Estendi il plot per mostrare anche i dati più recenti
+                    price_subset = price_subset[price_subset.index >= start_date]
+                else:
+                    # Altrimenti filtra solo nel range dei dati di trends
+                    price_subset = price_subset[
+                        (price_subset.index >= start_date)
+                        & (price_subset.index <= end_date)
+                    ]
 
                 line_price = ax2.plot(
                     price_subset.index,
@@ -146,30 +182,43 @@ def plot_google_trends_crypto(
                 ax2.set_ylabel("Price (USD)", color="black")
                 ax2.tick_params(axis="y", labelcolor="black")
 
-                # Set exact min and max limits
-                ax2.set_ylim(
-                    price_subset["PriceUSD"].min(), price_subset["PriceUSD"].max()
-                )
+                # Imposta i limiti esatti min e max
+                if not price_subset.empty:
+                    ax2.set_ylim(
+                        price_subset["PriceUSD"].min() * 0.9,
+                        price_subset["PriceUSD"].max() * 1.1,
+                    )
 
                 lines = line_trends + line_price
                 labels = [l.get_label() for l in lines]
-                ax.legend(lines, labels, loc="center left")
+                ax.legend(lines, labels, loc="upper left")
 
             ax.set_title(f'{title} "{keyword}"', fontweight="bold")
             ax.grid(True, linestyle="--", alpha=0.5)
             ax.spines["top"].set_visible(False)
 
-            # Add statistics
-            stats = f"Trends Max: {trends_data[keyword].max():.1f}\n"
-            stats += f"Trends Avg: {trends_data[keyword].mean():.1f}"
-            ax.text(
-                0.02,
-                0.98,
-                stats,
-                transform=ax.transAxes,
-                verticalalignment="top",
-                bbox=dict(boxstyle="round", facecolor="white", alpha=0.8),
-            )
+            # Aggiungi statistiche
+            if keyword.lower() in CRYPTO_MAPPING and price_data[keyword] is not None:
+                stats = f"Trends Max: {trends_data[keyword].max():.1f}\n"
+                stats += f"Trends Avg: {trends_data[keyword].mean():.1f}\n"
+
+                # Aggiungi informazioni sui prezzi
+                if not price_subset.empty:
+                    price_start = price_subset["PriceUSD"].iloc[0]
+                    price_end = price_subset["PriceUSD"].iloc[-1]
+                    price_change = ((price_end - price_start) / price_start) * 100
+                    stats += f"Price Start: ${price_start:.2f}\n"
+                    stats += f"Price End: ${price_end:.2f}\n"
+                    stats += f"Change: {price_change:.1f}%"
+
+                ax.text(
+                    0.02,
+                    0.98,
+                    stats,
+                    transform=ax.transAxes,
+                    verticalalignment="top",
+                    bbox=dict(boxstyle="round", facecolor="white", alpha=0.8),
+                )
         else:
             ax.text(
                 0.5,
@@ -184,7 +233,10 @@ def plot_google_trends_crypto(
     for keyword in keywords:
         if keyword.lower() in CRYPTO_MAPPING:
             try:
-                price_data[keyword] = fetch_crypto_data(CRYPTO_MAPPING[keyword.lower()])
+                # Passa il keyword alla funzione per selezionare la colonna corretta
+                price_data[keyword] = fetch_crypto_data(
+                    CRYPTO_MAPPING[keyword.lower()], keyword
+                )
                 print(f"Successfully fetched price data for {keyword}")
             except Exception as e:
                 print(f"Failed to fetch price data for {keyword}: {str(e)}")

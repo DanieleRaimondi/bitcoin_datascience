@@ -15,7 +15,10 @@ def load_dxy_data():
     Extracts data related to dollar index up to today's date and returns the closing prices as a DataFrame.
     """
     today = datetime.today().strftime("%Y-%m-%d")
-    data = yf.download("DX-Y.NYB", start="2000-01-01", end=today)
+    data = yf.download(
+        "DX-Y.NYB", start="2000-01-01", end=today, progress=False, auto_adjust=False
+    )
+    data.columns = data.columns.get_level_values(0)  # Flatten MultiIndex columns
     return data[["Close"]].rename(columns={"Close": "DXY"})
 
 
@@ -166,7 +169,7 @@ def plot_models(df, tops_dates, bottoms_dates, startbull_dates):
     plt.show()
 
 
-def add_loess(df, column, frac=0.05):
+def add_loess(df, column, frac=0.035):
     """
     Adds LOESS smoothing to a data column.
     """
