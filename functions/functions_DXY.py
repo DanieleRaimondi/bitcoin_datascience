@@ -98,7 +98,7 @@ def plot_models(df, tops_dates, bottoms_dates, startbull_dates):
     plot_colored_loess(ax1, df, "PriceUSD_LOESS", "PriceUSD_LOESS_DERIV", lw=2)
     ax1.tick_params(axis="y", labelcolor="tab:blue")
     ax1.set_yscale("log")
-    ax1.set_ylim([df["PriceUSD"].min(), df["PriceUSD"].max()])
+    ax1.set_ylim([df["PriceUSD"].min(), df["PriceUSD"].max()*1.25])
     ax1.set_xlim([df.index.min(), df.index.max()])
     ax1.yaxis.set_major_formatter(ScalarFormatter())
     ax1.ticklabel_format(style="plain", axis="y")
