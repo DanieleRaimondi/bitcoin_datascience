@@ -33,7 +33,7 @@ This section demonstrates an exponential transformation of the time dimension in
 Here I present a straightforward ensemble of the ThermoModel and LogTimeLogPrice models. The purpose is to average the predicted upper and lower bands from both models, providing a more robust forecast.
 
 #### Slopes Growth Model 🪴 ![](output/1e.SlopesGrowthModel.jpg)
-This analysis aims to estimate the future growth rate of Bitcoin's price by examining historical trends and projecting them into the future. The model is based on the observation that Bitcoin's growth rate, while still positive, has been decreasing over time. This decline is hypothesized to be related to Bitcoin halving events and the economic theory of diminishing returns.
+This model analyzes Bitcoin's diminishing returns by connecting historical peaks and bottoms with regression lines, then forecasting future cycles using exponential decay convergence. As Bitcoin matures, growth rates naturally decline and converge toward a stable target, creating a narrowing price corridor that reflects the transition from explosive early growth to more mature market behavior over time.
 
 #### BTC vs Supply 💭 ![](output/1f.BTCvsSupply.jpg)
 This analysis explores the growth correlation between Bitcoin's supply curve and its price history, to gain insights into how Bitcoin's programmed scarcity might influence its value over time.
