@@ -29,7 +29,7 @@ This study is a powerful tool designed to analyze Bitcoin's price growth over ti
 #### AritmTimeLogPrice ⚙️ ![](output/1c.AritmTimeLogPrice.jpg)
 This section demonstrates an exponential transformation of the time dimension in the LogTimeLogPrice model. This transformation is applied to ensure the results are comparable with those of the ThermoModel.
 
-#### ThermoLogTimeLogPrice 💪🏻 ![](output/1d.ThermoLogTimeLogPrice.jpg)
+#### ThermoLogTimeLogPrice 💪🏻 ![](output/1d.EnsembleCorridor.jpg)
 Here I present a straightforward ensemble of the ThermoModel and LogTimeLogPrice models. The purpose is to average the predicted upper and lower bands from both models, providing a more robust forecast.
 
 #### Slopes Growth Model 🪴 ![](output/1e.SlopesGrowthModel.jpg)

@@ -1,7 +1,7 @@
 # Esegue i notebook uno dopo l'altro
 jupyter nbconvert --to notebook --execute --inplace 1a.ThermoModel.ipynb
 jupyter nbconvert --to notebook --execute --inplace 1b.LogTimeLogPrice.ipynb
-jupyter nbconvert --to notebook --execute --inplace 1d.ThermoLogTimeLogPrice.ipynb
+jupyter nbconvert --to notebook --execute --inplace 1d.EnsembleCorridor.ipynb
 jupyter nbconvert --to notebook --execute --inplace 1e.SlopesGrowthModel.ipynb
 jupyter nbconvert --to notebook --execute --inplace 1g.Growths.ipynb
 jupyter nbconvert --to notebook --execute --inplace 2a.Cycles.ipynb
