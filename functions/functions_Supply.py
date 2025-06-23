@@ -290,7 +290,7 @@ def plot_m2_btcprice(btc_data, forecast):
     ax2.set_ylabel("BTC Price (USD)", color="green")  # Set y-axis label color
     ax2.tick_params(axis="y", labelcolor="green")  # Set y-axis ticks color
     ax2.set_yscale("log")
-    ax2.set_ylim(bottom=0, top=300_000)  # Set the y-axis limit for the BTC price
+    ax2.set_ylim(bottom=0, top=400_000)  # Set the y-axis limit for the BTC price
     ax2.yaxis.set_major_formatter(ticker.FuncFormatter(lambda x, p: f"${x:.0f}"))
     ax2.legend(loc="upper right", fontsize=8)
 

@@ -95,7 +95,7 @@ def plot_ensemble_corridor(
     plt.yticks(10 ** np.arange(6), 10 ** np.arange(6))
     plt.title(
         "Bitcoin Ensemble Model (Weighted)",
-        fontsize=48,  # FIXED: was 5400!
+        fontsize=40, 
         fontweight="bold",
     )
     plt.grid(linewidth=0.5, linestyle="--")
@@ -110,7 +110,7 @@ def plot_ensemble_corridor(
         df.time.iloc[435],
         2500,
         f"Current value: \n{round(100 * lowess[-1], 1)} %",
-        fontsize=28,  # Reduced from 40
+        fontsize=28,  
         color="k",
         bbox=dict(facecolor="white"),
         ha="center",
@@ -120,7 +120,7 @@ def plot_ensemble_corridor(
         df.time.iloc[420],
         2,
         f"Expected top: {round(df['upper'].iloc[-1]/1000)*1000} $",
-        fontsize=18,  # Reduced from 25
+        fontsize=18, 
         color="k",
         bbox=dict(facecolor="white"),
         ha="center",
@@ -129,7 +129,7 @@ def plot_ensemble_corridor(
     # Add logo (with error handling)
     try:
         img = plt.imread(get_sample_data(btc_logo_path))
-        plt.figimage(img, 250, 3500)  # Adjusted position
+        plt.figimage(img, 250, 3500)  
     except:
         print("Logo file not found, skipping logo placement")
 
@@ -193,6 +193,6 @@ def plot_ensemble_corridor(
     )
 
     # Save and show the plot with optimized settings
-    plt.savefig(output_path, bbox_inches="tight", dpi=200)  # Reduced DPI from 350
+    plt.savefig(output_path, bbox_inches="tight", dpi=200)  
     plt.tight_layout()
     plt.show()

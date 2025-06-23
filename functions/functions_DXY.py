@@ -2,6 +2,7 @@ import yfinance as yf
 import pandas as pd
 from datetime import datetime
 import matplotlib.pyplot as plt
+import random
 import statsmodels.api as sm
 from matplotlib.ticker import ScalarFormatter
 import sys
@@ -13,13 +14,42 @@ from fetch_data import fetch_data
 def load_dxy_data():
     """
     Extracts data related to dollar index up to today's date and returns the closing prices as a DataFrame.
+    Enhanced with rate limit handling.
     """
     today = datetime.today().strftime("%Y-%m-%d")
-    data = yf.download(
-        "DX-Y.NYB", start="2000-01-01", end=today, progress=False, auto_adjust=False
-    )
-    data.columns = data.columns.get_level_values(0)  # Flatten MultiIndex columns
-    return data[["Close"]].rename(columns={"Close": "DXY"})
+
+    max_retries = 5
+    base_delay = 10
+
+    for attempt in range(max_retries):
+        try:
+            if attempt > 0:
+                delay = base_delay * (attempt + 1) + random.uniform(0, 5)
+                print(f"Rate limited. Waiting {delay:.1f} seconds...")
+                time.sleep(delay)
+
+            print(f"Downloading DXY data (attempt {attempt + 1}/{max_retries})...")
+
+            data = yf.download(
+                "DX-Y.NYB",
+                start="2000-01-01",
+                end=today,
+                progress=False,
+                auto_adjust=False,
+            )
+
+            if not data.empty:
+                data.columns = data.columns.get_level_values(
+                    0
+                )  # Flatten MultiIndex columns
+                return data[["Close"]].rename(columns={"Close": "DXY"})
+
+        except Exception as e:
+            print(f"Attempt {attempt + 1} failed: {str(e)}")
+            if attempt == max_retries - 1:
+                raise Exception("Failed to download DXY data after all retries")
+
+    return None
 
 
 def load_btc_data():
