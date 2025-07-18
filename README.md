@@ -108,6 +108,12 @@ This analysis aims to explore the potential correlation between Bitcoin's price 
 #### Bitcoin Price Correlation with US Elections 🗳️ ![](output/7b.US_Elections.jpg)
 This analysis expands on my previous study by examining the broader relationship between Bitcoin price movements and significant political events globally. Beyond just the U.S. elections, we investigate how regulatory announcements, policy shifts, and major political transitions across different regions impact Bitcoin's volatility and overall trend. Through time-series analysis and correlation studies, we aim to identify patterns that might help predict how future political developments could influence the cryptocurrency market. This research provides investors with additional context for understanding Bitcoin's reaction to the geopolitical landscape.
 
+## 8.ETF Flows:
+
+#### ETF Flows distribution 🌡️ ![](output/8.ETF_BTC_flows.jpg)
+System that collects Bitcoin and Ethereum ETF flow data, integrates cryptocurrency prices, and generates visualizations with trend analysis.
+
+
 ## Get Involved! 🌟
 
 I believe in the power of community and collaboration. Here's how you can get involved:
