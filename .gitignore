@@ -12,11 +12,13 @@ functions/functions_etf_inflows.py
 functions/fetch_data.py
 notebooks/Reddit.csv
 notebooks/test.ipynb
-notebooks/BTCvsUSElections.ipynb
+sentiment.ipynb
+
+notebooks/test*.ipynb
+test*.ipynb
 
 #functions
 
-*.ipynb
 notebooks/temp_images/
 streamlit/
 .DS_Store

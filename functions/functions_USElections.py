@@ -53,7 +53,7 @@ def plot_data(
 ):
     """Create a multi-axis plot showing Bitcoin price and US election probabilities."""
     # Create the main figure and primary axis for Bitcoin price
-    fig, ax1 = plt.subplots(figsize=(12, 6))
+    fig, ax1 = plt.subplots(figsize=(12, 4))
     ax1.set_ylabel("BTC Price (USD)", color="black")
 
     # Configure y-axis formatting
@@ -274,7 +274,7 @@ def plot_data_winners(df, elections=None):
         )
 
     # Create figure and axis
-    fig, ax = plt.subplots(figsize=(14, 8))
+    fig, ax = plt.subplots(figsize=(14, 6))
 
     # Plot Bitcoin price on a logarithmic scale
     ax.semilogy(

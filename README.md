@@ -41,6 +41,9 @@ This analysis explores the growth correlation between Bitcoin's supply curve and
 #### BTC SMA 💭 ![](output/1g.BTC_SMA.jpg)
 In this visualization, we display the Bitcoin price movement in comparison to its Simple Moving Average (SMA) calculated over 209 weeks. The reason for choosing 209 weeks is linked to the Bitcoin halving cycle, which occurs every 4 years, approximately equivalent to 209 weeks. It has always been a great support of Bitcoin's prices.
 
+#### Metcalfe Law 💭 ![](output/1h.Metcalfe.jpg)
+Quantify Bitcoin's fundamental value using network activity to identify overvaluation/undervaluation periods and develop a data-driven trading indicator based on network effects theory.
+
 
 ## 2.Cycles:
 
