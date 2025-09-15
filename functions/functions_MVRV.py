@@ -8,7 +8,7 @@ from matplotlib.patches import Ellipse
 import sys
 
 sys.path.append("/Users/danieleraimondi/bitcoin_datascience/functions")
-from fetch_data import fetch_data
+from fetch_data import fetch_crypto_data
 
 
 def load_dataframe():
@@ -18,7 +18,7 @@ def load_dataframe():
     Returns:
         merged (pandas.DataFrame): Preprocessed dataframe with columns 'time', 'PriceUSD', 'mvrv', 'mvrvstd', and 'mvrv_norm'.
     """
-    df = fetch_data("btc")
+    df = fetch_crypto_data("btc")
     df = pd.DataFrame(data=df)
 
     df.rename(columns={"CapMVRVCur": "mvrv"}, inplace=True)

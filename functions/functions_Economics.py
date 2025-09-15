@@ -10,7 +10,7 @@ import matplotlib.dates as mdates
 import sys
 
 sys.path.append("/Users/danieleraimondi/bitcoin_datascience/functions")
-from fetch_data import fetch_data
+from fetch_data import fetch_crypto_data
 
 load_dotenv()
 
@@ -39,7 +39,7 @@ def plot_btc_economics(
     fred = Fred(api_key=os.getenv("FRED_API"))
 
     # Load Bitcoin price data
-    df = fetch_data("btc")
+    df = fetch_crypto_data("btc")
     # Convert 'time' column to datetime if not already
     df["time"] = pd.to_datetime(df["time"])
     df.dropna(inplace=True, subset=["PriceUSD"])
@@ -195,7 +195,7 @@ def plot_btc_m2sl_global_money_yoy():
     fred = Fred(api_key=os.getenv("FRED_API"))
 
     # Load Bitcoin price data
-    df = fetch_data("btc")
+    df = fetch_crypto_data("btc")
     df["time"] = pd.to_datetime(df["time"])
     df.dropna(inplace=True, subset=["PriceUSD"])
 

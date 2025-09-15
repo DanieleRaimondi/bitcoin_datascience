@@ -6,11 +6,11 @@ import pandas as pd
 import sys
 
 sys.path.append("/Users/danieleraimondi/bitcoin_datascience/functions")
-from fetch_data import fetch_data
+from fetch_data import fetch_crypto_data
 
 def process_data():
     # Load Bitcoin data
-    df = fetch_data("btc")
+    df = fetch_crypto_data("btc")
 
     # 'time' column in datetime format
     df["time"] = pd.to_datetime(df["time"])

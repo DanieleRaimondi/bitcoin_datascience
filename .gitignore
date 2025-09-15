@@ -1,6 +1,7 @@
 #data/
 __pycache__
 .mypy_cache/
+.pytest_cache
 utils/__pycache__
 btc_charts.egg-info/
 functions/__pycache__
@@ -15,10 +16,12 @@ notebooks/test.ipynb
 sentiment.ipynb
 
 notebooks/test*.ipynb
+notebooks/x*.ipynb
 test*.ipynb
+x*.ipynb
 
 #functions
-
+run.sh
 notebooks/temp_images/
 streamlit/
 .DS_Store
@@ -27,3 +30,8 @@ sentiment/
 run_fusion_model.py
 ThermoModel_Cycles_Fusion.py
 output/ThermoModel_Cycles_Fusion.jpg
+data/
+functions/functions_BTC_Miners.py
+notebooks/Rotations.ipynb
+notebooks/10.CandleStick_Charts.ipynb
+notebooks/0.Forecast.ipynb

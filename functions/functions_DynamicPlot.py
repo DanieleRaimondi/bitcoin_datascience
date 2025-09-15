@@ -9,10 +9,10 @@ import numpy as np
 import sys
 
 sys.path.append("/Users/danieleraimondi/bitcoin_datascience/functions")
-from fetch_data import fetch_data
+from fetch_data import fetch_crypto_data
 
 def load_data():
-    df = fetch_data("btc")
+    df = fetch_crypto_data("btc")
     df = df[["time", "PriceUSD"]].dropna()
     return df
 

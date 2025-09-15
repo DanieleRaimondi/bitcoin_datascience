@@ -6,9 +6,10 @@ import random
 import statsmodels.api as sm
 from matplotlib.ticker import ScalarFormatter
 import sys
+import time  # Missing import
 
 sys.path.append("/Users/danieleraimondi/bitcoin_datascience/functions")
-from fetch_data import fetch_data
+from fetch_data import fetch_crypto_data
 
 
 def load_dxy_data():
@@ -38,22 +39,28 @@ def load_dxy_data():
                 auto_adjust=False,
             )
 
-            if not data.empty:
-                data.columns = data.columns.get_level_values(
-                    0
-                )  # Flatten MultiIndex columns
+            if not data.empty and "Close" in data.columns:
+                # Handle both single-level and multi-level column indexes
+                if isinstance(data.columns, pd.MultiIndex):
+                    data.columns = data.columns.get_level_values(0)
                 return data[["Close"]].rename(columns={"Close": "DXY"})
+            else:
+                print(
+                    f"Attempt {attempt + 1}: Downloaded data is empty or missing 'Close' column"
+                )
+                if attempt < max_retries - 1:
+                    continue
 
         except Exception as e:
             print(f"Attempt {attempt + 1} failed: {str(e)}")
             if attempt == max_retries - 1:
                 raise Exception("Failed to download DXY data after all retries")
 
-    return None
+    raise Exception("Failed to download DXY data: All attempts returned empty data")
 
 
 def load_btc_data():
-    btc = fetch_data("btc")
+    btc = fetch_crypto_data("btc")
     btc = btc.dropna(subset=["PriceUSD"]).reset_index(drop=True)[["time", "PriceUSD"]]
     btc.rename(columns={"time": "Date"}, inplace=True)
     btc.set_index("Date", inplace=True)
@@ -128,7 +135,7 @@ def plot_models(df, tops_dates, bottoms_dates, startbull_dates):
     plot_colored_loess(ax1, df, "PriceUSD_LOESS", "PriceUSD_LOESS_DERIV", lw=2)
     ax1.tick_params(axis="y", labelcolor="tab:blue")
     ax1.set_yscale("log")
-    ax1.set_ylim([df["PriceUSD"].min(), df["PriceUSD"].max()*1.25])
+    ax1.set_ylim([df["PriceUSD"].min(), df["PriceUSD"].max() * 1.25])
     ax1.set_xlim([df.index.min(), df.index.max()])
     ax1.yaxis.set_major_formatter(ScalarFormatter())
     ax1.ticklabel_format(style="plain", axis="y")

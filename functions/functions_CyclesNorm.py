@@ -4,7 +4,7 @@ import pandas as pd
 from datetime import datetime, timedelta
 import matplotlib.ticker as ticker
 import numpy as np
-from fetch_data import fetch_data
+from fetch_data import fetch_crypto_data
 
 
 def setup_style():
@@ -177,7 +177,7 @@ def add_vertical_lines(ax, halving_date):
 
 def visualize_plot():
     colors = setup_style()
-    df = fetch_data("btc")
+    df = fetch_crypto_data("btc")
 
     halving_dates = {
         "2016": pd.Timestamp("2016-07-09"),

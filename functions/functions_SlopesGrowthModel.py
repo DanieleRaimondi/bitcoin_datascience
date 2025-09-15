@@ -7,7 +7,7 @@ from matplotlib.colors import LinearSegmentedColormap
 import sys
 
 sys.path.append("/Users/danieleraimondi/bitcoin_datascience/functions")
-from fetch_data import fetch_data
+from fetch_data import fetch_crypto_data
 
 
 def slopes_growth_model(
@@ -106,7 +106,7 @@ def slopes_growth_model(
     xlim = (2011, last_forecast_year + 2)  # Add 2 years buffer for visualization
 
     # Load Bitcoin price data
-    df = fetch_data("btc")
+    df = fetch_crypto_data("btc")
 
     # Create a range of dates and reindex the dataframe
     date_range = pd.date_range(start=df["time"].min(), end=f"{xlim[1]}-12-31", freq="D")

@@ -4,7 +4,7 @@ import statsmodels.api as sm
 import sys
 
 sys.path.append("/Users/danieleraimondi/bitcoin_datascience/functions")
-from fetch_data import fetch_data
+from fetch_data import fetch_crypto_data
 
 
 def load_btc_data():
@@ -15,7 +15,7 @@ def load_btc_data():
     Returns:
     - pd.DataFrame: A pandas DataFrame containing the loaded and prepared Bitcoin price data.
     """
-    btc = fetch_data("btc")
+    btc = fetch_crypto_data("btc")
     btc = btc.dropna(subset=["PriceUSD"]).reset_index(drop=True)[["time", "AdrActCnt", "TxCnt", "PriceUSD"]]
     btc.set_index("time", inplace=True)
     return btc

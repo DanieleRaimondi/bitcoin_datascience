@@ -5,7 +5,7 @@ from scipy.optimize import differential_evolution
 from scipy.signal import savgol_filter
 from sklearn.linear_model import RANSACRegressor, LinearRegression
 from matplotlib.ticker import FuncFormatter
-from fetch_data import fetch_data
+from fetch_data import fetch_crypto_data
 import warnings
 
 warnings.filterwarnings("ignore")
@@ -84,7 +84,7 @@ def analyze_metcalfe(network_metric):
     print("METCALFE LAW ANALYSIS")
     print("=" * 50)
 
-    df = fetch_data("btc")
+    df = fetch_crypto_data("btc")
     df = df.dropna(subset=["PriceUSD", "TxCnt", "AdrActCnt", "SplyCur"]).copy()
     df["days_since_start"] = (df["time"] - df["time"].min()).dt.days
     df["time_factor"] = df["days_since_start"] / df["days_since_start"].max()
@@ -124,8 +124,8 @@ def analyze_metcalfe(network_metric):
     deviation_normalized = ((log_dev - log_dev.mean()) / log_dev.std()) * 20
     correlation = np.corrcoef(X.flatten(), y)[0, 1]
 
-    fig = plt.figure(figsize=(12, 8))
-    ax1 = plt.subplot2grid((7, 1), (0, 0), rowspan=5)
+    fig = plt.figure(figsize=(12, 7))
+    ax1 = plt.subplot2grid((8, 1), (0, 0), rowspan=6)
     ax1.semilogy(
         df["time"], df["PriceUSD"], "blue", linewidth=3, label="BTC Price", alpha=0.9
     )
@@ -164,7 +164,7 @@ def analyze_metcalfe(network_metric):
         1.04,
         f"Model: {model_name} | Parameters: [{param_str}]",
         transform=ax1.transAxes,
-        fontsize=10,
+        fontsize=8,
         ha="center",
     )
     ax1.text(
@@ -172,7 +172,7 @@ def analyze_metcalfe(network_metric):
         1.01,
         f"V = A(t) × n(n-1)/(2×c) | Correlation: {correlation:.6f}",
         transform=ax1.transAxes,
-        fontsize=10,
+        fontsize=8,
         ha="center",
     )
 
@@ -181,7 +181,7 @@ def analyze_metcalfe(network_metric):
     ax1.grid(True, alpha=0.3)
     ax1.set_xticks([])
 
-    ax2 = plt.subplot2grid((7, 1), (5, 0), rowspan=2)
+    ax2 = plt.subplot2grid((8, 1), (6, 0), rowspan=2)
     ax2.plot(df["time"], deviation_normalized, color="purple", linewidth=2, alpha=0.8)
     ax2.axhline(y=0, color="black", linestyle="-", alpha=0.5, linewidth=1)
     ax2.axhspan(15, deviation_normalized.max(), alpha=0.15, color="red")
@@ -202,7 +202,7 @@ def analyze_metcalfe(network_metric):
         0.95,
         f"Current: {status} ({current:.1f})",
         transform=ax2.transAxes,
-        fontsize=9,
+        fontsize=8,
         fontweight="bold",
         color=color,
         verticalalignment="top",

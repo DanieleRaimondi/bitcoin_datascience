@@ -8,11 +8,11 @@ from matplotlib.pyplot import figure
 import sys
 
 sys.path.append("/Users/danieleraimondi/bitcoin_datascience/functions")
-from fetch_data import fetch_data
+from fetch_data import fetch_crypto_data
 
 # Load and preprocess data
 def load_data():
-    df = fetch_data("btc")
+    df = fetch_crypto_data("btc")
     df = df[["time", "PriceUSD"]].dropna()
     return df
 
@@ -307,7 +307,7 @@ def load_and_preprocess_data():
         DataFrame: A pandas DataFrame containing the time, PriceUSD, Epoch, Halving, and Counter columns.
     """
     # Load the data from the CSV file and parse the 'time' column as dates
-    df = fetch_data("btc")
+    df = fetch_crypto_data("btc")
     df = df[["time", "PriceUSD"]].dropna()
 
     # Define epoch boundaries and their corresponding epoch numbers
@@ -339,7 +339,7 @@ def plot_bitcoin_halving_growth():
     Plots the growth of Bitcoin price since each halving event.
     """
     # Load the data
-    df = fetch_data("btc")
+    df = fetch_crypto_data("btc")
     df = df[["time", "PriceUSD"]].dropna()
 
     # Define epoch boundaries and their corresponding epoch numbers
@@ -452,7 +452,7 @@ def plot_bitcoin_price_epochs(
     Plots Bitcoin prices for different epochs defined by halving events.
     """
     # Load the data
-    df = fetch_data("btc")
+    df = fetch_crypto_data("btc")
     df = df[["time", "PriceUSD"]].dropna()
 
     # Define epoch boundaries and their corresponding epoch numbers

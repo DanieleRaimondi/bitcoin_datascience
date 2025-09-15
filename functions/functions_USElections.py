@@ -6,12 +6,12 @@ import numpy as np
 import sys
 
 sys.path.append("/Users/danieleraimondi/bitcoin_datascience/functions")
-from fetch_data import fetch_data
+from fetch_data import fetch_crypto_data
 
 
 def load_bitcoin_data():
     """Load Bitcoin price data from a predefined fetch function."""
-    btc = fetch_data("btc")[["time", "PriceUSD"]]
+    btc = fetch_crypto_data("btc")[["time", "PriceUSD"]]
     btc["time"] = pd.to_datetime(btc["time"])
     return btc
 

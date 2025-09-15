@@ -17,7 +17,8 @@ jupyter nbconvert --to notebook --execute --inplace 6a.GoogleTrends.ipynb
 jupyter nbconvert --to notebook --execute --inplace 7a.BTCvsUSELECTIONS.ipynb
 jupyter nbconvert --to notebook --execute --inplace 7b.US_Elections.ipynb
 jupyter nbconvert --to notebook --execute --inplace 8.ETF_Inflows.ipynb
-#jupyter nbconvert --to notebook --execute --inplace 9.DynamicPlot.ipynb
+jupyter nbconvert --to notebook --execute --inplace 9.BTC_Miners.ipynb
+#jupyter nbconvert --to notebook --execute --inplace 99.DynamicPlot.ipynb
 
 echo "All the notebooks run."
 

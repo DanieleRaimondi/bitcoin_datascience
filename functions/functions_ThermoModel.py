@@ -11,7 +11,7 @@ from scipy.optimize import minimize
 
 import sys
 sys.path.append("/Users/danieleraimondi/bitcoin_datascience/functions")
-from fetch_data import fetch_data
+from fetch_data import fetch_crypto_data
 
 
 def load_btc_data(train_frac = 0.9, last_date = False):
@@ -26,7 +26,7 @@ def load_btc_data(train_frac = 0.9, last_date = False):
     - pd.DataFrame: A pandas DataFrame with the prepared Bitcoin price data.
     - datetime: The last date available in the dataset.
     """
-    df = fetch_data("btc")
+    df = fetch_crypto_data("btc")
     df = df.dropna(subset=["PriceUSD"]).reset_index(drop=True)[["time", "PriceUSD"]]
     # Calculate the number of rows to load based on the fraction
     num_rows = int(len(df) * train_frac)

@@ -38,10 +38,10 @@ This model analyzes Bitcoin's diminishing returns by connecting historical peaks
 #### BTC vs Supply 💭 ![](output/1f.BTCvsSupply.jpg)
 This analysis explores the growth correlation between Bitcoin's supply curve and its price history, to gain insights into how Bitcoin's programmed scarcity might influence its value over time.
 
-#### BTC SMA 💭 ![](output/1g.BTC_SMA.jpg)
+#### BTC SMA 🚂 ![](output/1g.BTC_SMA.jpg)
 In this visualization, we display the Bitcoin price movement in comparison to its Simple Moving Average (SMA) calculated over 209 weeks. The reason for choosing 209 weeks is linked to the Bitcoin halving cycle, which occurs every 4 years, approximately equivalent to 209 weeks. It has always been a great support of Bitcoin's prices.
 
-#### Metcalfe Law 💭 ![](output/1h.Metcalfe.jpg)
+#### Metcalfe Law 🕸️ ![](output/1h.Metcalfe.jpg)
 Quantify Bitcoin's fundamental value using network activity to identify overvaluation/undervaluation periods and develop a data-driven trading indicator based on network effects theory.
 
 
@@ -113,8 +113,13 @@ This analysis expands on my previous study by examining the broader relationship
 
 ## 8.ETF Flows:
 
-#### ETF Flows distribution 🌡️ ![](output/8.ETF_BTC_flows.jpg)
+#### ETF Flows distribution 🏦 ![](output/8.ETF_BTC_flows.jpg)
 System that collects Bitcoin and Ethereum ETF flow data, integrates cryptocurrency prices, and generates visualizations with trend analysis.
+
+## 9.Miners:
+
+#### Correlations vs BTC + Holdings + Short Data ⛏️ ![](output/BTC_Miners/BTC_MARA_Holdings_Correlations.jpg)
+The objective of this analysis is to identify hedge and diversification opportunities in the crypto sector by studying correlations between Bitcoin and major mining companies while considering their BTC holdings and Short Data.
 
 
 ## Get Involved! 🌟
