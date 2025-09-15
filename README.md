@@ -118,7 +118,7 @@ System that collects Bitcoin and Ethereum ETF flow data, integrates cryptocurren
 
 ## 9.Miners:
 
-#### Correlations vs BTC + Holdings + Short Data ⛏️ ![](output/BTC_Miners/BTC_MARA_Holdings_Correlations.jpg)
+#### Correlations vs BTC + Holdings + Short Data ⛏️ ![](output/BTC_Miners/BTC_HUT_Analysis.jpg)
 The objective of this analysis is to identify hedge and diversification opportunities in the crypto sector by studying correlations between Bitcoin and major mining companies while considering their BTC holdings and Short Data.
 
 
