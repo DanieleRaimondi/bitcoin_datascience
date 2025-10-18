@@ -6,64 +6,237 @@ import random
 import statsmodels.api as sm
 from matplotlib.ticker import ScalarFormatter
 import sys
-import time  # Missing import
+import time
+import requests
+from io import StringIO
 
 sys.path.append("/Users/danieleraimondi/bitcoin_datascience/functions")
 from fetch_data import fetch_crypto_data
 
 
-def load_dxy_data():
+def load_dxy_data_fred():
     """
-    Extracts data related to dollar index up to today's date and returns the closing prices as a DataFrame.
-    Enhanced with rate limit handling.
+    Alternative DXY loader using FRED (Federal Reserve Economic Data).
+    More reliable than Yahoo Finance for economic indices.
+    """
+    try:
+        print("Downloading DXY data from FRED...")
+
+        # FRED API endpoint for Trade Weighted US Dollar Index
+        url = "https://fred.stlouisfed.org/graph/fredgraph.csv"
+        params = {
+            "bgcolor": "%23e1e9f0",
+            "chart_type": "line",
+            "drp": "0",
+            "fo": "open%20sans",
+            "graph_bgcolor": "%23ffffff",
+            "height": "450",
+            "mode": "fred",
+            "recession_bars": "on",
+            "txtcolor": "%23444444",
+            "ts": "12",
+            "tts": "12",
+            "width": "1318",
+            "nt": "0",
+            "thu": "0",
+            "trc": "0",
+            "show_legend": "yes",
+            "show_axis_titles": "yes",
+            "show_tooltip": "yes",
+            "id": "DTWEXBGS",  # Broad trade-weighted dollar index
+            "scale": "left",
+            "cosd": "2000-01-01",
+            "coed": datetime.today().strftime("%Y-%m-%d"),
+            "line_color": "%234572a7",
+            "link_values": "false",
+            "line_style": "solid",
+            "mark_type": "none",
+            "mw": "3",
+            "lw": "2",
+            "ost": "-99999",
+            "oet": "99999",
+            "mma": "0",
+            "fml": "a",
+            "fq": "Daily",
+            "fam": "avg",
+            "fgst": "lin",
+            "fgsnd": "2020-02-01",
+            "line_index": "1",
+            "transformation": "lin",
+            "vintage_date": datetime.today().strftime("%Y-%m-%d"),
+            "revision_date": datetime.today().strftime("%Y-%m-%d"),
+            "nd": datetime.today().strftime("%Y-%m-%d"),
+        }
+
+        response = requests.get(url, params=params, timeout=30)
+        response.raise_for_status()
+
+        data = pd.read_csv(StringIO(response.text))
+
+        # Clean and format data
+        data.columns = ["Date", "DXY"]
+        data["Date"] = pd.to_datetime(data["Date"])
+        data = data.set_index("Date")
+
+        # Remove any rows with missing values
+        data = data.dropna()
+
+        # Convert to numeric
+        data["DXY"] = pd.to_numeric(data["DXY"], errors="coerce")
+        data = data.dropna()
+
+        if len(data) > 100:
+            print(f"Successfully loaded {len(data)} DXY data points from FRED")
+            print(f"Date range: {data.index.min()} to {data.index.max()}")
+            print(f"DXY range: {data['DXY'].min():.2f} to {data['DXY'].max():.2f}")
+            return data
+        else:
+            raise Exception("Insufficient data from FRED")
+
+    except Exception as e:
+        print(f"FRED download failed: {str(e)}")
+        return None
+
+
+def load_dxy_data_yfinance():
+    """
+    Fallback DXY loader using yfinance with aggressive rate limit handling.
     """
     today = datetime.today().strftime("%Y-%m-%d")
+    max_retries = 8
+    base_delay = 5
 
-    max_retries = 5
-    base_delay = 10
+    symbols = ["DX-Y.NYB", "DXY=X", "^DXY"]
 
-    for attempt in range(max_retries):
-        try:
-            if attempt > 0:
-                delay = base_delay * (attempt + 1) + random.uniform(0, 5)
-                print(f"Rate limited. Waiting {delay:.1f} seconds...")
-                time.sleep(delay)
+    for symbol in symbols:
+        print(f"Trying yfinance symbol: {symbol}")
 
-            print(f"Downloading DXY data (attempt {attempt + 1}/{max_retries})...")
+        for attempt in range(max_retries):
+            try:
+                if attempt > 0:
+                    delay = base_delay * (2**attempt) + random.uniform(5, 15)
+                    print(f"Waiting {delay:.1f} seconds before retry...")
+                    time.sleep(delay)
 
-            data = yf.download(
-                "DX-Y.NYB",
-                start="2000-01-01",
-                end=today,
-                progress=False,
-                auto_adjust=False,
-            )
-
-            if not data.empty and "Close" in data.columns:
-                # Handle both single-level and multi-level column indexes
-                if isinstance(data.columns, pd.MultiIndex):
-                    data.columns = data.columns.get_level_values(0)
-                return data[["Close"]].rename(columns={"Close": "DXY"})
-            else:
                 print(
-                    f"Attempt {attempt + 1}: Downloaded data is empty or missing 'Close' column"
+                    f"Downloading DXY data with {symbol} (attempt {attempt + 1}/{max_retries})..."
                 )
-                if attempt < max_retries - 1:
+
+                # Create new session for each attempt
+                import requests
+
+                session = requests.Session()
+                session.headers.update(
+                    {
+                        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+                    }
+                )
+
+                # Try manual ticker approach first
+                ticker = yf.Ticker(symbol, session=session)
+                data = ticker.history(
+                    start="2000-01-01",
+                    end=today,
+                    auto_adjust=False,
+                    prepost=False,
+                    actions=False,
+                    timeout=30,
+                )
+
+                if data is not None and not data.empty:
+                    print(
+                        f"Downloaded {len(data)} rows with columns: {list(data.columns)}"
+                    )
+
+                    # Handle column structure
+                    if "Close" in data.columns:
+                        result = data[["Close"]].rename(columns={"Close": "DXY"})
+                    elif len(data.columns) >= 4:
+                        result = data.iloc[:, [3]].rename(
+                            columns={data.columns[3]: "DXY"}
+                        )
+                    else:
+                        print(f"Unexpected column structure: {data.columns}")
+                        continue
+
+                    # Validate and clean data
+                    if len(result) > 100 and not result["DXY"].isna().all():
+                        # Timezone fix
+                        if result.index.tz is not None:
+                            result.index = result.index.tz_localize(None)
+
+                        print(
+                            f"Successfully loaded {len(result)} DXY data points from {symbol}"
+                        )
+                        print(
+                            f"Date range: {result.index.min()} to {result.index.max()}"
+                        )
+                        print(
+                            f"DXY range: {result['DXY'].min():.2f} to {result['DXY'].max():.2f}"
+                        )
+                        return result
+                    else:
+                        print(f"Invalid data for {symbol}")
+
+                else:
+                    print(f"Attempt {attempt + 1}: No data returned for {symbol}")
+
+            except Exception as e:
+                error_msg = str(e)
+                print(f"Attempt {attempt + 1} failed for {symbol}: {error_msg}")
+
+                if (
+                    "rate limit" in error_msg.lower()
+                    or "too many requests" in error_msg.lower()
+                ):
+                    rate_limit_delay = 60 + random.uniform(30, 60)
+                    print(
+                        f"Rate limit detected. Waiting {rate_limit_delay:.1f} seconds..."
+                    )
+                    time.sleep(rate_limit_delay)
                     continue
 
-        except Exception as e:
-            print(f"Attempt {attempt + 1} failed: {str(e)}")
-            if attempt == max_retries - 1:
-                raise Exception("Failed to download DXY data after all retries")
+        print(f"Failed to get data from {symbol}, trying next symbol...")
+        time.sleep(30 + random.uniform(10, 20))
 
-    raise Exception("Failed to download DXY data: All attempts returned empty data")
+    return None
+
+
+def load_dxy_data():
+    """
+    Main DXY loader: Try FRED first, then fall back to yfinance if needed.
+    """
+    # Try FRED first (no rate limits)
+    fred_data = load_dxy_data_fred()
+    if fred_data is not None:
+        return fred_data
+
+    print("FRED failed, falling back to yfinance...")
+
+    # Fallback to yfinance
+    yf_data = load_dxy_data_yfinance()
+    if yf_data is not None:
+        return yf_data
+
+    raise Exception("All DXY data sources failed")
 
 
 def load_btc_data():
+    """
+    Load BTC data and ensure timezone-naive index for compatibility.
+    """
     btc = fetch_crypto_data("btc")
     btc = btc.dropna(subset=["PriceUSD"]).reset_index(drop=True)[["time", "PriceUSD"]]
     btc.rename(columns={"time": "Date"}, inplace=True)
     btc.set_index("Date", inplace=True)
+
+    # Timezone fix
+    if btc.index.tz is not None:
+        btc.index = btc.index.tz_localize(None)
+
+    # Ensure proper datetime index
+    if not isinstance(btc.index, pd.DatetimeIndex):
+        btc.index = pd.to_datetime(btc.index)
     return btc
 
 
@@ -206,7 +379,7 @@ def plot_models(df, tops_dates, bottoms_dates, startbull_dates):
     plt.show()
 
 
-def add_loess(df, column, frac=0.035):
+def add_loess(df, column, frac=0.03):
     """
     Adds LOESS smoothing to a data column.
     """
