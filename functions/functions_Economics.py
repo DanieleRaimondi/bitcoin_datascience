@@ -9,8 +9,7 @@ import matplotlib.ticker as ticker
 import matplotlib.dates as mdates
 import sys
 
-sys.path.append("/Users/danieleraimondi/bitcoin_datascience/functions")
-from fetch_data import fetch_crypto_data
+from .fetch_data import fetch_crypto_data
 
 load_dotenv()
 

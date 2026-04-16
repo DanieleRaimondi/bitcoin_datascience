@@ -5,14 +5,18 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import sys
 
-sys.path.append("/Users/danieleraimondi/bitcoin_datascience/functions")
+import sys as _sys, os as _os
+_funcs_dir = _os.path.dirname(_os.path.abspath(__file__))
+if _funcs_dir not in _sys.path:
+    _sys.path.insert(0, _funcs_dir)
+del _sys, _os, _funcs_dir
 from fetch_data import fetch_crypto_data
 
 def process_data():
     # Load Bitcoin data
     df = fetch_crypto_data("btc")
 
-    # 'time' column in datetime format
+    # Convert 'time' column to datetime format
     df["time"] = pd.to_datetime(df["time"])
     df["Supply"] = df["CapMrktCurUSD"] / df["PriceUSD"]
 
@@ -22,18 +26,18 @@ def process_data():
     return df, forecast
 
 
-# Funzione per stimare la percentuale di monete perse nel tempo
-def estimate_lost_coins_percentage(btc_data,time_series, initial_loss_rate=0.025, decay_rate=0.985):
+def estimate_lost_coins_percentage(btc_data, time_series, initial_loss_rate=0.025, decay_rate=0.985):
     """
-    Stima la percentuale di monete perse nel tempo.
-    :param time_series: Serie temporale delle date.
-    :param initial_loss_rate: Tasso percentuale iniziale di monete perse per anno.
-    :param decay_rate: Tasso di decrescita del tasso di perdita annuale.
-    :return: Percentuale di monete perse nel tempo.
+    Estimate the percentage of lost coins over time.
+    :param btc_data: Historical Bitcoin data.
+    :param time_series: Time series of dates.
+    :param initial_loss_rate: Initial annual percentage loss rate of coins.
+    :param decay_rate: Decay rate of the annual loss rate.
+    :return: Tuple of (percentage of lost coins over time, loss rates).
     """
     start_date = btc_data["time"].min()
     years = (time_series - start_date).dt.days / 365.25
-    loss_rates = initial_loss_rate * (decay_rate**years)
+    loss_rates = initial_loss_rate * (decay_rate ** years)
     lost_coins_percentage = 1 - np.exp(-loss_rates * years)
     return lost_coins_percentage, loss_rates
 
@@ -49,7 +53,7 @@ def forecast_supply(btc_data, years=15):
     Returns:
     DataFrame: A DataFrame containing the forecasted supply values for future dates.
     """
-    # Preparing the DataFrame for Prophet
+    # Prepare the DataFrame for Prophet
     df_prophet = btc_data[["time", "Supply"]].rename(columns={"time": "ds", "Supply": "y"})
 
     # Initialize the Prophet model with a specified carrying capacity
@@ -70,7 +74,7 @@ def forecast_supply(btc_data, years=15):
     return forecast
 
 
-def lost_coins_estimation(btc_data,forecast):
+def lost_coins_estimation(btc_data, forecast):
     """
     Estimate the lost coins percentage over time and calculate the available supply based on the forecast.
 
@@ -92,12 +96,15 @@ def plot_available_supply(btc_data, forecast):
     """
     Plot the forecasted values along with historical and available supply data.
     """
-    # Plotting
+    import matplotlib.dates as mdates
     plt.figure(figsize=(12, 6))
-    plt.plot(forecast.ds, forecast.yhat, label="BTC Supply - Forecast", color="orange")
-    # Supply
+    # Ensure x values are datetime
+    x_forecast = pd.to_datetime(forecast.ds)
+    x_btc = pd.to_datetime(btc_data["time"])
+    plt.plot(x_forecast, forecast.yhat, label="BTC Supply - Forecast", color="orange")
+    # Historical Supply
     plt.plot(
-        btc_data["time"],
+        x_btc,
         btc_data["Supply"],
         label="BTC Supply - Historical",
         linewidth=3,
@@ -106,7 +113,7 @@ def plot_available_supply(btc_data, forecast):
 
     # Available Supply
     plt.plot(
-        forecast["ds"],
+        x_forecast,
         forecast["available_supply"],
         label="BTC Supply Available - Forecast",
         linewidth=2,
@@ -135,9 +142,13 @@ def plot_available_supply(btc_data, forecast):
         y=21000000, color="red", linestyle="--", lw=1, label="Max Supply = 21,000,000"
     )
 
-    plt.gca().get_yaxis().set_major_formatter(
+    ax = plt.gca()
+    ax.get_yaxis().set_major_formatter(
         ticker.FuncFormatter(lambda x, p: format(int(x), ","))
     )
+    # Set x-axis to date format
+    ax.xaxis.set_major_locator(mdates.AutoDateLocator())
+    ax.xaxis.set_major_formatter(mdates.ConciseDateFormatter(ax.xaxis.get_major_locator()))
     plt.xlabel("")
     plt.ylabel("Supply")
     plt.title("BTC Available Supply Estimation", fontsize=20, fontweight="bold")
@@ -149,7 +160,7 @@ def plot_available_supply(btc_data, forecast):
         0.02,
         0.92,
         lost_coins_text,
-        transform=plt.gca().transAxes,
+        transform=ax.transAxes,
         fontsize=10,
         verticalalignment="top",
         bbox=dict(boxstyle="round", facecolor="white", alpha=0.8),
@@ -164,18 +175,21 @@ def plot_m2_supply(btc_data, forecast, m2_data):
     Plot the forecasted Bitcoin supply values along with historical and available supply data,
     and M2 Money Supply on a secondary axis.
     """
+    import matplotlib.dates as mdates
     fig, ax1 = plt.subplots(figsize=(12, 6))
 
-    # Bitcoin Supply Plot
-    ax1.plot(forecast.ds, forecast.yhat, label="BTC Supply - Forecast", color="orange")
+    # Ensure x values are datetime
+    x_forecast = pd.to_datetime(forecast.ds)
+    x_btc = pd.to_datetime(btc_data["time"])
+    ax1.plot(x_forecast, forecast.yhat, label="BTC Supply - Forecast", color="orange")
     ax1.plot(
-        btc_data["time"],
+        x_btc,
         btc_data["Supply"],
         label="BTC Supply - Historical",
         linewidth=3,
         color="blue",
     )
-    # ax1.plot(forecast["ds"], forecast["available_supply"], label="Forecast Available BTC Supply", linewidth=2, color="green")
+    # ax1.plot(x_forecast, forecast["available_supply"], label="Forecast Available BTC Supply", linewidth=2, color="green")
 
     ax1.axhline(
         y=21000000,
@@ -212,6 +226,9 @@ def plot_m2_supply(btc_data, forecast, m2_data):
     ax1.yaxis.set_major_formatter(
         ticker.FuncFormatter(lambda x, p: format(int(x), ","))
     )
+    # Set x-axis to date format
+    ax1.xaxis.set_major_locator(mdates.AutoDateLocator())
+    ax1.xaxis.set_major_formatter(mdates.ConciseDateFormatter(ax1.xaxis.get_major_locator()))
 
     # M2 Money Supply Plot (secondary y-axis)
     ax2 = ax1.twinx()
@@ -236,12 +253,15 @@ def plot_m2_btcprice(btc_data, forecast):
     Plot the forecasted Bitcoin supply values along with historical and available supply data,
     and Bitcoin price on a secondary axis with a logarithmic scale.
     """
+    import matplotlib.dates as mdates
     fig, ax1 = plt.subplots(figsize=(12, 6))
 
-    # Bitcoin Supply Plot
-    ax1.plot(forecast.ds, forecast.yhat, label="BTC Supply - Forecast", color="orange")
+    # Ensure x values are datetime
+    x_forecast = pd.to_datetime(forecast.ds)
+    x_btc = pd.to_datetime(btc_data["time"])
+    ax1.plot(x_forecast, forecast.yhat, label="BTC Supply - Forecast", color="orange")
     ax1.plot(
-        btc_data["time"],
+        x_btc,
         btc_data["Supply"],
         label="BTC Supply - Historical",
         linewidth=3,
@@ -283,14 +303,17 @@ def plot_m2_btcprice(btc_data, forecast):
     ax1.yaxis.set_major_formatter(
         ticker.FuncFormatter(lambda x, p: format(int(x), ","))
     )
+    # Set x-axis to date format
+    ax1.xaxis.set_major_locator(mdates.AutoDateLocator())
+    ax1.xaxis.set_major_formatter(mdates.ConciseDateFormatter(ax1.xaxis.get_major_locator()))
 
     # Bitcoin Price Plot (secondary y-axis with logarithmic scale)
     ax2 = ax1.twinx()
-    ax2.plot(btc_data["time"], btc_data["PriceUSD"], label="BTC Price", color="green")
+    ax2.plot(x_btc, btc_data["PriceUSD"], label="BTC Price", color="green")
     ax2.set_ylabel("BTC Price (USD)", color="green")  # Set y-axis label color
     ax2.tick_params(axis="y", labelcolor="green")  # Set y-axis ticks color
     ax2.set_yscale("log")
-    ax2.set_ylim(bottom=0, top=400_000)  # Set the y-axis limit for the BTC price
+    ax2.set_ylim(bottom=0, top=250_000)  # Set the y-axis limit for the BTC price
     ax2.yaxis.set_major_formatter(ticker.FuncFormatter(lambda x, p: f"${x:.0f}"))
     ax2.legend(loc="upper right", fontsize=8)
 
@@ -320,7 +343,7 @@ def coins_lost_percentage(btc_data, forecast):
     :param forecast: Forecast data with predicted values and available supply.
     :return: A formatted string indicating the percentage of coins lost, or a message if data is not available.
     """
-    # l'ultima data disponibile in btc_data
+    # Get the last available date in btc_data
     last_date = btc_data.dropna().iloc[-1]["time"]
     last_forecast = forecast[forecast["ds"] == last_date]
 
@@ -328,9 +351,9 @@ def coins_lost_percentage(btc_data, forecast):
         last_supply = last_forecast["yhat"].values[0]
         last_available_supply = last_forecast["available_supply"].values[0]
 
-        coins_lost_percentage = round(100 * (1 - (last_available_supply / last_supply)), 2)
+        coins_lost_pct = round(100 * (1 - (last_available_supply / last_supply)), 2)
 
-        # Restituire la stringa formattata
-        return f"Estimated percentage of coins lost: {coins_lost_percentage} %"
+        # Return the formatted string
+        return f"Estimated percentage of coins lost: {coins_lost_pct} %"
     else:
         return "Data not available for the last date in btc_data."

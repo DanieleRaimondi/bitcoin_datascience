@@ -7,7 +7,11 @@ import matplotlib.ticker as mticker
 from matplotlib.pyplot import figure
 import sys
 
-sys.path.append("/Users/danieleraimondi/bitcoin_datascience/functions")
+import sys as _sys, os as _os
+_funcs_dir = _os.path.dirname(_os.path.abspath(__file__))
+if _funcs_dir not in _sys.path:
+    _sys.path.insert(0, _funcs_dir)
+del _sys, _os, _funcs_dir
 from fetch_data import fetch_crypto_data
 
 # Load and preprocess data
@@ -56,23 +60,9 @@ def plot_bitcoin_price_vs_sma(df):
     # ============== UPPER SUBPLOT: Price vs SMA ==============
     ax1.set_facecolor("white")
 
-    # Plot Bitcoin price and its SMA with better colors
-    ax1.plot(
-        weekly.index,
-        weekly["PriceUSD"],
-        label="Bitcoin Price",
-        linewidth=3,
-        color="#00D4AA",
-        alpha=0.9,
-    )
-    ax1.plot(
-        weekly.index,
-        weekly["209SMA"],
-        label="209-Week SMA",
-        color="#FF6B35",
-        linewidth=3,
-        alpha=0.9,
-    )
+    # --- ThermoModel palette: prezzo nero, SMA arancione ---
+    ax1.plot(weekly.index, weekly["PriceUSD"], label="Bitcoin Price", color="black", linewidth=3.5, zorder=10)
+    ax1.plot(weekly.index, weekly["209SMA"], label="209-Week SMA", color="#FFA500", linewidth=3.5, zorder=9)
 
     # Set y-axis to logarithmic scale
     ax1.set_yscale("log")
@@ -119,74 +109,82 @@ def plot_bitcoin_price_vs_sma(df):
     # Increase the size of tick labels
     ax1.tick_params(axis="both", which="major", labelsize=14, colors="black")
 
+
     # ============== LOWER SUBPLOT: Trading Oscillator ==============
     ax2.set_facecolor("white")
 
-    # Create trading zones with background colors
+    # Palette divergente blu-arancio-rosso (ThermoModel)
     multiplier_clean = weekly["Multiple"].dropna()
+    zone_colors = {
+        "strong_accum": "#1976D2",   # blue
+        "accum": "#64B5F6",         # light blue
+        "light_dist": "#FFD180",    # light orange
+        "dist": "#FF9800",          # orange
+        "heavy_dist": "#FF5252",    # red
+        "extreme": "#FF5252",       # red (no dark red)
+    }
 
-    # Define trading zones with specific color gradations
-    ax2.axhspan(
-        0.7, 1, alpha=0.4, color="darkgreen", label="Strong Accumulation (0.7x-1x)"
-    )
-    ax2.axhspan(1, 1.5, alpha=0.2, color="green", label="Accumulation (1x-1.5x)")
+    ax2.axhspan(0.7, 1, alpha=0.35, color=zone_colors["strong_accum"], label="Strong Accumulation (0.7x-1x)")
+    ax2.axhspan(1, 1.5, alpha=0.25, color=zone_colors["accum"], label="Accumulation (1x-1.5x)")
+    ax2.axhspan(1.5, 2.5, alpha=0.18, color=zone_colors["light_dist"], label="Light Distribution (1.5x-2.5x)")
+    ax2.axhspan(2.5, 4, alpha=0.18, color=zone_colors["dist"], label="Distribution (2.5x-4x)")
+    ax2.axhspan(4, 7, alpha=0.18, color=zone_colors["heavy_dist"], label="Heavy Distribution (4x-7x)")
+    ax2.axhspan(7, 20, alpha=0.18, color=zone_colors["extreme"], label="Extreme Distribution (>7x)")
 
-    # Red gradation zones
-    ax2.axhspan(
-        1.5, 2.5, alpha=0.15, color="orange", label="Light Distribution (1.5x-2.5x)"
-    )
-    ax2.axhspan(2.5, 4, alpha=0.25, color="red", label="Distribution (2.5x-4x)")
-    ax2.axhspan(4, 7, alpha=0.35, color="darkred", label="Heavy Distribution (4x-7x)")
-    ax2.axhspan(7, 20, alpha=0.5, color="maroon", label="Extreme Distribution (>7x)")
+    # Oscillator line: scala colori divergente
+    from matplotlib.collections import LineCollection
+    import matplotlib as mpl
+    x_vals = mpl.dates.date2num(weekly.index)
+    y_vals = weekly["Multiple"].values
+    points = np.array([x_vals, y_vals]).T.reshape(-1, 1, 2)
+    segments = np.concatenate([points[:-1], points[1:]], axis=1)
+    # Crea una mappa da blu (basso) a rosso (alto)
+    norm = mpl.colors.Normalize(vmin=0.7, vmax=7)
+    cmap = mpl.colors.LinearSegmentedColormap.from_list("thermo", [zone_colors["strong_accum"], zone_colors["light_dist"], zone_colors["heavy_dist"], zone_colors["extreme"]])
+    lc = LineCollection(segments, cmap=cmap, norm=norm)
+    lc.set_array(y_vals)
+    lc.set_linewidth(3.5)
+    ax2.add_collection(lc)
 
-    # Plot the multiplier with gradient-like effect
-    ax2.plot(
-        weekly.index,
-        weekly["Multiple"],
-        color="#0066CC",
-        linewidth=3,
-        alpha=0.9,
-        label="Price/SMA Oscillator",
-    )
-
-    # Add key horizontal reference lines
+    # Linee orizzontali di riferimento
     levels = [0.7, 1, 1.5, 2.5, 4, 7, 10]
     colors = [
-        "darkgreen",
-        "#FF6B35",
-        "#FFD700",
-        "#FFA500",
-        "#FF4444",
-        "#CC0000",
-        "#800000",
+        zone_colors["strong_accum"],
+        zone_colors["accum"],
+        zone_colors["light_dist"],
+        zone_colors["dist"],
+        zone_colors["heavy_dist"],
+        zone_colors["extreme"],
+        "#BDBDBD",  # neutral gray for 10x
     ]
     styles = [":", "-", "--", "--", "--", ":", ":"]
 
     for level, color, style in zip(levels, colors, styles):
         ax2.axhline(y=level, color=color, linestyle=style, linewidth=2, alpha=0.8)
 
+
     # Add trading signals annotations
     current_multiple = multiplier_clean.iloc[-1] if len(multiplier_clean) > 0 else 1
 
-    # Add text box with current signal
+    # Signal text and color professionale
     if current_multiple < 1:
         signal_text = "🟢 STRONG ACCUMULATION"
-        signal_color = "darkgreen"
+        signal_color = zone_colors["strong_accum"]
     elif current_multiple < 1.5:
         signal_text = "🟢 ACCUMULATION ZONE"
-        signal_color = "green"
+        signal_color = zone_colors["accum"]
     elif current_multiple < 2.5:
-        signal_text = "🟠 LIGHT DISTRIBUTION"
-        signal_color = "orange"
+        signal_text = "🟡 LIGHT DISTRIBUTION"
+        signal_color = zone_colors["light_dist"]
     elif current_multiple < 4:
-        signal_text = "🔴 DISTRIBUTION ZONE"
-        signal_color = "red"
+        signal_text = "🟠 DISTRIBUTION ZONE"
+        signal_color = zone_colors["dist"]
     elif current_multiple < 7:
         signal_text = "🔴 HEAVY DISTRIBUTION"
-        signal_color = "darkred"
+        signal_color = zone_colors["heavy_dist"]
     else:
         signal_text = "🔴 EXTREME DISTRIBUTION"
-        signal_color = "maroon"
+        signal_color = zone_colors["extreme"]
 
     # Set y-axis to logarithmic scale
     ax2.set_yscale("log")
@@ -226,7 +224,8 @@ def plot_bitcoin_price_vs_sma(df):
         pad=15,
         color="black",
     )
-    ax2.set_xlabel("Time", fontsize=16, labelpad=10, color="black")
+    # Rimuovi label asse x
+    # ax2.set_xlabel("Time", fontsize=16, labelpad=10, color="black")
     ax2.set_ylabel("Multiplier", fontsize=16, labelpad=10, color="black")
 
     # Show grid lines

@@ -7,6 +7,8 @@ btc_charts.egg-info/
 functions/__pycache__
 
 .env
+.venv
+.venv-py311
 notebooks/SentiMeter.ipynb
 functions/functions_SentiMeter.py
 functions/functions_etf_inflows.py

@@ -1,0 +1,17 @@
+numpy
+pandas
+matplotlib
+seaborn
+scipy
+scikit-learn
+statsmodels
+yfinance
+requests
+plotly
+pillow
+fredapi
+python-dotenv
+pytrends
+prophet
+jupyter
+ipykernel

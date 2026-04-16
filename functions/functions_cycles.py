@@ -58,9 +58,9 @@ def cycle_annotation_phase(
     halving_dates,
     tops_dates,
     bottoms_dates,
-    next_peak_prediction,
-    next_peak_prediction_lower,
-    next_peak_prediction_upper,
+    # next_peak_prediction,
+    # next_peak_prediction_lower,
+    # next_peak_prediction_upper,
 ):
     """
     Annotate cycle phases (maxima, minima, and zero crossings) on the cyclical pattern
@@ -138,38 +138,18 @@ def cycle_annotation_phase(
         ax2.axvline(date, color="green", linestyle="--", alpha=0.5)
     for date in bottoms_dates:
         ax2.axvline(date, color="red", linestyle="--", alpha=0.5)
-    ax2.axvline(next_peak_prediction, color="green", linestyle="--", alpha=0.5)
-    ax2.fill_between(
-        x=[next_peak_prediction_lower, next_peak_prediction_upper],
-        y1=ax2.get_ylim()[0],
-        y2=ax2.get_ylim()[1],
-        color="green",
-        alpha=0.15,
-    )
-
-    # Add "Cycle" labels for each major peak date and for the next top prediction
-    cycle_labels = ["Cycle 1", "Cycle 2", "Cycle 3"]
+    # Add "Cycle" labels for each major peak date
+    cycle_labels = ["Cycle 1", "Cycle 2", "Cycle 3", "Cycle 4"]
     for i, date in enumerate(tops_dates):
         ax2.text(
             date,
             -0.95,
-            cycle_labels[i],
+            cycle_labels[i] if i < len(cycle_labels) else f"Cycle {i+1}",
             color="b",
             fontsize=13,
             ha="center",
             fontweight="bold",
         )
-
-    # Add the label "Cycle 4" for the next top prediction
-    ax2.text(
-        next_peak_prediction,
-        -0.95,
-        "Cycle 4",
-        color="b",
-        fontsize=13,
-        ha="center",
-        fontweight="bold",
-    )
 
 
 def plot_bitcoin_cycles(
@@ -230,33 +210,7 @@ def plot_bitcoin_cycles(
     add_annotations_with_dates(ax1, halving_dates, "HALVING", "orange", 0.2)
     add_annotations_with_dates(ax1, tops_dates, "TOP", "green", 0.5)
     add_annotations_with_dates(ax1, bottoms_dates, "BOTTOM", "red", 0.5)
-    ax1.axvline(next_peak_prediction, color="green", linestyle="--", alpha=0.5)
-    ax1.text(
-        next_peak_prediction,
-        6,
-        f'NEXT TOP ?\n{next_peak_prediction_lower.strftime("%b")}-{next_peak_prediction_upper.strftime("%b")} {next_peak_prediction.strftime("%y")}',
-        verticalalignment="top",
-        color="green",
-        fontsize=8,
-        ha="center",
-        bbox=dict(
-            facecolor="white",
-            edgecolor="none",
-            alpha=0.75,
-            boxstyle="round,pad=0.5",
-        ),
-    )
-
-    # Fill between the dates
-    ax1.fill_between(
-        x=pd.date_range(
-            start=next_peak_prediction_lower, end=next_peak_prediction_upper, freq="D"
-        ),
-        y1=ax1.get_ylim()[0],
-        y2=ax1.get_ylim()[1],
-        color="green",
-        alpha=0.15,
-    )
+    # (Rimosso: nessuna linea, testo o highlight per il prossimo top previsto)
 
     # Add BTC logo
     img_path = "../utils/btc_logo.png"
@@ -312,15 +266,13 @@ def plot_bitcoin_cycles(
             minima_indices = np.where(
                 (cycle_dates > tops_dates[i]) & (cycle_dates < bottoms_dates[i])
             )[0]
-        else:
-            minima_indices = np.where(cycle_dates > tops_dates[i])[0]
-        ax2.fill_between(
-            x=cycle_dates[minima_indices],
-            y1=-1.02,
-            y2=1.05,
-            color="red",
-            alpha=0.15,
-        )
+            ax2.fill_between(
+                x=cycle_dates[minima_indices],
+                y1=-1.02,
+                y2=1.05,
+                color=(1, 0, 0, 0.15),
+            )
+        # Se i >= len(bottoms_dates), non colorare: la fase finale sarà gestita dal riempimento rosso finale
 
     # Fill green areas
     ax2.fill_between(
@@ -342,25 +294,30 @@ def plot_bitcoin_cycles(
             alpha=0.15,
         )
 
-    # Fill last green area
+    # Colora in verde dall'ultimo bottom all'ultimo top
+    last_bottom = bottoms_dates[-1]
+    last_top = tops_dates[-1]
+    green_idx = (cycle_dates > last_bottom) & (cycle_dates <= last_top)
     ax2.fill_between(
-        x=cycle_dates[
-            (cycle_dates > bottoms_dates[-1]) & (cycle_dates < next_peak_prediction)
-        ],
+        x=cycle_dates[green_idx],
         y1=-1.02,
         y2=1.05,
         color="green",
         alpha=0.15,
     )
-
-    # Fill area to the right of the next top in red
+    # Colora in rosso dal top a oggi+6 mesi, stesso alpha dei periodi precedenti
+    last_date = cycle_dates[-1]
+    red_start = last_top
+    red_end = last_date + pd.DateOffset(months=6)
+    red_idx = (cycle_dates > red_start) & (cycle_dates <= last_date)
     ax2.fill_between(
-        x=cycle_dates[cycle_dates > next_peak_prediction],
+        x=cycle_dates[red_idx],
         y1=-1.02,
         y2=1.05,
-        color="red",
-        alpha=0.15,
+        color=(1, 0, 0, 0.15),
     )
+    # Estendi asse x di 6 mesi oltre l'ultima data
+    ax2.set_xlim(pd.to_datetime("2012-01-01"), last_date + pd.DateOffset(months=6))
 
     # Configure limits and formatting for the second subplot.
     cycle_annotation_phase(
@@ -375,9 +332,9 @@ def plot_bitcoin_cycles(
         halving_dates,
         tops_dates,
         bottoms_dates,
-        next_peak_prediction,
-        next_peak_prediction_lower,
-        next_peak_prediction_upper,
+        # next_peak_prediction,
+        # next_peak_prediction_lower,
+        # next_peak_prediction_upper,
     )
     ax1.text(
         btc_data.time.iloc[2800],
@@ -390,7 +347,7 @@ def plot_bitcoin_cycles(
     
     # export csv data for cycles
     cycles_df = pd.DataFrame({"time": cycle_dates, "cycle": cycle_wave})
-    cycles_df.to_csv("/Users/danieleraimondi/bitcoin_datascience/data/cycles.csv", index=False)
+    cycles_df.to_csv("/Users/danyr92/Coding/bitcoin_datascience/data/cycles.csv", index=False)
     
     # Save the figure and display it.
     plt.savefig("../output/2a.Cycles.jpg", dpi=400)

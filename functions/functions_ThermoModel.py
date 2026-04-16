@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import datetime as dt
+from pathlib import Path
 from sklearn.preprocessing import PolynomialFeatures
 from sklearn.pipeline import make_pipeline
 from sklearn.linear_model import LinearRegression
@@ -10,8 +11,21 @@ import statsmodels.api as sm
 from scipy.optimize import minimize
 
 import sys
-sys.path.append("/Users/danieleraimondi/bitcoin_datascience/functions")
-from fetch_data import fetch_crypto_data
+
+CURRENT_DIR = Path(__file__).resolve().parent
+PROJECT_ROOT = CURRENT_DIR.parent
+if str(CURRENT_DIR) not in sys.path:
+    sys.path.append(str(CURRENT_DIR))
+
+try:
+    from fetch_data import fetch_crypto_data
+except ModuleNotFoundError:
+    def fetch_crypto_data(crypto: str):
+        """Fallback loader that reads local CSV data when fetch_data.py is absent."""
+        file_path = PROJECT_ROOT / "data" / f"{crypto.lower()}.csv"
+        if not file_path.exists():
+            raise FileNotFoundError(f"Missing dataset: {file_path}")
+        return pd.read_csv(file_path)
 
 
 def load_btc_data(train_frac = 0.9, last_date = False):
@@ -28,6 +42,9 @@ def load_btc_data(train_frac = 0.9, last_date = False):
     """
     df = fetch_crypto_data("btc")
     df = df.dropna(subset=["PriceUSD"]).reset_index(drop=True)[["time", "PriceUSD"]]
+    # Convert 'time' column to datetime
+    df["time"] = pd.to_datetime(df["time"], errors="coerce")
+    df = df.dropna(subset=["time"]).reset_index(drop=True)
     # Calculate the number of rows to load based on the fraction
     num_rows = int(len(df) * train_frac)
     df = df.iloc[:num_rows].reset_index(drop=True)[["time", "PriceUSD"]]
@@ -480,7 +497,8 @@ def final_plot(df, last_date):
 
     # LOGO
     from matplotlib.cbook import get_sample_data
-    img = plt.imread(get_sample_data("/Users/danieleraimondi/btc_charts/btc_charts/utils/btc_logo.png"))
+    img_path = str(PROJECT_ROOT / "utils" / "btc_logo.png")
+    img = plt.imread(img_path)
     plt.figimage(img, 375, 5300)
     ###############################################################
 

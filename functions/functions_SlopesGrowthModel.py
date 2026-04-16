@@ -6,7 +6,11 @@ import matplotlib.ticker as mticker
 from matplotlib.colors import LinearSegmentedColormap
 import sys
 
-sys.path.append("/Users/danieleraimondi/bitcoin_datascience/functions")
+import sys as _sys, os as _os
+_funcs_dir = _os.path.dirname(_os.path.abspath(__file__))
+if _funcs_dir not in _sys.path:
+    _sys.path.insert(0, _funcs_dir)
+del _sys, _os, _funcs_dir
 from fetch_data import fetch_crypto_data
 
 
@@ -118,6 +122,10 @@ def slopes_growth_model(
     )
     df["index"] = range(1, len(df) + 1)
 
+    # Helper to get the nearest date in df["time"] to a target date
+    def get_nearest_date(target_date):
+        return df.iloc[(df["time"] - target_date).abs().argsort()[:1]]["time"].values[0]
+
     # Define important peak and bottom dates for Bitcoin price
     tops_dates = pd.to_datetime(
         ["2011-06-08", "2013-11-30", "2017-12-17", "2021-11-10"]
@@ -158,18 +166,24 @@ def slopes_growth_model(
 
     def plot_regression_lines(ax, dates, label_prefix, linestyle="--", colors=None):
         """Plot regression lines for given dates and return slopes and lines for legend"""
-        data = df[df["time"].isin(dates)]
+        # Use nearest available dates for regression points
+        nearest_dates = [get_nearest_date(d) for d in dates]
+        data = df[df["time"].isin(nearest_dates)]
         slopes = []
         lines = []
 
         for i in range(len(dates) - 1):
             color = colors[i] if colors else cycle_colors[i]
-            subset = data.iloc[i : i + 2]
+            # Use nearest available dates for regression
+            d0 = get_nearest_date(dates[i])
+            d1 = get_nearest_date(dates[i+1])
+            subset = df[df["time"].isin([d0, d1])]
             X = sm.add_constant(np.log(subset["index"]))
             y = np.log(subset["PriceUSD"])
 
             model = sm.OLS(y, X).fit()
-            slope = model.params[1]
+            # Use positional access to avoid KeyError if index is not 1
+            slope = model.params.values[1]
             slopes.append(round(slope, 2))
 
             line_xs = np.linspace(subset["index"].iloc[0], subset["index"].iloc[1], 100)
@@ -219,8 +233,11 @@ def slopes_growth_model(
 
     def calculate_price_at_date(start_date, start_price, target_date, slope, df):
         """Calculate price at target date given start conditions and slope"""
-        start_index = df[df["time"] == start_date]["index"].iloc[0]
-        target_index = df[df["time"] == target_date]["index"].iloc[0]
+        # Use nearest available dates for start and target
+        nearest_start = get_nearest_date(start_date)
+        nearest_target = get_nearest_date(target_date)
+        start_index = df[df["time"] == nearest_start]["index"].iloc[0]
+        target_index = df[df["time"] == nearest_target]["index"].iloc[0]
 
         intercept = np.log(start_price) - slope * np.log(start_index)
         predicted_price = np.exp(slope * np.log(target_index) + intercept)
@@ -567,18 +584,23 @@ def save_data_to_csv(
     result_df["upper"] = np.nan
     result_df["lower"] = np.nan
 
+    def get_nearest_date(target_date):
+        return df.iloc[(df["time"] - target_date).abs().argsort()[:1]]["time"].values[0]
+
     def calculate_line_values(
         start_date, start_price, end_date, end_price, slope, df_ref
     ):
         """Calculate values along a regression line"""
-        start_idx = df_ref[df_ref["time"] == start_date]["index"].iloc[0]
-        end_idx = df_ref[df_ref["time"] == end_date]["index"].iloc[0]
+        nearest_start = get_nearest_date(start_date)
+        nearest_end = get_nearest_date(end_date)
+        start_idx = df_ref[df_ref["time"] == nearest_start]["index"].iloc[0]
+        end_idx = df_ref[df_ref["time"] == nearest_end]["index"].iloc[0]
 
         # Calculate intercept
         intercept = np.log(start_price) - slope * np.log(start_idx)
 
         # Get all dates between start and end
-        mask = (df_ref["time"] >= start_date) & (df_ref["time"] <= end_date)
+        mask = (df_ref["time"] >= nearest_start) & (df_ref["time"] <= nearest_end)
         date_subset = df_ref[mask].copy()
 
         # Calculate values for each date
@@ -711,8 +733,8 @@ def save_data_to_csv(
     result_df = result_df.dropna(subset=["upper", "lower"], how="all")
 
     # Forward fill to create continuous lines
-    result_df["upper"] = result_df["upper"].fillna(method="ffill")
-    result_df["lower"] = result_df["lower"].fillna(method="ffill")
+    result_df["upper"] = result_df["upper"].ffill()
+    result_df["lower"] = result_df["lower"].ffill()
 
     # Create the data directory if it doesn't exist
     import os

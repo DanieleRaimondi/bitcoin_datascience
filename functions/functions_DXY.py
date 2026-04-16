@@ -10,8 +10,7 @@ import time
 import requests
 from io import StringIO
 
-sys.path.append("/Users/danieleraimondi/bitcoin_datascience/functions")
-from fetch_data import fetch_crypto_data
+from .fetch_data import fetch_crypto_data
 
 
 def load_dxy_data_fred():
@@ -335,6 +334,22 @@ def plot_models(df, tops_dates, bottoms_dates, startbull_dates):
             va="center",
             transform=ax1.get_xaxis_transform(),
         )
+
+    # Add red area after the last top date until the end of the data
+    last_top = tops_dates[-2]  # The last defined top (not 'today')
+    last_date = df.index.max()
+    ax1.axvspan(last_top, last_date, color="red", alpha=0.15)
+    mid_date = last_top + (last_date - last_top) / 2
+    ax1.text(
+        mid_date,
+        0.03,
+        "down \ntrend",
+        color="red",
+        fontsize=8,
+        ha="center",
+        va="center",
+        transform=ax1.get_xaxis_transform(),
+    )
 
     for startbull in startbull_dates:
         next_top_index = tops_dates[tops_dates > startbull][0]

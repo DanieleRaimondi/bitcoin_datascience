@@ -5,14 +5,19 @@ import statsmodels.api as sm
 import numpy as np
 import sys
 
-sys.path.append("/Users/danieleraimondi/bitcoin_datascience/functions")
+import sys as _sys, os as _os
+_funcs_dir = _os.path.dirname(_os.path.abspath(__file__))
+if _funcs_dir not in _sys.path:
+    _sys.path.insert(0, _funcs_dir)
+del _sys, _os, _funcs_dir
 from fetch_data import fetch_crypto_data
 
 
 def load_bitcoin_data():
     """Load Bitcoin price data from a predefined fetch function."""
     btc = fetch_crypto_data("btc")[["time", "PriceUSD"]]
-    btc["time"] = pd.to_datetime(btc["time"])
+    btc = btc.copy()
+    btc.loc[:, "time"] = pd.to_datetime(btc["time"])
     return btc
 
 
@@ -189,9 +194,7 @@ def preprocess_data(btc_data):
 
     # Create a copy of the Bitcoin data
     df = btc_data.copy()
-
-    # Ensure time column is in datetime format
-    df["time"] = pd.to_datetime(df["time"])
+    df.loc[:, "time"] = pd.to_datetime(df["time"])
 
     # Define U.S. presidential elections and administrations
     elections = pd.DataFrame(
@@ -210,26 +213,23 @@ def preprocess_data(btc_data):
         }
     )
 
-    # Add column to identify which administration each Bitcoin price falls under
-    df["administration"] = None
-    df["party"] = None
-
-    # Assign each Bitcoin price to the most recent presidential administration
-    for i, row in df.iterrows():
-        # Find the most recent election before this Bitcoin price observation
-        prior_elections = elections[elections["election_date"] <= row["time"]]
-        if not prior_elections.empty:
-            most_recent = prior_elections.iloc[-1]
-            df.at[i, "administration"] = most_recent["president"]
-            df.at[i, "party"] = most_recent["party"]
-
+    # Merge Bitcoin data with the most recent election before each observation
+    df_sorted = df.sort_values("time").reset_index(drop=True)
+    elections_sorted = elections.sort_values("election_date").reset_index(drop=True)
+    merged = pd.merge_asof(
+        df_sorted,
+        elections_sorted,
+        left_on="time",
+        right_on="election_date",
+        direction="backward"
+    )
     # Drop rows before the first election in our dataset
-    df = df.dropna(subset=["administration"])
-
-    # Add a log-scaled price column for visualization
-    df["log_price"] = np.log10(df["PriceUSD"])
-
-    return df, elections
+    merged = merged.dropna(subset=["president", "party"])
+    merged = merged.copy()  # Ensure no chained assignment warning
+    merged.loc[:, "log_price"] = np.log10(merged["PriceUSD"])
+    # Rename columns for compatibility
+    merged = merged.rename(columns={"president": "administration"})
+    return merged, elections
 
 
 def plot_data_winners(df, elections=None):
@@ -272,8 +272,11 @@ def plot_data_winners(df, elections=None):
                 ],
             }
         )
+        elections = elections.copy()
 
     # Create figure and axis
+    # Ensure no chained assignment warning
+    df = df.copy()
     fig, ax = plt.subplots(figsize=(14, 6))
 
     # Plot Bitcoin price on a logarithmic scale
@@ -357,6 +360,7 @@ def plot_data_winners(df, elections=None):
                 color=color,
             )
 
+
     # Set labels and title
     ax.set_title(
         "Bitcoin Price Trends During U.S. Presidential Administrations",
@@ -365,6 +369,9 @@ def plot_data_winners(df, elections=None):
     )
     ax.set_xlabel("Date", fontsize=12)
     ax.set_ylabel("Bitcoin Price (USD, Log Scale)", fontsize=12)
+
+    # Imposta il range dell'asse x da 2010 all'ultima data disponibile
+    ax.set_xlim(pd.Timestamp("2010-01-01"), df["time"].max())
 
     # Format x-axis date labels
     ax.xaxis.set_major_formatter(mdates.DateFormatter("%Y"))

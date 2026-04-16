@@ -1,26 +1,40 @@
-# Esegue i notebook uno dopo l'altro
-jupyter nbconvert --to notebook --execute --inplace 1a.ThermoModel.ipynb
-jupyter nbconvert --to notebook --execute --inplace 1b.LogTimeLogPrice.ipynb
-jupyter nbconvert --to notebook --execute --inplace 1d.EnsembleCorridor.ipynb
-jupyter nbconvert --to notebook --execute --inplace 1e.SlopesGrowthModel.ipynb
-jupyter nbconvert --to notebook --execute --inplace 1g.Growths.ipynb
-jupyter nbconvert --to notebook --execute --inplace 1h.Metcalfe.ipynb
-jupyter nbconvert --to notebook --execute --inplace 2a.Cycles.ipynb
-jupyter nbconvert --to notebook --execute --inplace 2b.CyclesNorm.ipynb
-jupyter nbconvert --to notebook --execute --inplace 2c.MVRV.ipynb
-jupyter nbconvert --to notebook --execute --inplace 3a.Economics.ipynb
-jupyter nbconvert --to notebook --execute --inplace 3b.DXY.ipynb
-jupyter nbconvert --to notebook --execute --inplace 4a.Supply.ipynb
-jupyter nbconvert --to notebook --execute --inplace 4c.Demand.ipynb
-jupyter nbconvert --to notebook --execute --inplace 5.Cohorts.ipynb
-jupyter nbconvert --to notebook --execute --inplace 6a.GoogleTrends.ipynb
-jupyter nbconvert --to notebook --execute --inplace 7a.BTCvsUSELECTIONS.ipynb
-jupyter nbconvert --to notebook --execute --inplace 7b.US_Elections.ipynb
-jupyter nbconvert --to notebook --execute --inplace 8.ETF_Inflows.ipynb
-jupyter nbconvert --to notebook --execute --inplace 9.BTC_Miners.ipynb
-#jupyter nbconvert --to notebook --execute --inplace 99.DynamicPlot.ipynb
+#!/usr/bin/env bash
 
-echo "All the notebooks run."
+set -euo pipefail
+
+# Esegue i notebook uno dopo l'altro usando la .venv del progetto se disponibile.
+if [ -x "../.venv/bin/python" ]; then
+	PY_CMD="../.venv/bin/python"
+else
+	PY_CMD="python"
+fi
+
+run_nb() {
+	"$PY_CMD" -m jupyter nbconvert --to notebook --execute --inplace "$1"
+}
+
+run_nb 1a.ThermoModel.ipynb
+run_nb 1b.LogTimeLogPrice.ipynb
+run_nb 1d.EnsembleCorridor.ipynb
+run_nb 1e.SlopesGrowthModel.ipynb
+run_nb 1g.Growths.ipynb
+run_nb 1h.Metcalfe.ipynb
+run_nb 2a.Cycles.ipynb
+run_nb 2b.CyclesNorm.ipynb
+run_nb 2c.MVRV.ipynb
+run_nb 3a.Economics.ipynb
+run_nb 3b.DXY.ipynb
+run_nb 4a.Supply.ipynb
+run_nb 4c.Demand.ipynb
+#run_nb 5.Cohorts.ipynb
+run_nb 6a.GoogleTrends.ipynb
+run_nb 7a.BTCvsUSELECTIONS.ipynb
+run_nb 7b.US_Elections.ipynb
+run_nb 8.ETF_Inflows.ipynb
+run_nb 9.BTC_Miners.ipynb
+# run_nb 99.DynamicPlot.ipynb
+
+echo "All notebooks executed."
 
 
 

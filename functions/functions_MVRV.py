@@ -7,8 +7,7 @@ import numpy as np
 from matplotlib.patches import Ellipse
 import sys
 
-sys.path.append("/Users/danieleraimondi/bitcoin_datascience/functions")
-from fetch_data import fetch_crypto_data
+from .fetch_data import fetch_crypto_data
 
 
 def load_dataframe():
@@ -24,7 +23,7 @@ def load_dataframe():
     df.rename(columns={"CapMVRVCur": "mvrv"}, inplace=True)
     merged = df[["time", "PriceUSD", "mvrv"]]
 
-    merged = merged.fillna(method="ffill")
+    merged = merged.ffill()
     merged = merged.dropna()
     merged["mvrvstd"] = merged["mvrv"].rolling(window=365 * 4).std()
     merged["mvrv_norm"] = merged["mvrv"] / merged["mvrvstd"]
@@ -158,9 +157,10 @@ def plot_btcusd_and_mvrv_oscillator(merged, frac=0.02, k=0.015):
         pd.to_datetime("2017-11-26"),
         pd.to_datetime("2021-03-17"),
         pd.to_datetime("2021-10-25"),
-        pd.to_datetime("2024-03-20"),
+        pd.to_datetime("2024-12-01"),
+        pd.to_datetime("2025-08-01"),
     ]
-    values = [96, 97, 84, 92, 92, 70, 67]
+    values = [96, 97, 84, 92, 92, 70, 69, 60]
     ellipse_width = 90
     ellipse_height = 23
 

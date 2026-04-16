@@ -1,10 +1,11 @@
+
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import pandas as pd
 from datetime import datetime, timedelta
 import matplotlib.ticker as ticker
 import numpy as np
-from fetch_data import fetch_crypto_data
+from .fetch_data import fetch_crypto_data
 
 
 def setup_style():
@@ -118,6 +119,7 @@ def add_vertical_lines(ax, halving_date):
     top_dates = [
         pd.Timestamp("2017-12-17"),
         pd.Timestamp("2021-11-10"),
+        pd.Timestamp("2025-10-06"),  # Added top for blue series
     ]
 
     # Compute time shift - align according with 2024 halving date
@@ -136,8 +138,10 @@ def add_vertical_lines(ax, halving_date):
     )
 
     aligned_top_dates = [
-        align_date(date, pd.Timestamp("2016-07-09")) for date in top_dates[:1]
-    ] + [align_date(date, pd.Timestamp("2020-05-11")) for date in top_dates[1:]]
+        align_date(top_dates[0], pd.Timestamp("2016-07-09")),
+        align_date(top_dates[1], pd.Timestamp("2020-05-11")),
+        align_date(top_dates[2], pd.Timestamp("2024-04-19")),  # Blue series top
+    ]
 
     # Bottom vertical lines with adjusted labels
     for i, aligned_date in enumerate(aligned_bottom_dates):
@@ -161,16 +165,27 @@ def add_vertical_lines(ax, halving_date):
 
     # Top vertical lines
     for i, aligned_date in enumerate(aligned_top_dates):
-        color = "green" if i == 0 else "red"
+        if i == 0:
+            color = "green"
+            y = ax.get_ylim()[1] * 0.6
+            y_offset = -20
+        elif i == 1:
+            color = "red"
+            y = ax.get_ylim()[1] * 0.6
+            y_offset = -69
+        else:
+            color = "blue"
+            y = 130000  # Set blue label at 130,000
+            y_offset = 0
         ax.axvline(aligned_date, color=color, linestyle="--", alpha=0.5)
 
         ax.annotate(
             "Top",
-            xy=(aligned_date, ax.get_ylim()[1] * 0.6),
-            xytext=(-8, -20 if i % 2 == 0 else -69),
+            xy=(aligned_date, y),
+            xytext=(-8, y_offset),
             textcoords="offset points",
             fontsize=10,
-            color=color,fontweight="bold",
+            color=color, fontweight="bold",
             bbox=dict(boxstyle="round,pad=0.3", fc="white", ec=color, alpha=0),
         )
 
