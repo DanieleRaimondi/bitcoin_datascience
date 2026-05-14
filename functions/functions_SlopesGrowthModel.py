@@ -4,14 +4,8 @@ import statsmodels.api as sm
 import matplotlib.pyplot as plt
 import matplotlib.ticker as mticker
 from matplotlib.colors import LinearSegmentedColormap
-import sys
 
-import sys as _sys, os as _os
-_funcs_dir = _os.path.dirname(_os.path.abspath(__file__))
-if _funcs_dir not in _sys.path:
-    _sys.path.insert(0, _funcs_dir)
-del _sys, _os, _funcs_dir
-from fetch_data import fetch_crypto_data
+from .fetch_data import fetch_crypto_data
 
 
 def slopes_growth_model(

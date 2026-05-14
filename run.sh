@@ -14,8 +14,6 @@ if [ ! -d "functions" ]; then
     # Try to find the functions directory in the project
     if [ -d "../functions" ]; then
         ln -s ../functions functions
-    elif [ -d "/Users/danieleraimondi/bitcoin_datascience/functions" ]; then
-        ln -s /Users/danieleraimondi/bitcoin_datascience/functions functions
     else
         echo "Error: Could not locate functions directory. Please ensure it exists before running."
         exit 1

@@ -1,16 +1,15 @@
 import pandas as pd
 import matplotlib.pyplot as plt
-from matplotlib.ticker import ScalarFormatter
+import matplotlib.dates as mdates
+from matplotlib.patches import Patch, Rectangle
+from matplotlib.ticker import ScalarFormatter, FuncFormatter
 import statsmodels.api as sm
 import numpy as np
-import sys
+from pathlib import Path
 
-import sys as _sys, os as _os
-_funcs_dir = _os.path.dirname(_os.path.abspath(__file__))
-if _funcs_dir not in _sys.path:
-    _sys.path.insert(0, _funcs_dir)
-del _sys, _os, _funcs_dir
-from fetch_data import fetch_crypto_data
+from .fetch_data import fetch_crypto_data
+
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
 
 def load_bitcoin_data():
@@ -23,7 +22,7 @@ def load_bitcoin_data():
 
 def load_election_probabilities():
     """Load US election probability data from a CSV file."""
-    us_data = pd.read_csv("../data/polymarket_US_election_24.csv")
+    us_data = pd.read_csv(PROJECT_ROOT / "data" / "polymarket_US_election_24.csv")
     us_data = us_data.drop(columns=["Timestamp (UTC)"])
     us_data = us_data.rename(columns={"Date (UTC)": "time"})
     us_data["time"] = pd.to_datetime(
@@ -189,9 +188,6 @@ def preprocess_data(btc_data):
     Returns:
     DataFrame: Processed data with Bitcoin prices and presidential administration indicators
     """
-    import pandas as pd
-    import numpy as np
-
     # Create a copy of the Bitcoin data
     df = btc_data.copy()
     df.loc[:, "time"] = pd.to_datetime(df["time"])
@@ -243,11 +239,6 @@ def plot_data_winners(df, elections=None):
     Returns:
     None: Displays and saves the plot
     """
-    import matplotlib.pyplot as plt
-    import matplotlib.dates as mdates
-    import numpy as np
-    import pandas as pd
-    from matplotlib.patches import Rectangle
 
     # If elections DataFrame is not provided, create a default one
     if elections is None:
@@ -288,8 +279,6 @@ def plot_data_winners(df, elections=None):
     ax.set_yscale("log")
 
     # Format y-axis labels with commas
-    from matplotlib.ticker import FuncFormatter
-
     def y_fmt(y, pos):
         if y < 1:
             return f"${y:.2f}"
@@ -370,7 +359,7 @@ def plot_data_winners(df, elections=None):
     ax.set_xlabel("Date", fontsize=12)
     ax.set_ylabel("Bitcoin Price (USD, Log Scale)", fontsize=12)
 
-    # Imposta il range dell'asse x da 2010 all'ultima data disponibile
+    # Set the x-axis range from 2010 to the latest available date
     ax.set_xlim(pd.Timestamp("2010-01-01"), df["time"].max())
 
     # Format x-axis date labels
@@ -383,8 +372,6 @@ def plot_data_winners(df, elections=None):
     ax.grid(True, alpha=0.3)
 
     # Add legend with Republican and Democratic indicators
-    from matplotlib.patches import Patch
-
     legend_elements = [
         Patch(facecolor="red", alpha=0.2, label="Republican Administration"),
         Patch(facecolor="blue", alpha=0.2, label="Democratic Administration"),

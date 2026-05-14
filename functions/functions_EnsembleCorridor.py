@@ -130,7 +130,7 @@ def plot_ensemble_corridor(
     try:
         img = plt.imread(get_sample_data(btc_logo_path))
         plt.figimage(img, 250, 3500)  
-    except:
+    except Exception:
         print("Logo file not found, skipping logo placement")
 
     # Oscillator plot

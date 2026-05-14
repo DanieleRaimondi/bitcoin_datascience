@@ -7,6 +7,9 @@ import matplotlib.dates as mdates
 from datetime import datetime
 from matplotlib.collections import LineCollection
 from matplotlib.colors import Normalize
+from pathlib import Path
+
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
 
 # function to add annotations with dates to a plot.
@@ -272,7 +275,7 @@ def plot_bitcoin_cycles(
                 y2=1.05,
                 color=(1, 0, 0, 0.15),
             )
-        # Se i >= len(bottoms_dates), non colorare: la fase finale sarà gestita dal riempimento rosso finale
+        # If i >= len(bottoms_dates), skip coloring: the final phase is handled by the red fill below
 
     # Fill green areas
     ax2.fill_between(
@@ -316,7 +319,7 @@ def plot_bitcoin_cycles(
         y2=1.05,
         color=(1, 0, 0, 0.15),
     )
-    # Estendi asse x di 6 mesi oltre l'ultima data
+    # Extend x-axis by 6 months beyond the last date
     ax2.set_xlim(pd.to_datetime("2012-01-01"), last_date + pd.DateOffset(months=6))
 
     # Configure limits and formatting for the second subplot.
@@ -347,7 +350,7 @@ def plot_bitcoin_cycles(
     
     # export csv data for cycles
     cycles_df = pd.DataFrame({"time": cycle_dates, "cycle": cycle_wave})
-    cycles_df.to_csv("/Users/danyr92/Coding/bitcoin_datascience/data/cycles.csv", index=False)
+    cycles_df.to_csv(PROJECT_ROOT / "data" / "cycles.csv", index=False)
     
     # Save the figure and display it.
     plt.savefig("../output/2a.Cycles.jpg", dpi=400)

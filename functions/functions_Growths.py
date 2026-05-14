@@ -5,14 +5,8 @@ from matplotlib.ticker import FuncFormatter
 import seaborn as sns
 import matplotlib.ticker as mticker
 from matplotlib.pyplot import figure
-import sys
 
-import sys as _sys, os as _os
-_funcs_dir = _os.path.dirname(_os.path.abspath(__file__))
-if _funcs_dir not in _sys.path:
-    _sys.path.insert(0, _funcs_dir)
-del _sys, _os, _funcs_dir
-from fetch_data import fetch_crypto_data
+from .fetch_data import fetch_crypto_data
 
 # Load and preprocess data
 def load_data():
@@ -138,7 +132,7 @@ def plot_bitcoin_price_vs_sma(df):
     y_vals = weekly["Multiple"].values
     points = np.array([x_vals, y_vals]).T.reshape(-1, 1, 2)
     segments = np.concatenate([points[:-1], points[1:]], axis=1)
-    # Crea una mappa da blu (basso) a rosso (alto)
+    # Create a colormap from blue (low) to red (high)
     norm = mpl.colors.Normalize(vmin=0.7, vmax=7)
     cmap = mpl.colors.LinearSegmentedColormap.from_list("thermo", [zone_colors["strong_accum"], zone_colors["light_dist"], zone_colors["heavy_dist"], zone_colors["extreme"]])
     lc = LineCollection(segments, cmap=cmap, norm=norm)
@@ -146,7 +140,7 @@ def plot_bitcoin_price_vs_sma(df):
     lc.set_linewidth(3.5)
     ax2.add_collection(lc)
 
-    # Linee orizzontali di riferimento
+    # Horizontal reference lines
     levels = [0.7, 1, 1.5, 2.5, 4, 7, 10]
     colors = [
         zone_colors["strong_accum"],

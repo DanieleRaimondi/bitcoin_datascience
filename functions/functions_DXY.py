@@ -24,47 +24,9 @@ def load_dxy_data_fred():
         # FRED API endpoint for Trade Weighted US Dollar Index
         url = "https://fred.stlouisfed.org/graph/fredgraph.csv"
         params = {
-            "bgcolor": "%23e1e9f0",
-            "chart_type": "line",
-            "drp": "0",
-            "fo": "open%20sans",
-            "graph_bgcolor": "%23ffffff",
-            "height": "450",
-            "mode": "fred",
-            "recession_bars": "on",
-            "txtcolor": "%23444444",
-            "ts": "12",
-            "tts": "12",
-            "width": "1318",
-            "nt": "0",
-            "thu": "0",
-            "trc": "0",
-            "show_legend": "yes",
-            "show_axis_titles": "yes",
-            "show_tooltip": "yes",
             "id": "DTWEXBGS",  # Broad trade-weighted dollar index
-            "scale": "left",
             "cosd": "2000-01-01",
             "coed": datetime.today().strftime("%Y-%m-%d"),
-            "line_color": "%234572a7",
-            "link_values": "false",
-            "line_style": "solid",
-            "mark_type": "none",
-            "mw": "3",
-            "lw": "2",
-            "ost": "-99999",
-            "oet": "99999",
-            "mma": "0",
-            "fml": "a",
-            "fq": "Daily",
-            "fam": "avg",
-            "fgst": "lin",
-            "fgsnd": "2020-02-01",
-            "line_index": "1",
-            "transformation": "lin",
-            "vintage_date": datetime.today().strftime("%Y-%m-%d"),
-            "revision_date": datetime.today().strftime("%Y-%m-%d"),
-            "nd": datetime.today().strftime("%Y-%m-%d"),
         }
 
         response = requests.get(url, params=params, timeout=30)
@@ -122,8 +84,6 @@ def load_dxy_data_yfinance():
                 )
 
                 # Create new session for each attempt
-                import requests
-
                 session = requests.Session()
                 session.headers.update(
                     {

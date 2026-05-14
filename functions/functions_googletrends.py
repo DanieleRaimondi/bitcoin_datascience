@@ -84,9 +84,9 @@ def plot_google_trends_crypto(
         # Usa il mapping specifico per determinare la colonna del prezzo
         price_col = PRICE_COLUMN_MAPPING.get(keyword.lower(), "PriceUSD")
 
-        # Verifica se la colonna esiste nel dataframe
+        # Check if the column exists in the dataframe
         if price_col not in df.columns:
-            # Fallback per retrocompatibilità
+            # Fallback for backward compatibility
             price_col = (
                 "PriceUSD" if "PriceUSD" in df.columns else "principal_market_price_usd"
             )
@@ -94,7 +94,7 @@ def plot_google_trends_crypto(
                 raise ValueError(f"No valid price column found for {crypto}")
 
         result_df = df[["time", price_col]].set_index("time")
-        result_df.columns = ["PriceUSD"]  # Rinomina per standardizzare
+        result_df.columns = ["PriceUSD"]  # Rename for consistency
         return result_df
 
     def fetch_trends_data(kw: list, tf: str, initial_pause: int) -> dict:
@@ -146,25 +146,25 @@ def plot_google_trends_crypto(
             if keyword.lower() in CRYPTO_MAPPING and price_data[keyword] is not None:
                 ax2 = ax.twinx()
 
-                # Ottimizzazione: Usa lo stesso intervallo di date per il plot di trend e prezzo
-                # e assicurati che vengano visualizzati tutti i dati disponibili
+                # Optimization: use the same date range for trend and price plot
+                # and ensure all available data is shown
                 start_date = trends_data[keyword].index[0]
                 end_date = trends_data[keyword].index[-1]
 
-                # Assicurati che i dati di prezzo coprano l'intero intervallo
-                # Se ci sono dati di prezzo più recenti, li mostriamo comunque
+                # Ensure price data covers the full range
+                # If there is more recent price data, show it anyway
                 price_subset = price_data[keyword]
 
-                # Se ci sono dati di prezzo disponibili che iniziano dopo i dati di trends
+                # If available price data starts after trends data
                 if price_subset.index[0] > start_date:
                     start_date = price_subset.index[0]
 
-                # Se ci sono dati di prezzo che finiscono dopo i dati di trends
+                # If price data ends after trends data
                 if price_subset.index[-1] > end_date:
-                    # Estendi il plot per mostrare anche i dati più recenti
+                    # Extend the plot to also show the most recent data
                     price_subset = price_subset[price_subset.index >= start_date]
                 else:
-                    # Altrimenti filtra solo nel range dei dati di trends
+                    # Otherwise filter to the trends data range only
                     price_subset = price_subset[
                         (price_subset.index >= start_date)
                         & (price_subset.index <= end_date)
@@ -182,7 +182,7 @@ def plot_google_trends_crypto(
                 ax2.set_ylabel("Price (USD)", color="black")
                 ax2.tick_params(axis="y", labelcolor="black")
 
-                # Imposta i limiti esatti min e max
+                # Set exact min and max limits
                 if not price_subset.empty:
                     ax2.set_ylim(
                         price_subset["PriceUSD"].min() * 0.9,
@@ -197,12 +197,12 @@ def plot_google_trends_crypto(
             ax.grid(True, linestyle="--", alpha=0.5)
             ax.spines["top"].set_visible(False)
 
-            # Aggiungi statistiche
+            # Add statistics
             if keyword.lower() in CRYPTO_MAPPING and price_data[keyword] is not None:
                 stats = f"Trends Max: {trends_data[keyword].max():.1f}\n"
                 stats += f"Trends Avg: {trends_data[keyword].mean():.1f}\n"
 
-                # Aggiungi informazioni sui prezzi
+                # Add price information
                 if not price_subset.empty:
                     price_start = price_subset["PriceUSD"].iloc[0]
                     price_end = price_subset["PriceUSD"].iloc[-1]
@@ -233,7 +233,7 @@ def plot_google_trends_crypto(
     for keyword in keywords:
         if keyword.lower() in CRYPTO_MAPPING:
             try:
-                # Passa il keyword alla funzione per selezionare la colonna corretta
+                # Pass the keyword to select the correct price column
                 price_data[keyword] = fetch_crypto_data(
                     CRYPTO_MAPPING[keyword.lower()], keyword
                 )

@@ -1,55 +1,44 @@
-import yfinance as yf
-import pandas as pd
-import numpy as np
-from sklearn.feature_selection import VarianceThreshold, SelectFromModel
-from fredapi import Fred
-from datetime import datetime
 import os
 import time
+import warnings
+from datetime import datetime
+
+from dotenv import load_dotenv
+
+load_dotenv()
+
 import matplotlib.pyplot as plt
-from sklearn.preprocessing import RobustScaler
-from sklearn.pipeline import Pipeline
 import numpy as np
-from sklearn.model_selection import TimeSeriesSplit
-from sklearn.utils.class_weight import compute_class_weight
+import pandas as pd
+import yfinance as yf
+from fredapi import Fred
+from scipy.signal import argrelextrema
 from sklearn.compose import ColumnTransformer
 from sklearn.ensemble import (
-    RandomForestClassifier,
+    ExtraTreesClassifier,
     GradientBoostingClassifier,
+    RandomForestClassifier,
+    StackingClassifier,
     VotingClassifier,
 )
-from sklearn.model_selection import TimeSeriesSplit
+from sklearn.feature_selection import SelectFromModel, VarianceThreshold
+from sklearn.impute import KNNImputer
+from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import (
-    roc_auc_score,
+    confusion_matrix,
     precision_score,
     recall_score,
-    confusion_matrix,
+    roc_auc_score,
 )
-from sklearn.impute import KNNImputer
-from scipy.signal import argrelextrema
-import warnings
+from sklearn.model_selection import TimeSeriesSplit
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import RobustScaler
+from sklearn.utils.class_weight import compute_class_weight
 
-from fetch_data import fetch_crypto_data
+from .fetch_data import fetch_crypto_data
 
 warnings.filterwarnings("ignore", category=UserWarning)
 warnings.filterwarnings("ignore", category=FutureWarning)
-
-import numpy as np
-from sklearn.ensemble import (
-    RandomForestClassifier,
-    GradientBoostingClassifier,
-    ExtraTreesClassifier,
-    VotingClassifier,
-    StackingClassifier,
-)
-from sklearn.linear_model import LogisticRegression
-from sklearn.model_selection import TimeSeriesSplit
-from sklearn.metrics import roc_auc_score
-from sklearn.pipeline import Pipeline
-from sklearn.compose import ColumnTransformer
-from sklearn.preprocessing import RobustScaler
-from sklearn.impute import KNNImputer
-from sklearn.feature_selection import SelectFromModel
 
 try:
     from xgboost import XGBClassifier
@@ -73,8 +62,7 @@ BOTTOMS_DATES = pd.to_datetime(["2011-11-19", "2015-01-14", "2018-12-15", "2022-
 
 def load_btc_data():
     """Load Bitcoin data from CoinMetrics"""
-    url = "https://raw.githubusercontent.com/coinmetrics/data/master/csv/btc.csv"
-    df = pd.read_csv(url, parse_dates=["time"], low_memory=False)
+    df = fetch_crypto_data("btc")
     df = df.sort_values("time").dropna(subset=["PriceUSD"]).reset_index(drop=True)
 
     # Drop unnecessary columns
@@ -838,11 +826,6 @@ def create_robust_pipeline():
     )
 
 
-import numpy as np
-from sklearn.model_selection import TimeSeriesSplit
-from sklearn.utils.class_weight import compute_class_weight
-
-
 def create_stratified_time_splits(df, target_col, n_splits=5, min_positive_ratio=0.01):
     """
     FIXED VERSION: Create time-aware splits that GUARANTEE positive examples in validation
@@ -1364,9 +1347,6 @@ def train_models_and_predict(df, split_date="2024-01-01"):
 
 def generate_future_predictions_simple(df, models, features):
     """Generate simple future predictions"""
-    from datetime import datetime
-    import pandas as pd
-
     last_date = df["time"].max()
     future_dates = pd.date_range(start=last_date + pd.Timedelta(days=1), periods=90)
     future_features = []
@@ -1492,10 +1472,6 @@ def plot_predictions(
     activation_threshold=0.9,
 ):
     """Plot ensemble and individual model predictions"""
-    import matplotlib.pyplot as plt
-    from datetime import datetime
-    import pandas as pd
-    
     split_date = pd.to_datetime(split_date)
     today = pd.to_datetime(datetime.today().date())
 
@@ -1902,9 +1878,6 @@ def print_forecast_summary(
     df, future_df, activation_threshold=0.9, use_thermomodel=False, use_cycles=False
 ):
     """Print comprehensive forecast summary"""
-    from datetime import datetime
-    import pandas as pd
-    
     split_date = pd.to_datetime("2024-01-01")  # Fixed split date
     today = pd.to_datetime(datetime.today().date())
     
@@ -2020,8 +1993,6 @@ def print_forecast_summary(
 
 def show_dataframe_info(df, show_sample=True):
     """Display comprehensive dataframe information"""
-    import pandas as pd
-    
     print("\n" + "=" * 80)
     print("📊 DATAFRAME ANALYSIS")
     print("=" * 80)
@@ -2074,9 +2045,6 @@ def show_dataframe_info(df, show_sample=True):
 
 def plot_feature_importances(feature_importances, show_top_n=30):
     """Plot feature importance charts"""
-    import pandas as pd
-    import matplotlib.pyplot as plt
-    
     n_models = len(feature_importances)
     if n_models == 0:
         print("❌ No feature importances available")
@@ -2147,9 +2115,6 @@ def plot_feature_importances(feature_importances, show_top_n=30):
 
 def plot_cv_confusion_matrices(performance):
     """Plot confusion matrices from cross-validation"""
-    import numpy as np
-    import matplotlib.pyplot as plt
-    
     targets_with_cm = {
         k: v
         for k, v in performance.items()

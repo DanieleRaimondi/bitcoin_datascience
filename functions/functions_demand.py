@@ -1,14 +1,8 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import statsmodels.api as sm
-import sys
 
-import sys as _sys, os as _os
-_funcs_dir = _os.path.dirname(_os.path.abspath(__file__))
-if _funcs_dir not in _sys.path:
-    _sys.path.insert(0, _funcs_dir)
-del _sys, _os, _funcs_dir
-from fetch_data import fetch_crypto_data
+from .fetch_data import fetch_crypto_data
 
 
 def load_btc_data():

@@ -1,19 +1,15 @@
+import math
+import os
+import tempfile
+
+import numpy as np
 import pandas as pd
 import plotly.graph_objects as go
-from plotly.subplots import make_subplots
 import plotly.io as pio
 from PIL import Image
-import os
-import math
-import numpy as np
-import sys
+from plotly.subplots import make_subplots
 
-import sys as _sys, os as _os
-_funcs_dir = _os.path.dirname(_os.path.abspath(__file__))
-if _funcs_dir not in _sys.path:
-    _sys.path.insert(0, _funcs_dir)
-del _sys, _os, _funcs_dir
-from fetch_data import fetch_crypto_data
+from .fetch_data import fetch_crypto_data
 
 def load_data():
     df = fetch_crypto_data("btc")
@@ -284,39 +280,38 @@ def create_bitcoin_price_gif(df, scale_type, sampling_interval=30, duration=75):
     # Add frames to the figure
     fig.frames = frames
 
-    # Create temporary directory for storing frame images
-    if not os.path.exists("temp_images"):
-        os.makedirs("temp_images")
+    # Create a secure isolated temporary directory for frame images
+    tmp_dir = tempfile.mkdtemp(prefix="btc_frames_")
+    try:
+        # Generate and save individual frames as images
+        for i, frame in enumerate(fig.frames):
+            fig.update(data=frame.data)
+            pio.write_image(fig, os.path.join(tmp_dir, f"frame_{i:03d}.png"))
 
-    # Generate and save individual frames as images
-    for i, frame in enumerate(fig.frames):
-        fig.update(data=frame.data)
-        pio.write_image(fig, f"temp_images/frame_{i:03d}.png")
+        # Load saved images
+        images = []
+        for file_name in sorted(os.listdir(tmp_dir)):
+            if file_name.endswith(".png"):
+                file_path = os.path.join(tmp_dir, file_name)
+                images.append(Image.open(file_path))
 
-    # Load saved images
-    images = []
-    for file_name in sorted(os.listdir("temp_images")):
-        if file_name.endswith(".png"):
-            file_path = os.path.join("temp_images", file_name)
-            images.append(Image.open(file_path))
+        # Remove the first image (it's empty due to how frames are created)
+        images = images[1:]
 
-    # Remove the first image (it's empty due to how frames are created)
-    images = images[1:]
-
-    # Save the GIF
-    images[0].save(
-        f"../output/Dynamic_Plot/Dynamic_BTC_Plot_{scale_type}.gif",
-        save_all=True,
-        append_images=images[1:] + [images[-1]] * 10,  # Repeat last frame 10 times
-        optimize=False,
-        duration=duration,  # Each frame displays for the specified duration
-        loop=1,  # GIF loops once (plays 1 time)
-    )
-
-    # Clean up temporary images
-    for file_name in os.listdir("temp_images"):
-        os.remove(os.path.join("temp_images", file_name))
-    os.rmdir("temp_images")
+        # Save the GIF
+        images[0].save(
+            f"../output/Dynamic_Plot/Dynamic_BTC_Plot_{scale_type}.gif",
+            save_all=True,
+            append_images=images[1:] + [images[-1]] * 10,  # Repeat last frame 10 times
+            optimize=False,
+            duration=duration,  # Each frame displays for the specified duration
+            loop=1,  # GIF loops once (plays 1 time)
+        )
+    finally:
+        # Clean up temporary directory and all its contents
+        for file_name in os.listdir(tmp_dir):
+            os.remove(os.path.join(tmp_dir, file_name))
+        os.rmdir(tmp_dir)
 
     print(f"GIF created successfully: Dynamic_BTC_Plot_{scale_type}.gif")
 

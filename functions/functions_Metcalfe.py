@@ -5,7 +5,7 @@ from scipy.optimize import differential_evolution
 from scipy.signal import savgol_filter
 from sklearn.linear_model import RANSACRegressor, LinearRegression
 from matplotlib.ticker import FuncFormatter
-from fetch_data import fetch_crypto_data
+from .fetch_data import fetch_crypto_data
 import warnings
 
 warnings.filterwarnings("ignore")
@@ -66,7 +66,7 @@ def analyze_metcalfe(network_metric):
                     log_p = np.log(df["PriceUSD"][mask])
                     corr = np.corrcoef(log_m, log_p)[0, 1]
                     return -corr if not np.isnan(corr) else 1e6
-                except:
+                except Exception:
                     return 1e6
 
             result = differential_evolution(objective, bounds, seed=42, maxiter=500)
