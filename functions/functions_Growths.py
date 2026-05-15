@@ -54,7 +54,7 @@ def plot_bitcoin_price_vs_sma(df):
     # ============== UPPER SUBPLOT: Price vs SMA ==============
     ax1.set_facecolor("white")
 
-    # --- ThermoModel palette: prezzo nero, SMA arancione ---
+    # --- ThermoModel palette: black price, orange SMA ---
     ax1.plot(weekly.index, weekly["PriceUSD"], label="Bitcoin Price", color="black", linewidth=3.5, zorder=10)
     ax1.plot(weekly.index, weekly["209SMA"], label="209-Week SMA", color="#FFA500", linewidth=3.5, zorder=9)
 
@@ -125,7 +125,7 @@ def plot_bitcoin_price_vs_sma(df):
     ax2.axhspan(4, 7, alpha=0.18, color=zone_colors["heavy_dist"], label="Heavy Distribution (4x-7x)")
     ax2.axhspan(7, 20, alpha=0.18, color=zone_colors["extreme"], label="Extreme Distribution (>7x)")
 
-    # Oscillator line: scala colori divergente
+    # Oscillator line with divergent color scale
     from matplotlib.collections import LineCollection
     import matplotlib as mpl
     x_vals = mpl.dates.date2num(weekly.index)

@@ -358,7 +358,7 @@ def final_plot(df, last_date):
     plt.figure(figsize=(38.4, 21.6))
     plt.subplot(5, 5, (1, 20))
 
-    df["lower_cubiclog"] = df["lower_cubiclog"].where(df["lower_cubiclog"] >= 1.75, np.nan)  # pulisco la serie xk + bella graficamente
+    df["lower_cubiclog"] = df["lower_cubiclog"].where(df["lower_cubiclog"] >= 1.75, np.nan)  # clean the series for better visual output
     df["medium_cubiclog"] = df["medium_cubiclog"].where(df["medium_cubiclog"] >= 1, np.nan)
     df["upper_cubiclog"] = df["upper_cubiclog"].where(df["upper_cubiclog"] >= 20, np.nan)
     df["25_cubiclog"] = df["25_cubiclog"].where(df["25_cubiclog"] >= 3.8, np.nan)

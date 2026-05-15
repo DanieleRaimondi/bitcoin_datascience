@@ -50,4 +50,4 @@ echo "All notebooks executed."
 
 
 # Then, simply launch this:
-# ~/bitcoin_datascience/notebooks/run_notebooks.sh
+# /Users/danyr92/Coding/bitcoin_datascience/notebooks/run_notebooks.sh

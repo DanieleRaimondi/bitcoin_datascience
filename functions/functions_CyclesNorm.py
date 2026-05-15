@@ -14,6 +14,7 @@ def setup_style():
         "cycle_2016": "green",
         "cycle_2020": "red",
         "cycle_2024": "blue",
+        "cycle_2028": "purple",
         "light_red": "#ff9999",
         "light_orange": "#ffcc99",
         "light_blue": "#99ccff",
@@ -21,7 +22,7 @@ def setup_style():
     }
 
 
-def get_price_data(df, halving_date, days_before=861, days_after=600):
+def get_price_data(df, halving_date, days_before=861, days_after=600, halving_price_override=None):
     # Extend the period to include 2 more months of data before
     extended_days_before = days_before + 60
 
@@ -30,18 +31,21 @@ def get_price_data(df, halving_date, days_before=861, days_after=600):
         & (df["time"] <= halving_date + timedelta(days=days_after))
     ].copy()
 
-    halving_price = float(
-        period_data[period_data["time"].dt.date == halving_date.date()][
-            "PriceUSD"
-        ].iloc[0]
-    )
+    if halving_price_override is not None:
+        halving_price = halving_price_override
+    else:
+        halving_price = float(
+            period_data[period_data["time"].dt.date == halving_date.date()][
+                "PriceUSD"
+            ].iloc[0]
+        )
     period_data["normalized_price"] = period_data["PriceUSD"] / halving_price
     period_data["price"] = period_data["PriceUSD"]
 
-    # Shift the alignment date by 2 months
+    # Shift the alignment date by 2 months, aligned to 2028 cycle
     shift = pd.Timedelta(days=60)
     period_data["aligned_date"] = (
-        period_data["time"] - halving_date + pd.Timestamp("2024-04-19") + shift
+        period_data["time"] - halving_date + pd.Timestamp("2028-04-20") + shift
     )
 
     return period_data
@@ -65,14 +69,14 @@ def format_axes(ax):
 
 
 def add_background_shading(ax, colors):
-    # Shift shading periods by 2 months
+    # Shift shading periods by 2 months, aligned to 2028 cycle
     shift = pd.Timedelta(days=60)
     shading_periods = [
-        ("2021-12-01", "2022-10-31", colors["light_red"]),
-        ("2022-11-01", "2023-10-31", colors["light_orange"]),
-        ("2023-11-01", "2024-10-31", colors["light_blue"]),
-        ("2024-11-01", "2025-10-31", colors["light_green"]),
-        ("2025-11-01", "2025-12-15", colors["light_red"]),
+        ("2025-11-01", "2026-10-31", colors["light_red"]),
+        ("2026-11-01", "2027-10-31", colors["light_orange"]),
+        ("2027-11-01", "2028-10-31", colors["light_blue"]),
+        ("2028-11-01", "2029-10-31", colors["light_green"]),
+        ("2029-11-01", "2029-12-31", colors["light_red"]),
     ]
 
     for start_date, end_date, color in shading_periods:
@@ -85,7 +89,7 @@ def add_background_shading(ax, colors):
 
 
 def add_halving_lines(ax):
-    halving_date = pd.Timestamp("2024-04-19")
+    halving_date = pd.Timestamp("2028-04-20")
     ax.axvline(
         halving_date,
         color="grey",
@@ -122,9 +126,9 @@ def add_vertical_lines(ax, halving_date):
         pd.Timestamp("2025-10-06"),  # Added top for blue series
     ]
 
-    # Compute time shift - align according with 2024 halving date
+    # Compute time shift - align according with 2028 halving date
     shift = pd.Timedelta(days=60)  # Shift 2 months
-    alignment_reference = pd.Timestamp("2024-04-19") + shift
+    alignment_reference = pd.Timestamp("2028-04-20") + shift
 
     # Align dates according to halving cycles
     def align_date(date, halving_date):
@@ -198,16 +202,25 @@ def visualize_plot():
         "2016": pd.Timestamp("2016-07-09"),
         "2020": pd.Timestamp("2020-05-11"),
         "2024": pd.Timestamp("2024-04-19"),
+        "2028": pd.Timestamp("2028-04-20"),
     }
 
+    # Create data for known cycles first
     cycle_data = {
-        year: get_price_data(df, date) for year, date in halving_dates.items()
+        year: get_price_data(df, halving_dates[year])
+        for year in ["2016", "2020", "2024"]
     }
 
     halving_price_2024 = float(
         cycle_data["2024"][
             cycle_data["2024"]["time"].dt.date == halving_dates["2024"].date()
         ]["price"].iloc[0]
+    )
+
+    # 2028 cycle: halving not yet occurred, normalize against 2024 halving price
+    # so scaled_price = actual USD price (shows real current prices)
+    cycle_data["2028"] = get_price_data(
+        df, halving_dates["2028"], halving_price_override=halving_price_2024
     )
 
     for data in cycle_data.values():
@@ -218,15 +231,24 @@ def visualize_plot():
     add_background_shading(ax, colors)
 
     for year, color_key in zip(
-        ["2016", "2020", "2024"], ["cycle_2016", "cycle_2020", "cycle_2024"]
+        ["2016", "2020", "2024", "2028"],
+        ["cycle_2016", "cycle_2020", "cycle_2024", "cycle_2028"],
     ):
+        lw = 2
+        alpha = 0.8
+        ls = "-"
+        if year == "2028":
+            lw = 2.5
+            alpha = 1.0
+            ls = "-"
         ax.plot(
             cycle_data[year]["aligned_date"],
             cycle_data[year]["scaled_price"],
             color=colors[color_key],
             label=f"{year} Halving Cycle",
-            linewidth=2,
-            alpha=0.8,
+            linewidth=lw,
+            alpha=alpha,
+            linestyle=ls,
         )
 
     format_axes(ax)
@@ -236,20 +258,20 @@ def visualize_plot():
         fontweight="bold",
         pad=4,
     )
-    ax.set_ylabel("2024 Cycle Price (Log Scale)", fontsize=12, labelpad=1)
-    ax.set_xlabel("2024 Cycle Time", fontsize=12, labelpad=1)
+    ax.set_ylabel("2028 Cycle Price (Log Scale)", fontsize=12, labelpad=1)
+    ax.set_xlabel("2028 Cycle Time", fontsize=12, labelpad=1)
     ax.legend(fancybox=True, shadow=True, loc="upper left", fontsize=10, framealpha=0.9)
 
-    # Shift line
+    # Shift line - aligned to 2028 cycle
     shift = pd.Timedelta(days=75)
-    start_date = pd.Timestamp("2022-01-01") + shift
-    end_date = pd.Timestamp("2026-01-01") + shift
-    cycle_length = pd.Timestamp("2025-12-01") - pd.Timestamp("2022-12-01")
+    start_date = pd.Timestamp("2026-01-01") + shift
+    end_date = pd.Timestamp("2030-01-01") + shift
+    cycle_length = pd.Timestamp("2029-12-01") - pd.Timestamp("2026-12-01")
 
     dates = pd.date_range(start=start_date, end=end_date, freq="D")
 
     omega = np.pi / (cycle_length.days)
-    time_shift = (pd.Timestamp("2022-12-01") - start_date).days
+    time_shift = (pd.Timestamp("2026-12-01") - start_date).days
 
     sine_wave = -1 * np.sin(omega * (np.arange(len(dates)) + time_shift))
     sine_wave = (

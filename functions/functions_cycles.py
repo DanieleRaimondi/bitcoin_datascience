@@ -213,7 +213,7 @@ def plot_bitcoin_cycles(
     add_annotations_with_dates(ax1, halving_dates, "HALVING", "orange", 0.2)
     add_annotations_with_dates(ax1, tops_dates, "TOP", "green", 0.5)
     add_annotations_with_dates(ax1, bottoms_dates, "BOTTOM", "red", 0.5)
-    # (Rimosso: nessuna linea, testo o highlight per il prossimo top previsto)
+    # (Removed: no line, text, or highlight for the next expected top)
 
     # Add BTC logo
     img_path = "../utils/btc_logo.png"
@@ -308,7 +308,7 @@ def plot_bitcoin_cycles(
         color="green",
         alpha=0.15,
     )
-    # Colora in rosso dal top a oggi+6 mesi, stesso alpha dei periodi precedenti
+    # Color red from the last top to today+6 months, same alpha as previous periods
     last_date = cycle_dates[-1]
     red_start = last_top
     red_end = last_date + pd.DateOffset(months=6)

@@ -46,12 +46,12 @@ def plot_google_trends_crypto(
         "cardano": "ada",
     }
 
-    # Mapping per le colonne dei prezzi per ogni criptovaluta
+    # Price column mapping for each cryptocurrency
     PRICE_COLUMN_MAPPING = {
         "bitcoin": "PriceUSD",
         "ethereum": "PriceUSD",
         "litecoin": "PriceUSD",
-        "solana": "principal_market_price_usd",  # Colonna specifica per SOL
+        "solana": "principal_market_price_usd",  # Specific column for SOL
         "dogecoin": "PriceUSD",
         "ripple": "PriceUSD",
         "cardano": "PriceUSD",
@@ -81,7 +81,7 @@ def plot_google_trends_crypto(
         url = f"https://raw.githubusercontent.com/coinmetrics/data/master/csv/{crypto}.csv"
         df = pd.read_csv(url, parse_dates=["time"], low_memory=False)
 
-        # Usa il mapping specifico per determinare la colonna del prezzo
+        # Use the mapping to determine the correct price column
         price_col = PRICE_COLUMN_MAPPING.get(keyword.lower(), "PriceUSD")
 
         # Check if the column exists in the dataframe
