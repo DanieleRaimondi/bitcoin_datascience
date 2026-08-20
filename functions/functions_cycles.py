@@ -125,7 +125,9 @@ def cycle_annotation_phase(
             )
 
     # Set the X axis and Y axis limits and configure the date formatting for the X-axis
-    ax2.set_xlim(pd.to_datetime("2012-01-01"), pd.to_datetime("2026-07-31"))
+    # (bound to the actual end of cycle_dates, not a hardcoded date, so the axis
+    # always matches however far the cyclical wave was computed)
+    ax2.set_xlim(pd.to_datetime("2012-01-01"), cycle_dates[-1])
     ax1.set_ylim(3, 150_000)
     ax2.set_ylim(-1.02, 1.05)
     ax2.set_ylabel("Cycles", fontsize=13)
@@ -214,6 +216,22 @@ def plot_bitcoin_cycles(
     add_annotations_with_dates(ax1, tops_dates, "TOP", "green", 0.5)
     add_annotations_with_dates(ax1, bottoms_dates, "BOTTOM", "red", 0.5)
     # (Removed: no line, text, or highlight for the next expected top)
+
+    # Estimate and annotate the next bottom: the first falling (75%-phase) zero
+    # crossing of the cyclical wave after the last confirmed top. Historically,
+    # bottoms line up with this 75% phase rather than the sine's literal minimum.
+    future_falling_crossings = [
+        i
+        for i in zero_crossings
+        if cycle_dates[i] > tops_dates[-1] and sin_derivative[i] < 0
+    ]
+    next_bottom_estimate = (
+        cycle_dates[future_falling_crossings[0]] if future_falling_crossings else None
+    )
+    if next_bottom_estimate is not None:
+        add_annotations_with_dates(
+            ax1, [next_bottom_estimate], "NEXT BOTTOM (est.)", "red", 0.8
+        )
 
     # Add BTC logo
     img_path = "../utils/btc_logo.png"
@@ -308,10 +326,9 @@ def plot_bitcoin_cycles(
         color="green",
         alpha=0.15,
     )
-    # Color red from the last top to today+6 months, same alpha as previous periods
+    # Color red from the last top through the end of the computed cycle wave
     last_date = cycle_dates[-1]
     red_start = last_top
-    red_end = last_date + pd.DateOffset(months=6)
     red_idx = (cycle_dates > red_start) & (cycle_dates <= last_date)
     ax2.fill_between(
         x=cycle_dates[red_idx],
@@ -319,8 +336,6 @@ def plot_bitcoin_cycles(
         y2=1.05,
         color=(1, 0, 0, 0.15),
     )
-    # Extend x-axis by 6 months beyond the last date
-    ax2.set_xlim(pd.to_datetime("2012-01-01"), last_date + pd.DateOffset(months=6))
 
     # Configure limits and formatting for the second subplot.
     cycle_annotation_phase(
@@ -339,6 +354,8 @@ def plot_bitcoin_cycles(
         # next_peak_prediction_lower,
         # next_peak_prediction_upper,
     )
+    if next_bottom_estimate is not None:
+        ax2.axvline(next_bottom_estimate, color="red", linestyle="--", alpha=0.8)
     ax1.text(
         btc_data.time.iloc[2800],
         100,
@@ -429,7 +446,9 @@ def manipulation(btc_data, tops_dates):
     frequence_between_peaks = 1 / average_peak_distance  # n of peaks per day
 
     # Create a time series with a defined range: it's the x axis used for plotting a cyclical pattern
-    cycle_dates = pd.date_range(start=btc_data["time"].min(), end="2026-07-31")
+    # (extended 6 months past the last confirmed top so the wave keeps drawing into
+    # the projected next bottom instead of cutting off mid-decline)
+    cycle_dates = pd.date_range(start=btc_data["time"].min(), end="2027-01-31")
     # Generate a sinusoidal wave based on the calculated frequency to represent cyclical patterns
     cycle_wave = np.sin(
         2 * np.pi * frequence_between_peaks * (cycle_dates - cycle_dates[0]).days
