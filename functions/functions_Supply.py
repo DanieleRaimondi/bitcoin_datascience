@@ -12,7 +12,20 @@ def process_data():
 
     # Convert 'time' column to datetime format
     df["time"] = pd.to_datetime(df["time"])
-    df["Supply"] = df["CapMrktCurUSD"] / df["PriceUSD"]
+    # Use CoinMetrics' own circulating-supply field (SplyCur) rather than
+    # deriving it as CapMrktCurUSD / PriceUSD. For the most recent days,
+    # fetch_crypto_data() tops up PriceUSD with fresh Yahoo Finance closes
+    # while carrying every other on-chain field (including CapMrktCurUSD)
+    # forward unchanged from the last CoinMetrics snapshot - so the ratio
+    # divides a frozen market cap by a moving price and swings wildly
+    # (even briefly exceeding the 21M cap) right where the chart's
+    # historical line meets the forecast. SplyCur doesn't have that
+    # problem: it's carried forward flat on those days, which is correct
+    # since supply barely moves day to day anyway.
+    if "SplyCur" in df.columns:
+        df["Supply"] = df["SplyCur"]
+    else:
+        df["Supply"] = df["CapMrktCurUSD"] / df["PriceUSD"]
 
     forecast = forecast_supply(df, years=15)
     forecast = lost_coins_estimation(df, forecast)
@@ -50,8 +63,18 @@ def forecast_supply(btc_data, years=15):
     # Prepare the DataFrame for Prophet
     df_prophet = btc_data[["time", "Supply"]].rename(columns={"time": "ds", "Supply": "y"})
 
-    # Initialize the Prophet model with a specified carrying capacity
-    prophet_model = Prophet(growth="logistic")
+    # Initialize the Prophet model with a specified carrying capacity.
+    # Supply has no real weekly/yearly seasonality - it's a smooth,
+    # monotonic curve driven by the (deterministic) issuance schedule.
+    # Leaving Prophet's default auto-seasonality on fits a spurious yearly
+    # cycle that keeps oscillating above the 21,000,000 cap for decades
+    # into the forecast, which is impossible for actual BTC supply.
+    prophet_model = Prophet(
+        growth="logistic",
+        yearly_seasonality=False,
+        weekly_seasonality=False,
+        daily_seasonality=False,
+    )
 
     # Set the carrying capacity to 21 million for all future dates
     df_prophet["cap"] = 21000000
