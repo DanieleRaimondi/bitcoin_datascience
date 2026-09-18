@@ -22,12 +22,13 @@ notebooks/x*.ipynb
 test*.ipynb
 x*.ipynb
 
-#functions
+functions/
 run.sh
 notebooks/temp_images/
 streamlit/
 .DS_Store
 sentiment/
+utils/ 
 
 ThermoModel_Cycles_Fusion.py
 output/ThermoModel_Cycles_Fusion.jpg

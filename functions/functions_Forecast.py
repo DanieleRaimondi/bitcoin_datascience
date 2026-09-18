@@ -1457,7 +1457,7 @@ def plot_dual_axis(
     labels = [l.get_label() for l in lns]
     ax1.legend(lns, labels, loc="upper left")
     ax1.set_title("Bitcoin: Price, Cycle Original and Cycle Transformed")
-    ax1.set_xlabel("Time")
+    ax1.set_xlabel("")
     ax1.grid(True, alpha=0.3)
 
     plt.tight_layout()
@@ -1700,7 +1700,7 @@ def plot_predictions(
         if i < 3:
             ax.tick_params(axis="x", labelbottom=False)
         else:
-            ax.set_xlabel("Date", fontsize=10)
+            ax.set_xlabel("")
 
     plt.tight_layout()
     plt.show()
@@ -1868,7 +1868,7 @@ def plot_predictions(
                         if idx < n_models - 1:
                             ax.tick_params(axis="x", labelbottom=False)
                         else:
-                            ax.set_xlabel("Date", fontsize=10)
+                            ax.set_xlabel("")
 
                     plt.tight_layout()
                     plt.show()

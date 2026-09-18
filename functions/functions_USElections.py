@@ -356,7 +356,7 @@ def plot_data_winners(df, elections=None):
         fontsize=16,
         fontweight="bold",
     )
-    ax.set_xlabel("Date", fontsize=12)
+    ax.set_xlabel("")
     ax.set_ylabel("Bitcoin Price (USD, Log Scale)", fontsize=12)
 
     # Set the x-axis range from 2010 to the latest available date

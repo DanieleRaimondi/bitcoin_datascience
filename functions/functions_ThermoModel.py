@@ -317,7 +317,7 @@ def inference(df, cubic_model_params, log_model_params, optimized_params):
     plt.plot(df["time"], df["PriceUSD"], label="Bitcoin Price", color="darkblue")
     plt.yscale("log")  # Set y-axis to logarithmic scale
     plt.title("Bitcoin Price with Inferenced Bands")
-    plt.xlabel("Date")
+    plt.xlabel("")
     plt.ylabel("Price USD (log scale)")
     plt.ylim(0.05, df["upper_cubiclog"].iloc[-1] * 1.15)
     plt.legend()

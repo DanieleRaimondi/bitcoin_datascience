@@ -41,6 +41,12 @@ This analysis explores the growth correlation between Bitcoin's supply curve and
 #### BTC SMA 🚂 ![](output/1g.BTC_SMA.jpg)
 In this visualization, we display the Bitcoin price movement in comparison to its Simple Moving Average (SMA) calculated over 209 weeks. The reason for choosing 209 weeks is linked to the Bitcoin halving cycle, which occurs every 4 years, approximately equivalent to 209 weeks. It has always been a great support of Bitcoin's prices.
 
+#### ThermoModel v2 🌡️📉 ![](output/1a.ThermoModel_v2.jpg)
+A rebuild of the ThermoModel that accounts for diminishing returns. The original fits a cubic polynomial in day index with fixed log-space offsets: the cubic extrapolates explosively upward (the opposite of diminishing returns) and a fixed offset keeps a constant band width forever. Measured against a power-law trend, cycle tops came in at 15.4x, 11.1x, 6.4x, 2.9x, 1.2x while bottoms stayed flat at ~0.5x, so v2 models the two bands differently: a linearly decaying upper offset and a constant lower one. Validated leave-future-out on out-of-sample top prediction, the median absolute error drops to **21% from 83%** ![](output/1a.ThermoModel_v2_Validation.jpg)
+
+#### Cycle Clock 🕰️ ![](output/1a.ThermoModel_v2_CycleForecast.jpg)
+The bands answer *how high and how low* but say nothing about *when*; the cycle analysis answers the opposite. Combined, they give a dated price path. A cycle clock (median top-to-top interval, with bottoms landing at phase 0.26 rather than 0.5 — the cycle is asymmetric, roughly a year down and three years back up) is mapped against where in the corridor price historically sat at each point of the cycle, then projected onto the extended bands. The per-cycle profiles correlate 0.53-0.98 and agree tightly at the extremes (interquartile spread of 11-15 points) but diverge badly mid-ascent (past 80 points), so the dated extremes are worth more than the path between them ![](output/1a.ThermoModel_v2_CycleProfile.jpg)
+
 #### Metcalfe Law 🕸️ ![](output/1h.Metcalfe.jpg)
 Quantify Bitcoin's fundamental value using network activity to identify overvaluation/undervaluation periods and develop a data-driven trading indicator based on network effects theory.
 
@@ -121,6 +127,40 @@ System that collects Bitcoin and Ethereum ETF flow data, integrates cryptocurren
 #### Correlations vs BTC + Holdings + Short Data ⛏️ ![](output/BTC_Miners/BTC_HUT_Analysis.jpg)
 The objective of this analysis is to identify hedge and diversification opportunities in the crypto sector by studying correlations between Bitcoin and major mining companies while considering their BTC holdings and Short Data.
 
+
+## 10.Valuation:
+
+#### Puell Multiple ⛏️💵 ![](output/10a.PuellMultiple.jpg)
+This chart compares the daily USD value of newly issued Bitcoin against its own 365-day moving average. Spikes above 4x have historically coincided with cycle tops (miners cashing out into euphoric prices), while drops below 0.5x have marked cycle bottoms (depressed miner revenue).
+
+#### MVRV Z-Score 🧮 ![](output/10b.MVRVZScore.jpg)
+The MVRV Z-Score measures the gap between Bitcoin's market cap and its realized cap (the aggregate cost basis of all coins), normalized by the historical standard deviation of market cap. It plots the Realized Price alongside BTC price, and has historically flagged euphoric tops (Z-Score > 7) and capitulation bottoms (Z-Score < 0).
+
+#### NUPL (Net Unrealized Profit/Loss) 😨🤑 ![](output/10b.NUPL.jpg)
+NUPL expresses the same market cap vs. realized cap gap as a fraction of market cap, split into five classic sentiment zones from Capitulation to Euphoria/Greed, offering a quick read on how much of the market is sitting on unrealized gains or losses.
+
+#### Pi Cycle Top Indicator 🥧 ![](output/10c.PiCycleTop.jpg)
+This indicator watches for the 111-day moving average crossing above 2x the 350-day moving average. Every time this crossover has occurred, Bitcoin's price has been within days of the cycle's eventual top.
+
+#### Golden Ratio Multiplier 🌀 ![](output/10d.GoldenRatioMultiplier.jpg)
+Tracks Bitcoin's 350-day moving average and its Fibonacci multiples (1.6x, 2x, 3x, 5x, 8x, 13x, 21x). Each band has historically lined up with a resistance level reached during past bull-market advances.
+
+#### Hash Ribbons ⛏️📶 ![](output/10e.HashRibbons.jpg)
+Compares the 30-day and 60-day moving averages of Bitcoin's hashrate to flag miner capitulation (30-day average below the 60-day) and its recovery. Historically, the recovery point has marked strong accumulation zones. Short whipsaws around the crossing point are filtered out so only sustained capitulations are flagged.
+
+#### 2-Year MA Multiplier 📏 ![](output/10f.2YearMAMultiplier.jpg)
+Plots Bitcoin's price against its own 730-day (2-year) moving average and 5x that average. The 2-year MA has historically acted as a strong long-term accumulation zone, while 5x the 2-year MA has capped the blow-off top of every cycle to date.
+
+## 11.Risk Model:
+
+#### Cycle Risk Model 🎚️ ![](output/11.RiskModel.jpg)
+A single composite 0-100 score answering "where are we in the cycle?": 0 = cycle lows, 100 = cycle highs. It blends three indicators, each ranked against its own trailing 4-year distribution: the deviation of price from its expanding power-law trend (weight 0.6), the MVRV ratio (0.2) and the 2-Year MA Multiplier (0.2). Weights were selected by backtest rather than by taste, and are renormalized over whatever components are available so the score survives the on-chain feed lagging.
+
+#### Validation ✅ ![](output/11.RiskModel_Validation.jpg)
+Forward returns by risk bucket at 90/180/365 days, plus Spearman rank correlations. Readings in the 80-100 bucket have historically been followed by *negative* median returns at every horizon (-14.5% at 90d, -29.1% at 365d), while low readings precede strong gains. The edge is concentrated at the extremes and grows with the horizon: this is a cycle-position tool, not a short-term timing signal.
+
+#### Projection 🔮 ![](output/11.RiskModel_Projection.jpg)
+Rather than simulating random price paths (a block-bootstrap Monte Carlo was tried first and discarded: it ignores the mean reversion the score itself demonstrates and degenerates into a widening cone around today's value), the projection is conditional and empirical. It finds every past episode that started at today's risk level *and* today's 30-day direction of travel, then shows what the score actually did over the following 6 months in each, alongside the BTC return that came with it. Based on a handful of overlapping episodes from three completed cycles - read it as "what happened the last few times", not as a calibrated probability.
 
 ## Get Involved! 🌟
 
