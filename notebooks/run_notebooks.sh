@@ -1,8 +1,16 @@
 #!/usr/bin/env bash
+#
+# Re-runs every notebook in place, refreshing the charts under ../output.
+#
+# Usage, from this directory:
+#   chmod +x run_notebooks.sh   # first time only
+#   ./run_notebooks.sh
 
 set -euo pipefail
 
-# Esegue i notebook uno dopo l'altro usando la .venv del progetto se disponibile.
+cd "$(dirname "$0")"
+
+# Prefer the project's virtualenv when it exists.
 if [ -x "../.venv/bin/python" ]; then
 	PY_CMD="../.venv/bin/python"
 else
@@ -29,7 +37,7 @@ run_nb 4a.Supply.ipynb
 run_nb 4c.Demand.ipynb
 #run_nb 5.Cohorts.ipynb
 run_nb 6a.GoogleTrends.ipynb
-run_nb 7a.BTCvsUSELECTIONS.ipynb
+run_nb 7a.BTCvsUSElections.ipynb
 run_nb 7b.US_Elections.ipynb
 run_nb 8.ETF_Inflows.ipynb
 run_nb 9.BTC_Miners.ipynb
@@ -43,19 +51,3 @@ run_nb 11.RiskModel.ipynb
 # run_nb 99.DynamicPlot.ipynb
 
 echo "All notebooks executed."
-
-
-
-# README
-# 1) Entrare nel folder notebooks da terminale
-
-# 2) Rendi lo Script Eseguibile (farlo solo la prima volta): 
-#    chmod +x run_notebooks.sh
-
-# 3) Lancia da terminale lo script per eseguire tutti i notebooks:
-#    ./run_notebooks.sh
-
-
-
-# Then, simply launch this:
-# /Users/danyr92/Coding/bitcoin_datascience/notebooks/run_notebooks.sh
