@@ -29,10 +29,10 @@ bottoms stayed flat at ~0.5x, so v2 models the two bands differently: a linearly
 offset and a constant lower one. Validated leave-future-out on out-of-sample top prediction, the
 median absolute error drops to **21% from 83%**.
 
-### Cycle Clock 🕰️
+### ThermoClock 🕰️
 ![](output/1a.ThermoModel_v2_CycleForecast.jpg)
 The bands answer *how high and how low* but say nothing about *when*; the cycle analysis answers
-the opposite. Combined, they give a dated price path. A cycle clock (median top-to-top interval,
+the opposite. Combined, they give a dated price path. A ThermoClock (median top-to-top interval,
 with bottoms landing at phase 0.26 rather than 0.5 — the cycle is asymmetric, roughly a year down
 and three years back up) is mapped against where in the corridor price historically sat at each
 point of the cycle, then projected onto the extended bands. The per-cycle profiles correlate
