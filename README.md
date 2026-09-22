@@ -24,20 +24,25 @@ single view of where price stands relative to its thermodynamic corridor.
 A rebuild of the ThermoModel that accounts for diminishing returns. The original fits a cubic
 polynomial in day index with fixed log-space offsets: the cubic extrapolates explosively upward
 (the opposite of diminishing returns) and a fixed offset keeps a constant band width forever.
-Measured against a power-law trend, cycle tops came in at 15.4x, 11.1x, 6.4x, 2.9x, 1.2x while
-bottoms stayed flat at ~0.5x, so v2 models the two bands differently: a linearly decaying upper
-offset and a constant lower one. Validated leave-future-out on out-of-sample top prediction, the
-median absolute error drops to **21% from 83%**.
+The trend is a log-log fit whose exponent eases off with time: refitted in real time, a plain
+power law's fixed exponent kept falling (6.8, 5.9, 5.8, 5.6 at the last four bottoms) and
+overshot every next bottom, which the concave trend corrects. Measured against it, cycle tops came
+in at 18.4x, 9.7x, 5.7x, 3.0x, 1.4x while bottoms stayed flat at ~0.5x, so v2 models the two bands
+differently: a linearly decaying upper offset and a constant lower one. Validated leave-future-out
+on out-of-sample top prediction, the median absolute error drops to **13% from 83%** (22% on a
+fixed-exponent trend).
 
 ### ThermoClock 🕰️
-![](output/1a.ThermoModel_v2_CycleForecast.jpg)
+![](output/1j.ThermoClock.jpg)
 The bands answer *how high and how low* but say nothing about *when*; the cycle analysis answers
-the opposite. Combined, they give a dated price path. A ThermoClock (median top-to-top interval,
-with bottoms landing at phase 0.26 rather than 0.5 — the cycle is asymmetric, roughly a year down
-and three years back up) is mapped against where in the corridor price historically sat at each
-point of the cycle, then projected onto the extended bands. The per-cycle profiles correlate
-0.53–0.98 and agree tightly at the extremes (interquartile spread of 11–15 points) but diverge
-badly mid-ascent (past 80 points), so the dated extremes are worth more than the path between them.
+the opposite. Combined, they give a dated price path. A ThermoClock - the same clock the cycle
+analysis draws, with every cycle the same length (1,419 days, fitted by least squares on the tops
+and bottoms together) and bottoms a quarter of a cycle after each top, since the cycle is
+asymmetric, roughly a year down and three years back up - is mapped against where in the corridor
+price historically sat at each point of the cycle, then projected onto the extended bands. The
+per-cycle profiles correlate 0.55–0.78 and agree tightly at the extremes (interquartile spread of
+5–11 points) but less so late in the climb (up to 45 points), so the dated extremes are worth more
+than the path between them.
 
 ### LogTimeLogPrice 🪜
 ![](output/1b.LogTimeLogPrice.jpg)
@@ -87,10 +92,10 @@ broader cyclical behaviour of the market.
 
 ### CyclesNorm 🔄
 ![](output/2b.CyclesNorm.jpg)
-Normalises price data from the 2016, 2020 and 2024 halving cycles so they can be compared
-directly, identifying key inflection points and projecting the timing of potential tops and
-bottoms. Colour-coded background shading marks the market phases, with a sinusoidal overlay for
-the underlying cyclical structure.
+Normalises price data from the 2016, 2020 and 2024 halving cycles - plus the nascent, still-open
+2028 cycle - so they can be compared directly, identifying key inflection points and projecting
+the timing of potential tops and bottoms. Colour-coded background shading marks the market
+phases, with a sinusoidal overlay for the underlying cyclical structure.
 
 ### Epochs Growth 📆
 ![](output/2c.EpochsGrowth.jpg)

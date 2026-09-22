@@ -28,6 +28,7 @@ run_nb 1e.SlopesGrowthModel.ipynb
 run_nb 1g.Growths.ipynb
 run_nb 1h.Metcalfe.ipynb
 run_nb 1i.ThermoModel_v2.ipynb
+run_nb 1j.ThermoClock.ipynb
 run_nb 2a.Cycles.ipynb
 run_nb 2b.CyclesNorm.ipynb
 run_nb 2c.MVRV.ipynb

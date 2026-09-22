@@ -37,3 +37,8 @@ functions/functions_BTC_Miners.py
 notebooks/Rotations.ipynb
 notebooks/10.CandleStick_Charts.ipynb
 notebooks/0.Forecast.ipynb
+# ThermoClock explainer video (rendered by functions/functions_ThermoClockAnimation.py)
+output/1j.ThermoClock_Animation.mp4
+output/1j.ThermoClock_Animation.gif
+output/animation_preview/
+output/1j.ThermoClock_CycleProfile.jpg
