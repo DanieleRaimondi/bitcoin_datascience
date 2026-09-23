@@ -263,25 +263,13 @@ interest data.
 
 ---
 
-## 8. Sentiment & Events
+## 8. Sentiment
 
 ### Google Trends 🔍
 ![](output/6a.GoogleTrends.jpeg)
 Explores the correlation between Google search interest for specific cryptocurrencies and their
 price fluctuations, on the hypothesis that search trends proxy sentiment and may lead market
 behaviour.
-
-### BTC vs US Elections 🇺🇸
-![](output/7a.BTCvsUSELECTIONS.jpg)
-Examines the correlation between Bitcoin's price and Donald Trump's probability of winning the
-2024 U.S. Presidential Election, on the hypothesis that the prospect of a Bitcoin-friendly
-president moves the asset. Election probabilities are sourced from Polymarket.
-
-### Bitcoin and Political Events 🗳️
-![](output/7b.US_Elections.jpg)
-Broadens the previous study beyond U.S. elections to regulatory announcements, policy shifts and
-major political transitions worldwide, using time-series and correlation analysis to find patterns
-in how Bitcoin reacts to the geopolitical landscape.
 
 ---
 
@@ -292,7 +280,6 @@ in how Bitcoin reacts to the geopolitical landscape.
 | [CoinMetrics Community Network Data](https://coinmetrics.io/community-network-data/) | BTC price and on-chain metrics |
 | [Yahoo Finance](https://finance.yahoo.com/) | Daily closes, equities, index data |
 | [FRED](https://fred.stlouisfed.org/) (St. Louis Fed) | Macroeconomic series |
-| [Polymarket](https://polymarket.com/) | 2024 US election probabilities |
 | [Google Trends](https://trends.google.com/) | Search interest |
 
 Several indicators implemented here are established, publicly documented concepts created by
