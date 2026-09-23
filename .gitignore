@@ -47,3 +47,4 @@ output/voice_samples/
 # local tooling config
 pyrightconfig.json
 .pre-commit-config.yaml
+requirements.txt

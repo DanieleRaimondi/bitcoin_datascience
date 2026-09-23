@@ -62,13 +62,6 @@ its results become directly comparable with the ThermoModel's.
 A straightforward ensemble of the ThermoModel and LogTimeLogPrice: averaging the predicted upper
 and lower bands of both produces a more robust corridor than either alone.
 
-### Slopes Growth Model 🪴
-![](output/1e.SlopesGrowthModel.jpg)
-Analyses Bitcoin's diminishing returns by connecting historical peaks and bottoms with regression
-lines, then forecasting future cycles using exponential decay convergence. As Bitcoin matures,
-growth rates decline and converge toward a stable target, creating a narrowing price corridor that
-reflects the transition from explosive early growth to more mature market behaviour.
-
 ### Metcalfe's Law 🕸️
 ![](output/1h.Metcalfe.jpg)
 Quantifies Bitcoin's fundamental value from network activity to identify overvaluation and
