@@ -1,8 +1,8 @@
 # **Bitcoin DataScience ₿** 📈
 
-A collection of quantitative models for Bitcoin: long-run price corridors, halving-cycle
-structure, on-chain valuation indicators, and the macro and market-structure studies that
-sit around them. Every chart below is regenerated from live data.
+A collection of quantitative models for Bitcoin: long-run price corridors, halving-cycle structure,
+machine-learning forecasts of cycle tops and bottoms, on-chain valuation indicators, and the macro
+and market-structure studies that sit around them. Every chart below is regenerated from live data.
 
 > **Data**: price and on-chain metrics from [CoinMetrics Community Network Data](https://coinmetrics.io/community-network-data/),
 > topped up with Yahoo Finance daily closes. Macro series from FRED. See [Data & Attribution](#data--attribution).
@@ -12,6 +12,18 @@ sit around them. Every chart below is regenerated from live data.
 ## 1. Price Models
 
 Where price sits against its own long-run trend, and how wide the corridor around it should be.
+
+### ThermoClock 🕰️
+![](output/1j.ThermoClock.jpg)
+The ThermoModel's bands (below) answer *how high and how low* but say nothing about *when*; the
+cycle analysis answers the opposite. Combined, they give a dated price path. A ThermoClock - the
+same clock the cycle analysis draws, with every cycle the same length (1,419 days, fitted by least
+squares on the tops and bottoms together) and bottoms a quarter of a cycle after each top, since
+the cycle is asymmetric, roughly a year down and three years back up - is mapped against where in
+the corridor price historically sat at each point of the cycle, then projected onto the extended
+bands. The per-cycle profiles correlate 0.55–0.78 and agree tightly at the extremes (interquartile
+spread of 5–11 points) but less so late in the climb (up to 45 points), so the dated extremes are
+worth more than the path between them.
 
 ### ThermoModel 🌡️
 ![](output/1a.ThermoModel.jpg)
@@ -27,22 +39,12 @@ polynomial in day index with fixed log-space offsets: the cubic extrapolates exp
 The trend is a log-log fit whose exponent eases off with time: refitted in real time, a plain
 power law's fixed exponent kept falling (6.8, 5.9, 5.8, 5.6 at the last four bottoms) and
 overshot every next bottom, which the concave trend corrects. Measured against it, cycle tops came
-in at 18.4x, 9.7x, 5.7x, 3.0x, 1.4x while bottoms stayed flat at ~0.5x, so v2 models the two bands
-differently: a linearly decaying upper offset and a constant lower one. Validated leave-future-out
-on out-of-sample top prediction, the median absolute error drops to **13% from 83%** (22% on a
-fixed-exponent trend).
-
-### ThermoClock 🕰️
-![](output/1j.ThermoClock.jpg)
-The bands answer *how high and how low* but say nothing about *when*; the cycle analysis answers
-the opposite. Combined, they give a dated price path. A ThermoClock - the same clock the cycle
-analysis draws, with every cycle the same length (1,419 days, fitted by least squares on the tops
-and bottoms together) and bottoms a quarter of a cycle after each top, since the cycle is
-asymmetric, roughly a year down and three years back up - is mapped against where in the corridor
-price historically sat at each point of the cycle, then projected onto the extended bands. The
-per-cycle profiles correlate 0.55–0.78 and agree tightly at the extremes (interquartile spread of
-5–11 points) but less so late in the climb (up to 45 points), so the dated extremes are worth more
-than the path between them.
+in at 18.4x, 9.7x, 5.7x, 3.0x, 1.4x and the deepest close of each cycle at 0.32x, 0.33x, 0.42x,
+0.47x, 0.55x, so both offsets move with the cycle: the upper one decays, fitted on the five tops,
+the lower one rises, fitted by quantile regression on the daily closes so that **99.5% of the
+history closes above it** (the old flat band, the mean of the five bottoms, was cut through on 15%
+of days, the deepest 36% below). Validated leave-future-out on out-of-sample top prediction, the
+median absolute error drops to **13% from 83%** (22% on a fixed-exponent trend).
 
 ### LogTimeLogPrice 🪜
 ![](output/1b.LogTimeLogPrice.jpg)
@@ -110,7 +112,31 @@ each cycle, where the second peak typically marks the all-time high.
 
 ---
 
-## 3. Valuation & Risk
+## 3. Machine Learning
+
+Supervised forecasts of cycle timing, validated on a window the models never saw.
+
+### Cycle Top Forecast 🤖🔺
+![](output/0.Forecast_Tops.jpg)
+A gradient-boosting ensemble that answers *when*, not *how high*: for every day it estimates the
+probability that a cycle top falls within the next month, six months or year. It learns from the
+run-up to the 2011, 2013, 2017 and 2021 tops, using price technicals, halving-epoch phase, market
+and macro data (each macro figure dated to its release, not to the month it describes) and the
+cycle clock. Everything from 2024 on is held out, including whatever is fitted to the extremes: the
+clock is refitted on the pre-2024 tops and bottoms only, and an extreme counts in any feature only
+90 days after it happened. On that untouched window the 1-year and 6-month signals both fired ahead
+of the October 2025 top but pointed about 70 days past it; the 1-month signal never fired.
+
+### Cycle Bottom Forecast 🤖🔻
+![](output/0.Forecast_Bottoms.jpg)
+The same pipeline, trained on the run-down into the 2011, 2015, 2018 and 2022 bottoms. Out of
+sample it is the weaker of the two: the 1-year and 6-month signals pointed to December 2026, about
+160 days after the July 2026 low, and the 1-month signal never fired. With four training cycles per
+side, read both as a structured second opinion on cycle timing rather than a calibrated date.
+
+---
+
+## 4. Valuation & Risk
 
 On-chain and price-derived indicators for cycle position. The composite comes first; the
 components that feed the same question follow.
@@ -176,7 +202,7 @@ sustained capitulations are flagged.
 
 ---
 
-## 4. Supply & Demand
+## 5. Supply & Demand
 
 ### BTC vs Supply 💭
 ![](output/1f.BTCvsSupply.jpg)
@@ -202,7 +228,7 @@ both as proxies for Bitcoin demand and for the growth of real user engagement on
 
 ---
 
-## 5. Macro
+## 6. Macro
 
 ### Economics 🪙
 ![](output/3a.Economics.jpg)
@@ -223,7 +249,7 @@ coincide with a declining DXY, and the in-between phases show a stable DXY.
 
 ---
 
-## 6. Market Structure
+## 7. Market Structure
 
 ### Cohorts 🐋
 ![](output/Cohorts_BTC/7_10K_to_100K_BTC.jpeg)
@@ -244,7 +270,7 @@ interest data.
 
 ---
 
-## 7. Sentiment & Events
+## 8. Sentiment & Events
 
 ### Google Trends 🔍
 ![](output/6a.GoogleTrends.jpeg)
