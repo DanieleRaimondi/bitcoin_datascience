@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.py[cod]
+.mypy_cache/
+.pytest_cache/
+
+# Environments and credentials
+.env
+.env.*
+!.env.example
+.venv/
+.venv-*/
+
+# Local-only code, data and tooling
+functions/
+data/
+utils/
+run.sh
+requirements.txt
+pyrightconfig.json
+.pre-commit-config.yaml
+
+# Scratch and system files
+notebooks/temp_images/
+test*.ipynb
+x*.ipynb
+.DS_Store
