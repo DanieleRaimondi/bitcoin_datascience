@@ -22,12 +22,12 @@ Where price sits against its own long-run trend, and how wide the corridor aroun
 ![](output/1j.ThermoClock.jpg)
 The ThermoModel's bands (below) answer *how high and how low* but say nothing about *when*; the
 cycle analysis answers the opposite. Combined, they give a dated price path. A ThermoClock - the
-same clock the cycle analysis draws, with every cycle the same length (1,419 days, fitted by least
+same clock the cycle analysis draws, with every cycle the same length (1,442 days, fitted by least
 squares on the tops and bottoms together) and bottoms a quarter of a cycle after each top, since
 the cycle is asymmetric, roughly a year down and three years back up - is mapped against where in
 the corridor price historically sat at each point of the cycle, then projected onto the extended
-bands. The per-cycle profiles correlate 0.55–0.77 pairwise and agree tightly near the extremes
-(interquartile spread down to 3 points) but less so late in the climb (up to 39 points), so the
+bands. The per-cycle profiles correlate 0.39–0.87 pairwise and agree tightly near the extremes
+(interquartile spread down to 4 points) but less so late in the climb (up to 42 points), so the
 dated extremes are worth more than the path between them.
 
 ### ThermoModel 🌡️
@@ -44,11 +44,11 @@ polynomial in day index with fixed log-space offsets: the cubic extrapolates exp
 The trend is a log-log fit whose exponent eases off with time: refitted in real time, a plain
 power law's fixed exponent kept falling (6.8, 5.9, 5.8, 5.6 at the last four bottoms) and
 overshot every next bottom, which the concave trend corrects. Measured against it, cycle tops came
-in at 18.4x, 9.7x, 5.7x, 3.0x, 1.5x and the deepest close of each cycle at 0.32x, 0.32x, 0.42x,
-0.47x, 0.56x, so both offsets move with the cycle: the upper one decays, fitted on the five tops,
+in at 18.5x, 9.6x, 5.7x, 3.0x, 1.5x and the deepest close of each cycle at 0.32x, 0.32x, 0.42x,
+0.48x, 0.51x, so both offsets move with the cycle: the upper one decays, fitted on the five tops,
 the lower one rises, fitted by quantile regression on the daily closes so that **99.5% of the
-history closes above it** (the old flat band, the mean of the five bottoms, was cut through on 15%
-of days, the deepest 35% below). Validated leave-future-out on out-of-sample top prediction, the
+history closes above it** (the old flat band, the mean of the five bottoms, was cut through on 14%
+of days, the deepest 34% below). Validated leave-future-out on out-of-sample top prediction, the
 median absolute error drops to **13% from 83%** (22% on a fixed-exponent trend).
 
 ### LogTimeLogPrice 🪜
