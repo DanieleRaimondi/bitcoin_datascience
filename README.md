@@ -9,8 +9,8 @@ are published for non-commercial, educational viewing.
 
 [![ThermoClock: levels from the bands, timing from the cycle](output/1j.ThermoClock_Animation.gif)](output/1j.ThermoClock_Animation_Narrated.mp4)
 
-*ThermoClock in two minutes, silent preview above. [Watch the narrated version](output/1j.ThermoClock_Animation_Narrated.mp4)
-(MP4, 2:16, English voice-over).*
+*ThermoClock in two minutes, silent preview above. Watch the narrated version in [English](output/1j.ThermoClock_Animation_Narrated.mp4)
+or [Italian](output/1j.ThermoClock_Animation_Narrated_it.mp4) (MP4, 2:16).*
 
 ---
 
